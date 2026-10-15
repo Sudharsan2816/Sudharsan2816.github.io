@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>AI Code Review Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: case-study sheet in the homepage's system; facts strip, then the eight standard sections down one reading column. */
+:root {
+  --paper: #e7e5e1; --sheet: #efeeea; --ink: #141414; --muted: #5b5853; --rule: #c7c3bc;
+  --red: #e0442c; --on-ink: #efeeea; --on-ink-muted: #a9a59e; --on-red: #141414;
+  --good: #2f7a4a; --nav-bg: rgba(231, 229, 225, 0.85);
+  --display: "Anybody", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --ease: cubic-bezier(.2, .75, .2, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #171615; --sheet: #1f1e1c; --ink: #ecebe6; --muted: #a29e97; --rule: #3a3835;
+    --red: #f0563c; --on-ink: #171615; --on-ink-muted: #5f5b55; --on-red: #141414;
+    --good: #5fbf83; --nav-bg: rgba(23, 22, 21, 0.85); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #171615; --sheet: #1f1e1c; --ink: #ecebe6; --muted: #a29e97; --rule: #3a3835;
+  --red: #f0563c; --on-ink: #171615; --on-ink-muted: #5f5b55; --on-red: #141414;
+  --good: #5fbf83; --nav-bg: rgba(23, 22, 21, 0.85); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 16.5px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; }
+::selection { background: var(--red); color: var(--on-red); }
+a { color: inherit; }
+a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 4px; }
+
+.wrap {
+  max-width: 1040px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--nav-bg); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); }
+.nav .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 10px; }
+.back { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; display: inline-flex; gap: 8px; align-items: center; }
+.back span { display: inline-block; transition: transform .25s var(--ease); }
+.back:hover span { transform: translateX(-4px); }
+.back:hover { color: var(--red); }
+.toc { display: flex; gap: clamp(8px, 2vw, 20px); list-style: none; margin: 0; padding: 0; }
+.toc a { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.toc a:hover { color: var(--ink); }
+@media (max-width: 720px) { .toc { display: none; } }
+
+.label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.ulink { text-decoration: none; background-image: linear-gradient(var(--red), var(--red)), linear-gradient(var(--rule), var(--rule)); background-size: 0% 1px, 100% 1px; background-position: 0 100%, 0 100%; background-repeat: no-repeat; padding-bottom: 2px; transition: background-size .35s var(--ease), color .2s; }
+.ulink:hover { background-size: 100% 1px, 100% 1px; color: var(--red); }
+
+/* hero */
+.hero { position: relative; margin-top: 24px; background: var(--sheet); padding-block: 28px 30px; padding-inline: clamp(16px, 4vw, 44px); display: grid; gap: 18px; overflow: hidden; isolation: isolate; }
+.hero .block { position: absolute; right: 9%; top: 0; bottom: 0; width: clamp(40px, 10%, 110px); background: var(--red); z-index: -1; }
+.hero .ghost { position: absolute; left: -0.03em; bottom: -0.18em; font-family: var(--display); font-weight: 300; font-stretch: 150%; font-size: clamp(60px, 13vw, 170px); line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--ink); opacity: .22; white-space: nowrap; z-index: -1; user-select: none; }
+.reg { position: absolute; font-family: var(--mono); font-size: 14px; line-height: 1; color: var(--muted); }
+.reg.tl { top: 8px; left: 8px; } .reg.tr { top: 8px; right: 8px; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--rule); color: var(--muted); background: var(--sheet); }
+h1 { margin: 0; font-family: var(--display); font-weight: 800; font-stretch: 86%; font-size: clamp(36px, 6.5vw, 76px); line-height: .95; letter-spacing: -.02em; text-transform: uppercase; text-wrap: balance; max-width: 14ch; }
+.lede { margin: 0; max-width: 60ch; font-size: clamp(17px, 1.8vw, 20px); line-height: 1.45; font-weight: 500; }
+.lede em { font-style: normal; color: var(--red); }
+
+/* facts strip */
+.facts { margin-top: 18px; background: var(--ink); color: var(--on-ink); border-radius: 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 6px clamp(16px, 3vw, 28px) 18px; }
+@media (min-width: 820px) { .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.fact { padding: 16px 12px 4px 0; border-top: 1px solid var(--on-ink-muted); display: grid; gap: 4px; align-content: start; }
+@media (min-width: 820px) { .fact { border-top: 0; border-left: 1px solid var(--on-ink-muted); padding: 12px 16px 2px; } .fact:first-child { border-left: 0; padding-left: 0; } }
+.fact .n { font-family: var(--display); font-weight: 800; font-stretch: 84%; font-size: clamp(30px, 4.6vw, 48px); line-height: 1; font-variant-numeric: tabular-nums; }
+.fact .n small { font-size: .45em; color: var(--on-ink-muted); font-weight: 600; font-stretch: 100%; }
+.fact .n .r { color: var(--red); font-weight: 400; }
+.fact p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--on-ink-muted); }
+
+/* sections */
+main { display: grid; gap: 72px; padding-block: 64px 48px; }
+section { scroll-margin-top: 64px; display: grid; gap: 18px; }
+.sh { display: flex; align-items: baseline; gap: 14px; border-top: 1px solid var(--ink); padding-top: 14px; }
+.sh .k { font-family: var(--mono); font-size: 12px; color: var(--red); }
+h2 { margin: 0; font-family: var(--display); font-weight: 700; font-stretch: 110%; font-size: clamp(24px, 3.2vw, 34px); line-height: 1.05; letter-spacing: -.01em; }
+.prose { max-width: 66ch; display: grid; gap: 14px; }
+.prose p { margin: 0; }
+.prose strong { font-weight: 600; }
+
+/* diagram */
+.diagram { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; overflow-x: auto; padding: 16px; }
+.diagram svg { display: block; min-width: 720px; width: 100%; height: auto; }
+.d-box { fill: var(--paper); stroke: var(--ink); stroke-width: 1.2; }
+.d-box.hot { fill: var(--red); stroke: var(--red); }
+.d-box.ink { fill: var(--ink); stroke: var(--ink); }
+.d-t { font-family: var(--mono); font-size: 11.5px; fill: var(--ink); }
+.d-t.s { font-size: 10px; fill: var(--muted); }
+.d-t.on-hot { fill: var(--on-red); }
+.d-t.on-ink { fill: var(--on-ink); }
+.d-lane { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; fill: var(--muted); }
+.d-line { stroke: var(--ink); stroke-width: 1.2; fill: none; }
+.d-line.dash { stroke-dasharray: 4 4; stroke: var(--muted); }
+.d-arrow { fill: var(--ink); }
+
+.components { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--rule); }
+@media (min-width: 760px) { .components { grid-template-columns: 1fr 1fr; column-gap: 36px; } }
+.components li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; padding-block: 11px; border-bottom: 1px solid var(--rule); font-size: 14.5px; }
+.components b { font-family: var(--mono); font-weight: 500; font-size: 12px; letter-spacing: .04em; padding-top: 2px; }
+.components span { color: var(--muted); }
+
+/* decisions */
+.decisions { display: grid; gap: 16px; }
+.decision { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; padding: 20px 22px; display: grid; gap: 12px; transition: transform .35s var(--ease), border-color .3s, box-shadow .35s var(--ease); }
+.decision:hover { transform: translateY(-4px); border-color: var(--ink); box-shadow: 0 22px 40px -28px rgba(0,0,0,.45); }
+.decision h3 { margin: 0; font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 21px; line-height: 1.15; text-wrap: balance; }
+.dgrid { display: grid; gap: 10px 22px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .dgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.dgrid div { display: grid; gap: 4px; align-content: start; font-size: 14.5px; min-width: 0; }
+.dgrid .label.chose { color: var(--good); }
+.dgrid .label.rejected { color: var(--red); }
+
+/* tables */
+.tw { overflow-x: auto; border-top: 1px solid var(--ink); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+th { text-align: left; font-family: var(--mono); font-weight: 500; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 10px 12px 8px 0; border-bottom: 1px solid var(--rule); }
+td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; vertical-align: top; }
+td.num, th.num { text-align: right; }
+tr.win td { font-weight: 600; }
+tr.win td:first-child { color: var(--red); }
+tbody tr { transition: background .2s; }
+tbody tr:hover { background: var(--sheet); }
+.cap { margin: 8px 0 0; font-size: 13px; color: var(--muted); max-width: 70ch; }
+.pill { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; }
+.pill.pass { color: var(--good); } .pill.fail { color: var(--red); }
+
+.evalgrid { display: grid; gap: 28px; }
+.evalgrid h3 { margin: 0 0 8px; font-family: var(--display); font-weight: 650; font-stretch: 100%; font-size: 18px; }
+
+.next { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--rule); max-width: 760px; }
+.next li { padding: 12px 0 12px 26px; border-bottom: 1px solid var(--rule); position: relative; }
+.next li::before { content: "+"; position: absolute; left: 4px; top: 11px; font-family: var(--mono); color: var(--red); }
+
+.links { display: flex; flex-wrap: wrap; gap: 12px 26px; font-family: var(--mono); font-size: 13px; }
+footer { padding-block: 0 36px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero .block { animation: grow 1s var(--ease) both; transform-origin: 50% 100%; }
+  h1 { animation: rise .8s .1s var(--ease) both; }
+  @supports (animation-timeline: view()) {
+    .reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% cover 25%; }
+  }
+}
+@keyframes grow { from { transform: scaleY(0); } }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+@keyframes reveal { from { opacity: .35; translate: 0 36px; } to { opacity: 1; translate: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .decision { transition: none; } }
+
+/* calmer system, matching the homepage: sentence-case labels in the body face, one load moment only */
+.label, .tag, .back, .toc a, th, .pill, .dgrid .label { font-family: var(--body); text-transform: none; letter-spacing: 0; }
+.label { font-size: 13px; font-weight: 600; }
+.tag { font-size: 12.5px; }
+.back { font-size: 14px; }
+.toc a { font-size: 14px; font-weight: 500; }
+th { font-size: 12.5px; font-weight: 600; }
+.pill { font-size: 12px; }
+.sh .k, .hero .ghost, .reg { display: none; }
+.reveal { animation: none !important; }
+.lede em { color: inherit; font-weight: 650; }
+.next li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--red); top: 21px; left: 6px; }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Case study">
+  <div class="wrap">
+    <a class="back" href="./"><span>←</span> Sudharsan V S</a>
+    <ul class="toc">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#decisions">Decisions</a></li>
+      <li><a href="#evaluation">Evaluation</a></li>
+      <li><a href="#failures">Failures</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+  <header class="hero">
+    <span class="reg tl" aria-hidden="true">+</span><span class="reg tr" aria-hidden="true">+</span>
+    <span class="block" aria-hidden="true"></span>
+    <span class="ghost" aria-hidden="true">Review</span>
+    <div class="tags"><span class="tag">Personal build</span><span class="tag">Agents</span><span class="tag">Case study</span></div>
+    <h1>AI Code Review Agent</h1>
+    <p class="lede">An LLM pull-request reviewer that <em>doesn't let the model have the last word</em>: every finding must quote a changed line or it's dropped, and the verdict is computed in code.</p>
+  </header>
+
+  <div class="facts" role="list">
+    <div class="fact" role="listitem"><div class="n">6<small> nodes</small></div><p>LangGraph state machine; approval is a branch, not a flag</p></div>
+    <div class="fact" role="listitem"><div class="n">0</div><p>findings kept without an exact changed line as evidence</p></div>
+    <div class="fact" role="listitem"><div class="n">401</div><p>for any webhook without a valid HMAC-SHA256 signature</p></div>
+    <div class="fact" role="listitem"><div class="n">16</div><p>tests in CI, covering grounding, the graph and security</p></div>
+  </div>
+
+  <main>
+    <section id="problem" class="reveal" aria-labelledby="h-problem">
+      <div class="sh"><span class="k">01</span><h2 id="h-problem">Problem</h2></div>
+      <div class="prose">
+        <p>Code review is a queue: pull requests wait for a busy senior engineer, and the first pass is often mechanical. An automated first reviewer could shorten that wait, but only if engineers trust it. The fastest way to lose that trust is a confident comment about code that isn't in the change, or a "request changes" verdict built on a misread README.</p>
+        <p>So the hard part is not getting a model to write a review. It's making sure nothing the model invents reaches the pull request, and that a human can stop any review before it posts.</p>
+      </div>
+    </section>
+
+    <section id="architecture" class="reveal" aria-labelledby="h-arch">
+      <div class="sh"><span class="k">02</span><h2 id="h-arch">Architecture</h2></div>
+      <div class="diagram" role="img" aria-label="A GitHub webhook is HMAC-verified and acknowledged, then a background task runs a LangGraph state machine: fetch diff, LLM review, parse JSON, ground findings and recompute the verdict, persist to MongoDB, then either post the comment to GitHub or hold it for human approval.">
+        <svg viewBox="0 0 980 300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow" d="M0,0 L10,5 L0,10 z"/></marker>
+          </defs>
+          <text class="d-lane" x="10" y="22">ENTRY</text>
+          <rect class="d-box" x="10" y="34" width="170" height="56" rx="8"/><text class="d-t" x="22" y="58">GitHub webhook</text><text class="d-t s" x="22" y="76">HMAC-SHA256 or 401</text>
+          <rect class="d-box" x="210" y="34" width="170" height="56" rx="8"/><text class="d-t" x="222" y="58">Acknowledge</text><text class="d-t s" x="222" y="76">review in background</text>
+          <rect class="d-box" x="410" y="34" width="170" height="56" rx="8"/><text class="d-t" x="422" y="58">Manual API</text><text class="d-t s" x="422" y="76">token required</text>
+          <path class="d-line" d="M180 62 H208" marker-end="url(#ah)"/>
+
+          <text class="d-lane" x="10" y="140">LANGGRAPH STATEGRAPH</text>
+          <rect class="d-box" x="10" y="152" width="120" height="56" rx="8"/><text class="d-t" x="22" y="176">fetch_diff</text><text class="d-t s" x="22" y="194">≤ 80k chars</text>
+          <rect class="d-box" x="150" y="152" width="120" height="56" rx="8"/><text class="d-t" x="162" y="176">llm_review</text><text class="d-t s" x="162" y="194">180 s, 0 retries</text>
+          <rect class="d-box" x="290" y="152" width="130" height="56" rx="8"/><text class="d-t" x="302" y="176">parse_response</text><text class="d-t s" x="302" y="194">JSON only</text>
+          <rect class="d-box hot" x="440" y="152" width="140" height="56" rx="8"/><text class="d-t on-hot" x="452" y="176">build_review</text><text class="d-t on-hot" x="452" y="194">ground + verdict</text>
+          <rect class="d-box ink" x="600" y="152" width="130" height="56" rx="8"/><text class="d-t on-ink" x="612" y="176">persist_review</text><text class="d-t on-ink" x="612" y="194" style="opacity:.75">MongoDB</text>
+          <rect class="d-box" x="770" y="120" width="200" height="50" rx="8"/><text class="d-t" x="782" y="142">post_comment</text><text class="d-t s" x="782" y="159">auto-post allowed</text>
+          <rect class="d-box" x="770" y="196" width="200" height="50" rx="8"/><text class="d-t" x="782" y="218">END · held</text><text class="d-t s" x="782" y="235">approval required</text>
+          <path class="d-line" d="M130 180 H148" marker-end="url(#ah)"/>
+          <path class="d-line" d="M270 180 H288" marker-end="url(#ah)"/>
+          <path class="d-line" d="M420 180 H438" marker-end="url(#ah)"/>
+          <path class="d-line" d="M580 180 H598" marker-end="url(#ah)"/>
+          <path class="d-line" d="M730 172 L768 148" marker-end="url(#ah)"/>
+          <path class="d-line" d="M730 188 L768 214" marker-end="url(#ah)"/>
+          <path class="d-line dash" d="M295 90 V120 H70 V150" marker-end="url(#ah)"/>
+          <path class="d-line dash" d="M495 90 V120 H75" />
+          <path class="d-line dash" d="M870 246 V278 H500" marker-end="url(#ah)"/>
+          <text class="d-t s" x="512" y="272">POST /review/approve posts it later</text>
+        </svg>
+      </div>
+      <ul class="components">
+        <li><b>Webhook route</b><span>Verifies the HMAC signature before parsing; with no secret configured it rejects everything.</span></li>
+        <li><b>Background task</b><span>Returns to GitHub at once and runs the review afterwards, since a review can take far longer than GitHub waits.</span></li>
+        <li><b>fetch_diff</b><span>Pulls PR metadata and the unified diff; anything past 80,000 characters is cut with a visible marker.</span></li>
+        <li><b>llm_review</b><span>Claude, OpenAI or NVIDIA behind one interface; Claude caches the long system prompt. One 180-second bound per call.</span></li>
+        <li><b>parse_response</b><span>Extracts the JSON object; anything else raises, so a malformed answer never becomes a comment.</span></li>
+        <li><b>build_review</b><span>Keeps only findings that quote a changed line, then sets verdict, summary and score floors in code.</span></li>
+        <li><b>persist_review</b><span>Saves every review to MongoDB before the posting decision, so a held review is never lost.</span></li>
+        <li><b>Approval branch</b><span>Posts when auto-posting is allowed; otherwise ends and waits for <code>/review/approve</code>.</span></li>
+      </ul>
+    </section>
+
+    <section id="decisions" class="reveal" aria-labelledby="h-dec">
+      <div class="sh"><span class="k">03</span><h2 id="h-dec">Key decisions and trade-offs</h2></div>
+      <div class="decisions">
+        <article class="decision">
+          <h3>Ground every finding in the diff, and take the verdict away from the model</h3>
+          <div class="dgrid">
+            <div><span class="label chose">Chose</span>Each finding must name a file in the PR and quote one of its added or deleted lines (at least 8 characters). Survivors decide the verdict: none means approve, any high or critical means request changes.</div>
+            <div><span class="label rejected">Rejected</span>Relying on prompt instructions alone and trusting the model's own verdict and summary. The prompt still asks for evidence, but nothing depends on the model obeying it.</div>
+            <div><span class="label">Trade-off</span>Real issues whose evidence spans several lines, or sits in unchanged context, are dropped. The system prefers a missed comment to an invented one.</div>
+          </div>
+        </article>
+        <article class="decision">
+          <h3>Documentation can't testify about application code</h3>
+          <div class="dgrid">
+            <div><span class="label chose">Chose</span>Findings on READMEs and repo metadata are allowed only as low or medium code-quality notes about that file, matched against a list of documentation terms.</div>
+            <div><span class="label rejected">Rejected</span>Treating all changed files equally. A README that describes a security risk would otherwise produce a "critical security" finding against code nobody changed.</div>
+            <div><span class="label">Trade-off</span>A genuinely dangerous config change in a metadata file is capped at medium and can't block the merge on its own.</div>
+          </div>
+        </article>
+        <article class="decision">
+          <h3>Approval as a branch in the graph, after the review is saved</h3>
+          <div class="dgrid">
+            <div><span class="label chose">Chose</span>A conditional edge after <code>persist_review</code> routes to posting or to a held end state, so the gate is visible in the pipeline's shape and tested as a path.</div>
+            <div><span class="label rejected">Rejected</span>A flag checked inside one long function, which is how the service worked before the graph was wired in, and posting first with a delete on rejection.</div>
+            <div><span class="label">Trade-off</span>The gate defaults to off so demos post straight away. A team using it for real should switch it on.</div>
+          </div>
+        </article>
+        <article class="decision">
+          <h3>Acknowledge fast, review in the background, fail once</h3>
+          <div class="dgrid">
+            <div><span class="label chose">Chose</span>Return to GitHub immediately and run the graph as a background task, with one 180-second bound per LLM call and SDK retries turned off.</div>
+            <div><span class="label rejected">Rejected</span>Reviewing inside the webhook request, which outlasts GitHub's delivery timeout, and SDK retries that could stack several long waits on one review.</div>
+            <div><span class="label">Trade-off</span>Background tasks live in the server process: a restart loses an in-flight review, and transient errors aren't retried. A durable queue is the fix.</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="evaluation" class="reveal" aria-labelledby="h-eval">
+      <div class="sh"><span class="k">04</span><h2 id="h-eval">Evaluation and results</h2></div>
+      <div class="prose">
+        <p><strong>Review quality is not yet measured.</strong> There is no labelled set of pull requests yet, so there is no precision, recall or false-positive rate to report. What is tested is the behaviour around the model: what it is allowed to claim, and what happens to a review afterwards.</p>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Behaviour under test</th><th>Tests</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td>Findings about files outside the PR are dropped</td><td class="num">1</td><td><span class="pill pass">pass</span></td></tr>
+            <tr><td>High-severity findings block only when evidence matches a changed line</td><td class="num">1</td><td><span class="pill pass">pass</span></td></tr>
+            <tr><td>READMEs can't be evidence for app-code claims; doc notes don't block</td><td class="num">2</td><td><span class="pill pass">pass</span></td></tr>
+            <tr><td>Suggested fixes must quote a changed line; prompt demands evidence</td><td class="num">2</td><td><span class="pill pass">pass</span></td></tr>
+            <tr><td>Graph posts, holds for approval, or skips posting on request</td><td class="num">3</td><td><span class="pill pass">pass</span></td></tr>
+            <tr><td>Missing signature rejected; missing secret rejects all; valid signature accepted; API token enforced</td><td class="num">4</td><td><span class="pill pass">pass</span></td></tr>
+            <tr><td>Provider timeout enforced; NVIDIA client wiring; markdown rendering</td><td class="num">3</td><td><span class="pill pass">pass</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cap">16 tests, run on every push in GitHub Actions. All use stubs for GitHub, the LLM and MongoDB; none call a real model.</p>
+    </section>
+
+    <section id="failures" class="reveal" aria-labelledby="h-fail">
+      <div class="sh"><span class="k">05</span><h2 id="h-fail">Failure modes and guardrails</h2></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>What goes wrong</th><th>What the system does</th></tr></thead>
+          <tbody>
+            <tr><td>Model invents an issue in unchanged code or another file</td><td>No changed line matches its evidence, so the finding is dropped and logged.</td></tr>
+            <tr><td>Model claims "approve" or "request changes" on its own</td><td>Ignored. The verdict is recomputed from the findings that survived grounding.</td></tr>
+            <tr><td>Model returns prose instead of JSON</td><td>Parsing raises; the background task logs the failure and nothing is posted.</td></tr>
+            <tr><td>Provider hangs</td><td>The call is cut at 180 seconds with no retries; the review fails without posting.</td></tr>
+            <tr><td>Forged or unsigned webhook</td><td>401 before the payload is parsed. With no secret configured, every webhook is rejected.</td></tr>
+            <tr><td>Very large diff</td><td>Cut at 80,000 characters with a marker; findings can only cite lines that were actually sent.</td></tr>
+            <tr><td>Posting to GitHub fails</td><td>The review is already saved in MongoDB, so it can be approved and posted again.</td></tr>
+            <tr><td>GitHub delivers the same event twice</td><td><strong>Not handled.</strong> Both deliveries run a full review. Known gap.</td></tr>
+            <tr><td>Server restarts mid-review</td><td><strong>Not handled.</strong> In-flight background work is lost. Known gap.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="next" class="reveal" aria-labelledby="h-next">
+      <div class="sh"><span class="k">06</span><h2 id="h-next">Limitations and what I'd do next</h2></div>
+      <ul class="next">
+        <li>Build a labelled set of pull requests with seeded bugs and measure precision, recall and the share of model findings that grounding drops.</li>
+        <li>Deduplicate deliveries by repository, PR and head commit, so a redelivered event can't produce a second review.</li>
+        <li>Move reviews from in-process background tasks to a durable queue with retries, the way I run task orchestration in production.</li>
+        <li>Ground multi-line evidence, so real issues that span several changed lines aren't dropped.</li>
+        <li>Add rate limiting on the API routes, and deploy a demo against a sandbox repository.</li>
+      </ul>
+    </section>
+
+    <section id="links" class="reveal" aria-labelledby="h-links">
+      <div class="sh"><span class="k">07</span><h2 id="h-links">Links</h2></div>
+      <div class="links">
+        <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/tree/main" target="_blank" rel="noopener">Code ↗</a>
+        <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/blob/main/app/agents/review_agent.py" target="_blank" rel="noopener">LangGraph pipeline ↗</a>
+        <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/blob/main/app/services/review_grounding.py" target="_blank" rel="noopener">Grounding logic ↗</a>
+        <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/pull/4" target="_blank" rel="noopener">PR #4: wiring the graph ↗</a>
+      </div>
+      <p class="cap">Demo video and hosted demo: not recorded yet.</p>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Sudharsan V S</span>
+    <a class="ulink" href="./">Back to portfolio</a>
+  </footer>
+</div>
+</body>
+</html>

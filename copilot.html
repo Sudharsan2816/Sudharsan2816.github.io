@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Market Research Copilot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: case-study sheet in the homepage's system; facts strip, then the eight standard sections down one reading column. */
+:root {
+  --paper: #e7e5e1; --sheet: #efeeea; --ink: #141414; --muted: #5b5853; --rule: #c7c3bc;
+  --red: #e0442c; --on-ink: #efeeea; --on-ink-muted: #a9a59e; --on-red: #141414;
+  --good: #2f7a4a; --nav-bg: rgba(231, 229, 225, 0.85);
+  --display: "Anybody", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --ease: cubic-bezier(.2, .75, .2, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #171615; --sheet: #1f1e1c; --ink: #ecebe6; --muted: #a29e97; --rule: #3a3835;
+    --red: #f0563c; --on-ink: #171615; --on-ink-muted: #5f5b55; --on-red: #141414;
+    --good: #5fbf83; --nav-bg: rgba(23, 22, 21, 0.85); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #171615; --sheet: #1f1e1c; --ink: #ecebe6; --muted: #a29e97; --rule: #3a3835;
+  --red: #f0563c; --on-ink: #171615; --on-ink-muted: #5f5b55; --on-red: #141414;
+  --good: #5fbf83; --nav-bg: rgba(23, 22, 21, 0.85); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 16.5px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; }
+::selection { background: var(--red); color: var(--on-red); }
+a { color: inherit; }
+a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 4px; }
+
+.wrap {
+  max-width: 1040px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--nav-bg); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); }
+.nav .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 10px; }
+.back { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; display: inline-flex; gap: 8px; align-items: center; }
+.back span { display: inline-block; transition: transform .25s var(--ease); }
+.back:hover span { transform: translateX(-4px); }
+.back:hover { color: var(--red); }
+.toc { display: flex; gap: clamp(8px, 2vw, 20px); list-style: none; margin: 0; padding: 0; }
+.toc a { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.toc a:hover { color: var(--ink); }
+@media (max-width: 720px) { .toc { display: none; } }
+
+.label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.ulink { text-decoration: none; background-image: linear-gradient(var(--red), var(--red)), linear-gradient(var(--rule), var(--rule)); background-size: 0% 1px, 100% 1px; background-position: 0 100%, 0 100%; background-repeat: no-repeat; padding-bottom: 2px; transition: background-size .35s var(--ease), color .2s; }
+.ulink:hover { background-size: 100% 1px, 100% 1px; color: var(--red); }
+
+/* hero */
+.hero { position: relative; margin-top: 24px; background: var(--sheet); padding-block: 28px 30px; padding-inline: clamp(16px, 4vw, 44px); display: grid; gap: 18px; overflow: hidden; isolation: isolate; }
+.hero .block { position: absolute; right: 9%; top: 0; bottom: 0; width: clamp(40px, 10%, 110px); background: var(--red); z-index: -1; }
+.hero .ghost { position: absolute; left: -0.03em; bottom: -0.18em; font-family: var(--display); font-weight: 300; font-stretch: 150%; font-size: clamp(60px, 13vw, 170px); line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--ink); opacity: .22; white-space: nowrap; z-index: -1; user-select: none; }
+.reg { position: absolute; font-family: var(--mono); font-size: 14px; line-height: 1; color: var(--muted); }
+.reg.tl { top: 8px; left: 8px; } .reg.tr { top: 8px; right: 8px; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--rule); color: var(--muted); background: var(--sheet); }
+h1 { margin: 0; font-family: var(--display); font-weight: 800; font-stretch: 86%; font-size: clamp(36px, 6.5vw, 76px); line-height: .95; letter-spacing: -.02em; text-transform: uppercase; text-wrap: balance; max-width: 14ch; }
+.lede { margin: 0; max-width: 60ch; font-size: clamp(17px, 1.8vw, 20px); line-height: 1.45; font-weight: 500; }
+.lede em { font-style: normal; color: var(--red); }
+
+/* facts strip */
+.facts { margin-top: 18px; background: var(--ink); color: var(--on-ink); border-radius: 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 6px clamp(16px, 3vw, 28px) 18px; }
+@media (min-width: 820px) { .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.fact { padding: 16px 12px 4px 0; border-top: 1px solid var(--on-ink-muted); display: grid; gap: 4px; align-content: start; }
+@media (min-width: 820px) { .fact { border-top: 0; border-left: 1px solid var(--on-ink-muted); padding: 12px 16px 2px; } .fact:first-child { border-left: 0; padding-left: 0; } }
+.fact .n { font-family: var(--display); font-weight: 800; font-stretch: 84%; font-size: clamp(30px, 4.6vw, 48px); line-height: 1; font-variant-numeric: tabular-nums; }
+.fact .n small { font-size: .45em; color: var(--on-ink-muted); font-weight: 600; font-stretch: 100%; }
+.fact .n .r { color: var(--red); font-weight: 400; }
+.fact p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--on-ink-muted); }
+
+/* sections */
+main { display: grid; gap: 72px; padding-block: 64px 48px; }
+section { scroll-margin-top: 64px; display: grid; gap: 18px; }
+.sh { display: flex; align-items: baseline; gap: 14px; border-top: 1px solid var(--ink); padding-top: 14px; }
+.sh .k { font-family: var(--mono); font-size: 12px; color: var(--red); }
+h2 { margin: 0; font-family: var(--display); font-weight: 700; font-stretch: 110%; font-size: clamp(24px, 3.2vw, 34px); line-height: 1.05; letter-spacing: -.01em; }
+.prose { max-width: 66ch; display: grid; gap: 14px; }
+.prose p { margin: 0; }
+.prose strong { font-weight: 600; }
+
+/* diagram */
+.diagram { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; overflow-x: auto; padding: 16px; }
+.diagram svg { display: block; min-width: 720px; width: 100%; height: auto; }
+.d-box { fill: var(--paper); stroke: var(--ink); stroke-width: 1.2; }
+.d-box.hot { fill: var(--red); stroke: var(--red); }
+.d-box.ink { fill: var(--ink); stroke: var(--ink); }
+.d-t { font-family: var(--mono); font-size: 11.5px; fill: var(--ink); }
+.d-t.s { font-size: 10px; fill: var(--muted); }
+.d-t.on-hot { fill: var(--on-red); }
+.d-t.on-ink { fill: var(--on-ink); }
+.d-lane { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; fill: var(--muted); }
+.d-line { stroke: var(--ink); stroke-width: 1.2; fill: none; }
+.d-line.dash { stroke-dasharray: 4 4; stroke: var(--muted); }
+.d-arrow { fill: var(--ink); }
+
+.components { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--rule); }
+@media (min-width: 760px) { .components { grid-template-columns: 1fr 1fr; column-gap: 36px; } }
+.components li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; padding-block: 11px; border-bottom: 1px solid var(--rule); font-size: 14.5px; }
+.components b { font-family: var(--mono); font-weight: 500; font-size: 12px; letter-spacing: .04em; padding-top: 2px; }
+.components span { color: var(--muted); }
+
+/* decisions */
+.decisions { display: grid; gap: 16px; }
+.decision { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; padding: 20px 22px; display: grid; gap: 12px; transition: transform .35s var(--ease), border-color .3s, box-shadow .35s var(--ease); }
+.decision:hover { transform: translateY(-4px); border-color: var(--ink); box-shadow: 0 22px 40px -28px rgba(0,0,0,.45); }
+.decision h3 { margin: 0; font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 21px; line-height: 1.15; text-wrap: balance; }
+.dgrid { display: grid; gap: 10px 22px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .dgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.dgrid div { display: grid; gap: 4px; align-content: start; font-size: 14.5px; min-width: 0; }
+.dgrid .label.chose { color: var(--good); }
+.dgrid .label.rejected { color: var(--red); }
+
+/* tables */
+.tw { overflow-x: auto; border-top: 1px solid var(--ink); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+th { text-align: left; font-family: var(--mono); font-weight: 500; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 10px 12px 8px 0; border-bottom: 1px solid var(--rule); }
+td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; vertical-align: top; }
+td.num, th.num { text-align: right; }
+tr.win td { font-weight: 600; }
+tr.win td:first-child { color: var(--red); }
+tbody tr { transition: background .2s; }
+tbody tr:hover { background: var(--sheet); }
+.cap { margin: 8px 0 0; font-size: 13px; color: var(--muted); max-width: 70ch; }
+.pill { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; }
+.pill.pass { color: var(--good); } .pill.fail { color: var(--red); }
+
+.evalgrid { display: grid; gap: 28px; }
+.evalgrid h3 { margin: 0 0 8px; font-family: var(--display); font-weight: 650; font-stretch: 100%; font-size: 18px; }
+
+.next { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--rule); max-width: 760px; }
+.next li { padding: 12px 0 12px 26px; border-bottom: 1px solid var(--rule); position: relative; }
+.next li::before { content: "+"; position: absolute; left: 4px; top: 11px; font-family: var(--mono); color: var(--red); }
+
+.links { display: flex; flex-wrap: wrap; gap: 12px 26px; font-family: var(--mono); font-size: 13px; }
+footer { padding-block: 0 36px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero .block { animation: grow 1s var(--ease) both; transform-origin: 50% 100%; }
+  h1 { animation: rise .8s .1s var(--ease) both; }
+  @supports (animation-timeline: view()) {
+    .reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% cover 25%; }
+  }
+}
+@keyframes grow { from { transform: scaleY(0); } }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+@keyframes reveal { from { opacity: .35; translate: 0 36px; } to { opacity: 1; translate: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .decision { transition: none; } }
+
+/* calmer system, matching the homepage: sentence-case labels in the body face, one load moment only */
+.label, .tag, .back, .toc a, th, .pill, .dgrid .label { font-family: var(--body); text-transform: none; letter-spacing: 0; }
+.label { font-size: 13px; font-weight: 600; }
+.tag { font-size: 12.5px; }
+.back { font-size: 14px; }
+.toc a { font-size: 14px; font-weight: 500; }
+th { font-size: 12.5px; font-weight: 600; }
+.pill { font-size: 12px; }
+.sh .k, .hero .ghost, .reg { display: none; }
+.reveal { animation: none !important; }
+.lede em { color: inherit; font-weight: 650; }
+.next li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--red); top: 21px; left: 6px; }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Case study">
+  <div class="wrap">
+    <a class="back" href="./"><span>←</span> Sudharsan V S</a>
+    <ul class="toc">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#decisions">Decisions</a></li>
+      <li><a href="#evaluation">Evaluation</a></li>
+      <li><a href="#failures">Failures</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+  <header class="hero">
+    <span class="reg tl" aria-hidden="true">+</span><span class="reg tr" aria-hidden="true">+</span>
+    <span class="block" aria-hidden="true"></span>
+    <span class="ghost" aria-hidden="true">Copilot</span>
+    <div class="tags"><span class="tag">Personal build</span><span class="tag">RAG</span><span class="tag">Case study</span></div>
+    <h1>Market Research Copilot</h1>
+    <p class="lede">A document-grounded research assistant where the most important decision was the least glamorous one: <em>fixed-size chunks beat semantic chunking</em>, and the benchmark shows why.</p>
+  </header>
+
+  <div class="facts" role="list">
+    <div class="fact" role="listitem"><div class="n">100<small>%</small> <span class="r">/</span> 90.6<small>%</small></div><p>complete-hit@3, fixed vs semantic chunking, 32 labelled questions</p></div>
+    <div class="fact" role="listitem"><div class="n">20<span class="r">→</span>6</div><p>FAISS candidates reranked by an NVIDIA NIM model</p></div>
+    <div class="fact" role="listitem"><div class="n">0.35</div><p>similarity floor below which it says "not covered"</p></div>
+    <div class="fact" role="listitem"><div class="n">9<small>/12</small> <span class="r">→</span> 10<small>/10</small></div><p>live chat test before and after fixing three failures</p></div>
+  </div>
+
+  <main>
+    <!-- 1. Problem -->
+    <section id="problem" class="reveal" aria-labelledby="h-problem">
+      <div class="sh"><span class="k">01</span><h2 id="h-problem">Problem</h2></div>
+      <div class="prose">
+        <p>Market-research reports are dense: one page can carry a company's founding year, its price points, its growth rate and a competitor comparison. An analyst who asks a general chatbot about them gets fluent answers drawn from the model's memory, and the numbers are often wrong or invented. The useful version answers only from the reports the analyst uploaded, shows which passages it used, and says plainly when the reports don't cover a question.</p>
+        <p>So the job of this system is retrieval quality and refusal discipline, more than generation. If the right passage isn't retrieved, the best model in the world still answers badly.</p>
+      </div>
+    </section>
+
+    <!-- 2. Architecture -->
+    <section id="architecture" class="reveal" aria-labelledby="h-arch">
+      <div class="sh"><span class="k">02</span><h2 id="h-arch">Architecture</h2></div>
+      <div class="diagram" role="img" aria-label="Ingestion path: upload, parse, 305-word chunker, NIM embeddings, per-session FAISS index. Question path: follow-up resolution, FAISS top 20, 0.35 relevance threshold, NIM rerank top 6, grounded LLM answer with citations, or a not-covered response.">
+        <svg viewBox="0 0 980 300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow" d="M0,0 L10,5 L0,10 z"/></marker>
+          </defs>
+          <text class="d-lane" x="10" y="22">INGEST</text>
+          <rect class="d-box" x="10" y="34" width="130" height="56" rx="8"/><text class="d-t" x="22" y="58">Upload + parse</text><text class="d-t s" x="22" y="76">PDF · CSV · TXT · MD</text>
+          <rect class="d-box" x="170" y="34" width="150" height="56" rx="8"/><text class="d-t" x="182" y="58">Fixed chunker</text><text class="d-t s" x="182" y="76">305 words · 38 overlap</text>
+          <rect class="d-box" x="350" y="34" width="160" height="56" rx="8"/><text class="d-t" x="362" y="58">NIM embeddings</text><text class="d-t s" x="362" y="76">MiniLM fallback</text>
+          <rect class="d-box ink" x="540" y="34" width="180" height="56" rx="8"/><text class="d-t on-ink" x="552" y="58">FAISS index</text><text class="d-t on-ink" x="552" y="76" style="opacity:.75">one per session · cosine</text>
+          <path class="d-line" d="M140 62 H168" marker-end="url(#ah)"/>
+          <path class="d-line" d="M320 62 H348" marker-end="url(#ah)"/>
+          <path class="d-line" d="M510 62 H538" marker-end="url(#ah)"/>
+
+          <text class="d-lane" x="10" y="146">ASK</text>
+          <rect class="d-box" x="10" y="158" width="150" height="56" rx="8"/><text class="d-t" x="22" y="182">Question</text><text class="d-t s" x="22" y="200">resolve its / typos</text>
+          <rect class="d-box" x="190" y="158" width="130" height="56" rx="8"/><text class="d-t" x="202" y="182">FAISS top 20</text><text class="d-t s" x="202" y="200">standalone query only</text>
+          <rect class="d-box hot" x="350" y="158" width="150" height="56" rx="8"/><text class="d-t on-hot" x="362" y="182">Relevance floor</text><text class="d-t on-hot" x="362" y="200">cosine ≥ 0.35</text>
+          <rect class="d-box" x="530" y="158" width="150" height="56" rx="8"/><text class="d-t" x="542" y="182">NIM rerank → 6</text><text class="d-t s" x="542" y="200">else embedding order</text>
+          <rect class="d-box" x="710" y="158" width="160" height="56" rx="8"/><text class="d-t" x="722" y="182">Grounded answer</text><text class="d-t s" x="722" y="200">Nemotron · citations</text>
+          <path class="d-line" d="M160 186 H188" marker-end="url(#ah)"/>
+          <path class="d-line" d="M320 186 H348" marker-end="url(#ah)"/>
+          <path class="d-line" d="M500 186 H528" marker-end="url(#ah)"/>
+          <path class="d-line" d="M680 186 H708" marker-end="url(#ah)"/>
+          <path class="d-line dash" d="M630 90 V120 H255 V156" marker-end="url(#ah)"/>
+          <text class="d-t s" x="400" y="114">search</text>
+
+          <path class="d-line" d="M425 214 V262 H708" marker-end="url(#ah)"/>
+          <rect class="d-box" x="710" y="240" width="250" height="44" rx="8"/><text class="d-t" x="722" y="267">"Not covered in the uploaded documents."</text>
+          <text class="d-t s" x="436" y="254">nothing clears the floor</text>
+        </svg>
+      </div>
+      <ul class="components">
+        <li><b>Parser</b><span>Reads PDF, CSV, TXT and Markdown; CSVs become 50-row text chunks so tables stay retrievable.</span></li>
+        <li><b>Chunker</b><span>Fixed 305-word windows with 38 words of overlap, so facts at a boundary appear in both neighbours.</span></li>
+        <li><b>Embeddings</b><span>NVIDIA NIM <code>nv-embedqa-e5-v5</code>, L2-normalised so inner product equals cosine. Falls back to local MiniLM if the API fails.</span></li>
+        <li><b>FAISS</b><span>One flat inner-product index per session, so one user's documents never answer another user's question.</span></li>
+        <li><b>Follow-ups</b><span>Pronouns and close typos are resolved against report entities; an optional Gemini call condenses the turn. Only the standalone query is embedded, never raw history.</span></li>
+        <li><b>Relevance floor</b><span>Drops candidates under 0.35 cosine before reranking; if none survive, the answer is "not covered" with zero sources.</span></li>
+        <li><b>Reranker</b><span>NIM <code>nv-rerankqa-mistral-4b-v3</code> orders 20 candidates and keeps 6; if the endpoint is down, embedding order is kept.</span></li>
+        <li><b>Generator</b><span>NVIDIA Nemotron, prompted to answer only the current question from the supplied chunks, with citations.</span></li>
+        <li><b>Report workers</b><span>Long market reports run in server-owned jobs with progress stages and restart recovery, capped at 10 active jobs.</span></li>
+        <li><b>API</b><span>FastAPI with optional API-key auth, rate limiting, sanitised uploads and request IDs on every log line.</span></li>
+      </ul>
+    </section>
+
+    <!-- 3. Decisions -->
+    <section id="decisions" class="reveal" aria-labelledby="h-dec">
+      <div class="sh"><span class="k">03</span><h2 id="h-dec">Key decisions and trade-offs</h2></div>
+      <div class="decisions">
+        <article class="decision">
+          <h3>Fixed-size chunks over semantic chunking</h3>
+          <div class="dgrid">
+            <div><span class="label chose">Chose</span>Fixed windows. On 32 labelled questions, complete-hit@3 was 100% against 90.6% for semantic chunking, and evidence recall@3 100% against 93.75%.</div>
+            <div><span class="label rejected">Rejected</span>Semantic chunking. It split related facts that sat on one dense page, and doubled the chunk count, so narrow chunks competed for the same top-3 slots.</div>
+            <div><span class="label">Trade-off</span>Semantic chunks cut retrieved context by 44.5%, which would lower prompt cost. Missing evidence costs more than extra tokens for a research tool.</div>
+          </div>
+        </article>
+        <article class="decision">
+          <h3>305 words, picked by a sweep, not a round number</h3>
+          <div class="dgrid">
+            <div><span class="label chose">Chose</span>305/38. It kept hit@3 and hit@6 at 100% and gave the best top-1 result: 71.9% hit@1 and 0.885 MRR, against 62.5% and 0.839 at 800/100.</div>
+            <div><span class="label rejected">Rejected</span>285/36, the smallest size with perfect hit@3, because its hit@1 and MRR were lower. Below 280 words, some evidence fell out of the top three.</div>
+            <div><span class="label">Trade-off</span>About 87 more context words at top 3 than 285/36, accepted for better first-result accuracy.</div>
+          </div>
+        </article>
+        <article class="decision">
+          <h3>Filter, then rerank, except for comparisons</h3>
+          <div class="dgrid">
+            <div><span class="label chose">Chose</span>FAISS fetches 20, a 0.35 floor removes weak matches, then NIM reranks to 6. Comparative questions skip the floor and diversify sources first.</div>
+            <div><span class="label rejected">Rejected</span>Flooring every query. A "Nimbus vs Corvex" question needs evidence from both reports, and the floor can discard one side before the reranker sees it.</div>
+            <div><span class="label">Trade-off</span>Comparisons can pass weaker candidates to the generator. The reranker's lift over embedding order has not been measured separately yet.</div>
+          </div>
+        </article>
+        <article class="decision">
+          <h3>Embed the question, never the conversation</h3>
+          <div class="dgrid">
+            <div><span class="label chose">Chose</span>Resolve "its" and near-miss names against entities in the reports, then embed one standalone question.</div>
+            <div><span class="label rejected">Rejected</span>Embedding raw history. In the live test, earlier turns leaked into answers: a Tesla question came back repeating the previous France question.</div>
+            <div><span class="label">Trade-off</span>Entity matching is deliberately strict, so a misspelling far from any report entity stays unresolved instead of guessing.</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 4. Evaluation -->
+    <section id="evaluation" class="reveal" aria-labelledby="h-eval">
+      <div class="sh"><span class="k">04</span><h2 id="h-eval">Evaluation and results</h2></div>
+      <div class="evalgrid">
+        <div>
+          <h3>Chunking benchmark, fixed vs semantic</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Metric</th><th class="num">Fixed</th><th class="num">Semantic</th></tr></thead>
+              <tbody>
+                <tr class="win"><td>Complete hit@3</td><td class="num">100.00%</td><td class="num">90.62%</td></tr>
+                <tr><td>Evidence recall@3</td><td class="num">100.00%</td><td class="num">93.75%</td></tr>
+                <tr><td>Complete hit@1</td><td class="num">62.50%</td><td class="num">59.38%</td></tr>
+                <tr><td>Mean reciprocal rank</td><td class="num">0.8385</td><td class="num">0.8065</td></tr>
+                <tr><td>Hit at production cutoff (6)</td><td class="num">100.00%</td><td class="num">96.88%</td></tr>
+                <tr><td>Retrieved context at 3</td><td class="num">714.9 words</td><td class="num">396.8 words</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="cap">Method: 32 labelled questions over three uploaded reports (6 parsed pages). A case passes only if the top chunks together contain every labelled fact. Same embedding model (MiniLM) for both; reranking and generation excluded to isolate chunking. Fixed side measured at 800/100 before the size sweep.</p>
+        </div>
+        <div>
+          <h3>Chunk-size sweep (selected rows)</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Size / overlap</th><th class="num">Hit@1</th><th class="num">Hit@3</th><th class="num">MRR</th><th class="num">Words@3</th></tr></thead>
+              <tbody>
+                <tr><td>800 / 100</td><td class="num">62.50%</td><td class="num">100.00%</td><td class="num">0.8385</td><td class="num">714.9</td></tr>
+                <tr><td>325 / 41</td><td class="num">65.62%</td><td class="num">100.00%</td><td class="num">0.8490</td><td class="num">660.3</td></tr>
+                <tr class="win"><td>305 / 38</td><td class="num">71.88%</td><td class="num">100.00%</td><td class="num">0.8854</td><td class="num">619.8</td></tr>
+                <tr><td>285 / 36</td><td class="num">65.62%</td><td class="num">100.00%</td><td class="num">0.8490</td><td class="num">533.1</td></tr>
+                <tr><td>280 / 35</td><td class="num">62.50%</td><td class="num">96.88%</td><td class="num">0.8307</td><td class="num">532.2</td></tr>
+                <tr><td>200 / 25</td><td class="num">59.38%</td><td class="num">90.62%</td><td class="num">0.8240</td><td class="num">438.2</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="cap">Selection rule: keep hit@3 and hit@6 at 100%, then take the best hit@1 and MRR. Full 22-row sweep in the repo.</p>
+        </div>
+        <div>
+          <h3>Live chat test, before and after fixes</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Case</th><th>First run</th><th>Retest</th></tr></thead>
+              <tbody>
+                <tr><td>Direct facts, prices, roles, comparisons (7)</td><td><span class="pill pass">7/7 pass</span></td><td><span class="pill pass">pass</span></td></tr>
+                <tr><td>Unrelated question ("capital of France")</td><td><span class="pill pass">refused</span></td><td>—</td></tr>
+                <tr><td>Missing metric (net margin not in report)</td><td><span class="pill pass">not covered</span></td><td><span class="pill pass">not covered</span></td></tr>
+                <tr><td>Tesla question after France question</td><td><span class="pill fail">leaked history</span></td><td><span class="pill pass">pass</span></td></tr>
+                <tr><td>Misspelled company ("Krishikub")</td><td><span class="pill fail">missed</span></td><td><span class="pill pass">resolved</span></td></tr>
+                <tr><td>Pronoun follow-up ("its weaknesses")</td><td><span class="pill fail">missed</span></td><td><span class="pill pass">resolved</span></td></tr>
+                <tr><td>Unknown company ("Farmlantic")</td><td>—</td><td><span class="pill pass">stayed rejected</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="cap">First run 9/12; focused retest 10/10. Median response 4.5 s; one 50 s provider outlier, and a broad-summary probe timed out at 120 s, recorded as a provider latency issue rather than a pass.</p>
+        </div>
+        <div class="prose">
+          <h3>Regression suite</h3>
+          <p>A committed six-case evaluation scores recall@3, hit@3, citation precision and recall, and a claim-token faithfulness check; all are 1.00 and gate CI. The faithfulness check is deterministic, not a model judge, and six fixture cases measure regressions, not general answer quality. 96 automated tests run in CI.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Failures -->
+    <section id="failures" class="reveal" aria-labelledby="h-fail">
+      <div class="sh"><span class="k">05</span><h2 id="h-fail">Failure modes and guardrails</h2></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>What goes wrong</th><th>What the system does</th></tr></thead>
+          <tbody>
+            <tr><td>Question isn't covered by the reports</td><td>Nothing clears the 0.35 floor, so it returns "Not covered in the uploaded documents." with zero sources. The LLM is not called without context.</td></tr>
+            <tr><td>A related but different fact exists (gross vs net margin)</td><td>Says the asked metric is not covered instead of substituting the nearby one.</td></tr>
+            <tr><td>Reranker endpoint unavailable</td><td>Keeps FAISS embedding order and continues.</td></tr>
+            <tr><td>Embedding API fails</td><td>Falls back to the local MiniLM model.</td></tr>
+            <tr><td>Earlier turns contaminate the answer</td><td>Only the standalone current question is embedded, and the prompt answers only the final question block.</td></tr>
+            <tr><td>Unknown or badly misspelled entity</td><td>Strict matching leaves it unresolved, so it is refused rather than mapped to the wrong company.</td></tr>
+            <tr><td>One user's documents answering another's question</td><td>Separate FAISS index per session; session IDs are validated against path traversal.</td></tr>
+            <tr><td>Browser tab closed during a long report</td><td>Report jobs belong to the server, persist progress and recover after restarts.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6. Next -->
+    <section id="next" class="reveal" aria-labelledby="h-next">
+      <div class="sh"><span class="k">06</span><h2 id="h-next">Limitations and what I'd do next</h2></div>
+      <ul class="next">
+        <li>The chunking benchmark used a 6-page corpus. Re-run it on a larger labelled set before treating 305/38 as general.</li>
+        <li>Measure the reranker's lift on its own, with the same questions run with and without it.</li>
+        <li>Add an independent model judge and adversarial questions (prompt injection inside documents, near-duplicate entities) to the evaluation.</li>
+        <li>Allocate retrieval by a context-word budget as well as by chunk count, so smaller chunks don't lose slots.</li>
+        <li>Host a public demo; the NVIDIA free tier's latency spikes need a timeout and a visible retry first.</li>
+      </ul>
+    </section>
+
+    <!-- 7. Links -->
+    <section id="links" class="reveal" aria-labelledby="h-links">
+      <div class="sh"><span class="k">07</span><h2 id="h-links">Links</h2></div>
+      <div class="links">
+        <a class="ulink" href="https://github.com/Sudharsan2816/Projects/tree/main/ai-market-research-copilot" target="_blank" rel="noopener">Code ↗</a>
+        <a class="ulink" href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHUNKING_BENCHMARK_2026-08-25.md" target="_blank" rel="noopener">Fixed vs semantic benchmark ↗</a>
+        <a class="ulink" href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/FIXED_CHUNK_SIZE_SWEEP_2026-08-26.md" target="_blank" rel="noopener">Chunk-size sweep ↗</a>
+        <a class="ulink" href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHATBOT_LIVE_TEST_RESULTS_2026-08-09.md" target="_blank" rel="noopener">Live chat test ↗</a>
+      </div>
+      <p class="cap">Demo video and hosted demo: not recorded yet.</p>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Sudharsan V S</span>
+    <a class="ulink" href="./">Back to portfolio</a>
+  </footer>
+</div>
+</body>
+</html>
