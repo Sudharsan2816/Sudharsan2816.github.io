@@ -173,6 +173,48 @@ th { font-size: 12.5px; font-weight: 600; }
 .reveal { animation: none !important; }
 .lede em { color: inherit; font-weight: 650; }
 .next li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--red); top: 21px; left: 6px; }
+
+/* let wide tables and diagrams scroll inside their boxes instead of widening the page on phones */
+section > *, .evalgrid > * { min-width: 0; }
+/* roadmap: evidence-backed build stages, native <details> so it works without JavaScript */
+.road-intro { margin: 0; max-width: 66ch; color: var(--muted); }
+.road { list-style: none; margin: 0; padding: 0 0 0 28px; position: relative; display: grid; gap: 10px; max-width: 860px; }
+.road::before { content: ""; position: absolute; left: 6px; top: 18px; bottom: 18px; width: 2px; background: var(--rule); }
+.stage { position: relative; }
+.stage::before { content: ""; position: absolute; left: -28px; top: 18px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); border: 2px solid var(--red); box-sizing: border-box; }
+.stage details { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; transition: border-color .2s; }
+.stage details[open] { border-color: var(--ink); }
+.stage summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 2px 16px; padding: 14px 18px; align-items: baseline; }
+.stage summary::-webkit-details-marker { display: none; }
+.stage summary:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 12px; }
+.stage time { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stage .st { font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 18px; line-height: 1.25; }
+.stage .so { grid-column: 2; font-size: 14.5px; color: var(--muted); }
+.stage .tg { grid-column: 3; grid-row: 1; font-size: 20px; line-height: 1; color: var(--muted); transition: transform .25s var(--ease), color .2s; }
+.stage details[open] .tg { transform: rotate(45deg); color: var(--red); }
+.stage summary:hover .st { color: var(--red); }
+.sgrid { margin: 0; padding: 2px 18px 14px; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 760px) { .sgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 22px; padding-left: 118px; } }
+.sgrid div { display: grid; gap: 4px; align-content: start; font-size: 14.5px; min-width: 0; }
+.sgrid dt { font-size: 13px; font-weight: 600; color: var(--muted); }
+.sgrid dt.problem { color: var(--red); }
+.sgrid dt.change, .sgrid dt.result { color: var(--good); }
+.sgrid dd { margin: 0; }
+.ev { margin: 0; padding: 0 18px 16px; font-size: 13.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+@media (min-width: 760px) { .ev { padding-left: 118px; } }
+.ev a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
+.ev a:hover { color: var(--red); border-color: var(--red); }
+.stage.now::before { background: var(--red); }
+.now-row { padding: 12px 18px; border: 1px dashed var(--rule); border-radius: 14px; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; }
+.now-row .st { font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 18px; }
+.now-row a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); font-size: 14.5px; }
+.now-row a:hover { color: var(--red); border-color: var(--red); }
+@media (max-width: 600px) {
+  .stage summary { grid-template-columns: minmax(0, 1fr) auto; }
+  .stage time, .stage .st, .stage .so { grid-column: 1; }
+  .stage .tg { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+}
+@media (prefers-reduced-motion: reduce) { .stage .tg, .stage details { transition: none; } }
 </style>
 </head>
 <body>
@@ -185,6 +227,7 @@ th { font-size: 12.5px; font-weight: 600; }
       <li><a href="#architecture">Architecture</a></li>
       <li><a href="#decisions">Decisions</a></li>
       <li><a href="#evaluation">Evaluation</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
       <li><a href="#failures">Failures</a></li>
     </ul>
   </div>
@@ -328,8 +371,30 @@ th { font-size: 12.5px; font-weight: 600; }
       </div>
     </section>
 
+    <section id="roadmap" class="reveal" aria-labelledby="h-road">
+      <div class="sh"><span class="k">05</span><h2 id="h-road">How it was built</h2></div>
+      <p class="road-intro">Built with AI coding agents (Codex and Claude Code). The stages below are what I decided, tested and fixed, each linked to the commit or report that shows it. Open a stage for the details.</p>
+      <ol class="road">
+        <li class="stage">
+          <details>
+            <summary><time datetime="2026-08-01">Aug 2026</time><span class="st">Built and evaluated in one pass</span><span class="so">Role-filtered retrieval; 7 of 7 allow/deny cases pass.</span><span class="tg" aria-hidden="true">+</span></summary>
+            <dl class="sgrid"><div><dt class="change">Change</dt><dd>JWT login across six roles, retrievers filtered by role, redaction of sensitive values and an audit log, shipped in one commit alongside other portfolio work.</dd></div><div><dt class="result">Result</dt><dd>An authorisation evaluation the same day: 7 of 7 allow and deny cases pass.</dd></div><div><dt class="still-open">Still open</dt><dd>Injection screening is pattern-based, and permissions are checked after vector search, not inside it.</dd></div></dl>
+            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/12c69ae8ce824fe486175082cfb60df72f368363" target="_blank" rel="noopener">12c69ae</a><a href="https://github.com/Sudharsan2816/Projects/blob/main/enterprise-rag/docs/RBAC_EVALUATION.md" target="_blank" rel="noopener">evaluation report</a></p>
+          </details>
+        </li>
+        <li class="stage">
+          <details>
+            <summary><time datetime="2026-10-15">Oct 2026</time><span class="st">Tests run in CI</span><span class="so">The 29 tests run from the repository root on every change to the project.</span><span class="tg" aria-hidden="true">+</span></summary>
+            <dl class="sgrid"><div><dt class="change">Change</dt><dd>CI runs the project's tests from the repository root.</dd></div></dl>
+            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/eca020b5fad80005dbd35370e1fa7a8beaee47c8" target="_blank" rel="noopener">eca020b</a></p>
+          </details>
+        </li>
+        <li class="stage now"><div class="now-row"><span class="st">Open now</span><a href="#next">Limitations and what I'd do next</a></div></li>
+      </ol>
+    </section>
+
     <section id="failures" class="reveal" aria-labelledby="h-fail">
-      <div class="sh"><span class="k">05</span><h2 id="h-fail">Failure modes and guardrails</h2></div>
+      <div class="sh"><span class="k">06</span><h2 id="h-fail">Failure modes and guardrails</h2></div>
       <div class="tw">
         <table>
           <thead><tr><th>What goes wrong</th><th>What the system does</th></tr></thead>
@@ -348,7 +413,7 @@ th { font-size: 12.5px; font-weight: 600; }
     </section>
 
     <section id="next" class="reveal" aria-labelledby="h-next">
-      <div class="sh"><span class="k">06</span><h2 id="h-next">Limitations and what I'd do next</h2></div>
+      <div class="sh"><span class="k">07</span><h2 id="h-next">Limitations and what I'd do next</h2></div>
       <ul class="next">
         <li>Filter by permission inside the vector search, so restricted neighbours can't crowd out authorised results.</li>
         <li>Replace keyword intent routing and pattern-based injection rules with a small classifier, and test both against paraphrased attacks.</li>
@@ -359,7 +424,7 @@ th { font-size: 12.5px; font-weight: 600; }
     </section>
 
     <section id="links" class="reveal" aria-labelledby="h-links">
-      <div class="sh"><span class="k">07</span><h2 id="h-links">Links</h2></div>
+      <div class="sh"><span class="k">08</span><h2 id="h-links">Links</h2></div>
       <div class="links">
         <a class="ulink" href="https://github.com/Sudharsan2816/Projects/tree/main/enterprise-rag" target="_blank" rel="noopener">Code ↗</a>
         <a class="ulink" href="https://github.com/Sudharsan2816/Projects/blob/main/enterprise-rag/app/security/rbac.py" target="_blank" rel="noopener">Permission matrix ↗</a>
