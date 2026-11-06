@@ -173,6 +173,48 @@ th { font-size: 12.5px; font-weight: 600; }
 .reveal { animation: none !important; }
 .lede em { color: inherit; font-weight: 650; }
 .next li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--red); top: 21px; left: 6px; }
+
+/* let wide tables and diagrams scroll inside their boxes instead of widening the page on phones */
+section > *, .evalgrid > * { min-width: 0; }
+/* roadmap: evidence-backed build stages, native <details> so it works without JavaScript */
+.road-intro { margin: 0; max-width: 66ch; color: var(--muted); }
+.road { list-style: none; margin: 0; padding: 0 0 0 28px; position: relative; display: grid; gap: 10px; max-width: 860px; }
+.road::before { content: ""; position: absolute; left: 6px; top: 18px; bottom: 18px; width: 2px; background: var(--rule); }
+.stage { position: relative; }
+.stage::before { content: ""; position: absolute; left: -28px; top: 18px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); border: 2px solid var(--red); box-sizing: border-box; }
+.stage details { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; transition: border-color .2s; }
+.stage details[open] { border-color: var(--ink); }
+.stage summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 2px 16px; padding: 14px 18px; align-items: baseline; }
+.stage summary::-webkit-details-marker { display: none; }
+.stage summary:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 12px; }
+.stage time { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stage .st { font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 18px; line-height: 1.25; }
+.stage .so { grid-column: 2; font-size: 14.5px; color: var(--muted); }
+.stage .tg { grid-column: 3; grid-row: 1; font-size: 20px; line-height: 1; color: var(--muted); transition: transform .25s var(--ease), color .2s; }
+.stage details[open] .tg { transform: rotate(45deg); color: var(--red); }
+.stage summary:hover .st { color: var(--red); }
+.sgrid { margin: 0; padding: 2px 18px 14px; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 760px) { .sgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 22px; padding-left: 118px; } }
+.sgrid div { display: grid; gap: 4px; align-content: start; font-size: 14.5px; min-width: 0; }
+.sgrid dt { font-size: 13px; font-weight: 600; color: var(--muted); }
+.sgrid dt.problem { color: var(--red); }
+.sgrid dt.change, .sgrid dt.result { color: var(--good); }
+.sgrid dd { margin: 0; }
+.ev { margin: 0; padding: 0 18px 16px; font-size: 13.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+@media (min-width: 760px) { .ev { padding-left: 118px; } }
+.ev a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
+.ev a:hover { color: var(--red); border-color: var(--red); }
+.stage.now::before { background: var(--red); }
+.now-row { padding: 12px 18px; border: 1px dashed var(--rule); border-radius: 14px; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; }
+.now-row .st { font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 18px; }
+.now-row a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); font-size: 14.5px; }
+.now-row a:hover { color: var(--red); border-color: var(--red); }
+@media (max-width: 600px) {
+  .stage summary { grid-template-columns: minmax(0, 1fr) auto; }
+  .stage time, .stage .st, .stage .so { grid-column: 1; }
+  .stage .tg { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+}
+@media (prefers-reduced-motion: reduce) { .stage .tg, .stage details { transition: none; } }
 </style>
 </head>
 <body>
@@ -185,6 +227,7 @@ th { font-size: 12.5px; font-weight: 600; }
       <li><a href="#architecture">Architecture</a></li>
       <li><a href="#decisions">Decisions</a></li>
       <li><a href="#evaluation">Evaluation</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
       <li><a href="#failures">Failures</a></li>
     </ul>
   </div>
@@ -321,8 +364,51 @@ th { font-size: 12.5px; font-weight: 600; }
       <p class="cap">16 tests, run on every push in GitHub Actions. All use stubs for GitHub, the LLM and MongoDB; none call a real model.</p>
     </section>
 
+    <section id="roadmap" class="reveal" aria-labelledby="h-road">
+      <div class="sh"><span class="k">05</span><h2 id="h-road">How it was built</h2></div>
+      <p class="road-intro">Built with AI coding agents (Codex and Claude Code). The stages below are what I decided, tested and fixed, each linked to the commit or report that shows it. Open a stage for the details.</p>
+      <ol class="road">
+        <li class="stage">
+          <details>
+            <summary><time datetime="2026-05-05">May 2026</time><span class="st">First version in one commit</span><span class="so">Webhooks in, LLM review, results in MongoDB.</span><span class="tg" aria-hidden="true">+</span></summary>
+            <dl class="sgrid"><div><dt class="change">Change</dt><dd>A FastAPI service that takes GitHub pull-request webhooks, has an LLM review the diff and stores the result in MongoDB, with a LangGraph graph defined. It landed as one commit: 25 files, 1,464 lines.</dd></div><div><dt class="still-open">Still open</dt><dd>No tests.</dd></div></dl>
+            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/1038232e3142c21ce56c30698de3da480e8e5383" target="_blank" rel="noopener">1038232</a></p>
+          </details>
+        </li>
+        <li class="stage">
+          <details>
+            <summary><time datetime="2026-06-09">Jun 2026</time><span class="st">First tests and CI</span><span class="so">Review output rendering tested on every push.</span><span class="tg" aria-hidden="true">+</span></summary>
+            <dl class="sgrid"><div><dt class="change">Change</dt><dd>Tests for how reviews are rendered as markdown, and CI on every push.</dd></div><div><dt class="still-open">Still open</dt><dd>Nothing checked whether a finding was true.</dd></div></dl>
+            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/8866b1bc884b89879739463f986edd7db2a02b66" target="_blank" rel="noopener">8866b1b</a></p>
+          </details>
+        </li>
+        <li class="stage">
+          <details>
+            <summary><time datetime="2026-08-03">Aug 2026</time><span class="st">Hardened for a public deploy</span><span class="so">Signed webhooks, token auth, container, deploy config.</span><span class="tg" aria-hidden="true">+</span></summary>
+            <dl class="sgrid"><div><dt class="change">Change</dt><dd>A security module for webhook signature checks and API-token auth, a Docker image and a Render deploy config.</dd></div></dl>
+            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/c3e844e123f306e8035ab362258d1aa2382357bb" target="_blank" rel="noopener">c3e844e</a></p>
+          </details>
+        </li>
+        <li class="stage">
+          <details>
+            <summary><time datetime="2026-08-06">Aug 2026</time><span class="st">Findings must quote the diff</span><span class="so">Ungrounded findings dropped; provider calls time-boxed.</span><span class="tg" aria-hidden="true">+</span></summary>
+            <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Findings weren't tied to the lines the pull request changed.</dd></div><div><dt class="change">Change</dt><dd>A finding that doesn't quote a changed line is dropped, documentation can't be cited as evidence about application code, and every provider call has a time limit.</dd></div><div><dt class="still-open">Still open</dt><dd>Multi-line evidence isn't grounded yet, so real issues spanning several changed lines can be dropped.</dd></div></dl>
+            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/b65970e37735c89b84cd51dd24b1792d82eac3be" target="_blank" rel="noopener">b65970e</a><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/93ad41e46031187a410b391edc7dd116a49fcc30" target="_blank" rel="noopener">93ad41e</a><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/767c9f263977d302f34296fd599c9d1a3175c7d3" target="_blank" rel="noopener">767c9f2</a></p>
+          </details>
+        </li>
+        <li class="stage">
+          <details>
+            <summary><time datetime="2026-10-15">Oct 2026</time><span class="st">Every review runs through the graph</span><span class="so">The LangGraph state machine is now the real execution path.</span><span class="tg" aria-hidden="true">+</span></summary>
+            <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>The LangGraph module couldn't even load (it imported a helper that no longer existed), so every review ran through a plain sequential method.</dd></div><div><dt class="change">Change</dt><dd>Reviews now execute the compiled graph. The approval gate is a branch after the review is saved, and grounding and timeouts carry over. Signed webhooks and token auth became required, with tests in CI.</dd></div><div><dt class="still-open">Still open</dt><dd>A redelivered webhook for the same commit can still trigger a second review.</dd></div></dl>
+            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/4" target="_blank" rel="noopener">PR #4</a><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/3" target="_blank" rel="noopener">PR #3</a></p>
+          </details>
+        </li>
+        <li class="stage now"><div class="now-row"><span class="st">Open now</span><a href="#next">Limitations and what I'd do next</a></div></li>
+      </ol>
+    </section>
+
     <section id="failures" class="reveal" aria-labelledby="h-fail">
-      <div class="sh"><span class="k">05</span><h2 id="h-fail">Failure modes and guardrails</h2></div>
+      <div class="sh"><span class="k">06</span><h2 id="h-fail">Failure modes and guardrails</h2></div>
       <div class="tw">
         <table>
           <thead><tr><th>What goes wrong</th><th>What the system does</th></tr></thead>
@@ -342,7 +428,7 @@ th { font-size: 12.5px; font-weight: 600; }
     </section>
 
     <section id="next" class="reveal" aria-labelledby="h-next">
-      <div class="sh"><span class="k">06</span><h2 id="h-next">Limitations and what I'd do next</h2></div>
+      <div class="sh"><span class="k">07</span><h2 id="h-next">Limitations and what I'd do next</h2></div>
       <ul class="next">
         <li>Build a labelled set of pull requests with seeded bugs and measure precision, recall and the share of model findings that grounding drops.</li>
         <li>Deduplicate deliveries by repository, PR and head commit, so a redelivered event can't produce a second review.</li>
@@ -353,7 +439,7 @@ th { font-size: 12.5px; font-weight: 600; }
     </section>
 
     <section id="links" class="reveal" aria-labelledby="h-links">
-      <div class="sh"><span class="k">07</span><h2 id="h-links">Links</h2></div>
+      <div class="sh"><span class="k">08</span><h2 id="h-links">Links</h2></div>
       <div class="links">
         <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/tree/main" target="_blank" rel="noopener">Code ↗</a>
         <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/blob/main/app/agents/review_agent.py" target="_blank" rel="noopener">LangGraph pipeline ↗</a>
