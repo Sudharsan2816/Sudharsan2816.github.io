@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Data Engineer building infrastructure for AI systems: orchestration, event-driven pipelines, idempotency and guardrails.">
 <meta property="og:title" content="Sudharsan V S · Infrastructure for AI systems">
-<meta property="og:description" content="Production orchestration at 3,000+ tasks a day, plus RAG and agent builds with committed evaluations.">
+<meta property="og:description" content="Orchestration, event-driven pipelines and guardrails for AI systems, plus RAG and agent builds with public code and committed evaluations.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -159,6 +159,7 @@ h2 {
 }
 .fte .big .unit { font-size: .28em; font-stretch: 110%; color: var(--on-ink); letter-spacing: .02em; margin-left: .15em; }
 .fte p { margin: 0; font-size: 15px; line-height: 1.45; }
+.fte .big.wide { font-size: clamp(72px, 7vw, 104px); }
 .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; }
 .metric { padding: 14px 16px 12px 0; min-width: 0; border-top: 1px solid var(--on-ink-muted); display: grid; gap: 4px; align-content: start; }
 .metric .num { font-family: var(--display); font-weight: 800; font-stretch: 84%; font-size: clamp(24px, 2.2vw, 32px); white-space: nowrap; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -300,7 +301,7 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
 
     <div style="display:grid; gap:14px">
       <h1>Data Engineer<span class="pipe">|</span>Building Infrastructure for AI Systems</h1>
-      <p class="value">I build the backend that makes LLM workflows dependable: orchestration, event-driven pipelines, idempotency and guardrails. In production that means <strong>3,000+ tasks a day</strong> and workflows that went from <strong>~30 minutes to ~5</strong>.</p>
+      <p class="value">I build the backend that makes LLM workflows dependable: orchestration, event-driven pipelines, idempotency and guardrails. Every build below ships with <strong>its tests and committed evaluations</strong>, in public.</p>
     </div>
 
     <p class="role-line">Data Engineer at Edvoy, Chennai</p>
@@ -342,18 +343,18 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
 
     <main>
       <section id="results" class="results" aria-labelledby="results-h">
-        <h2 id="results-h">Production results at Edvoy</h2>
-        <p class="src">Systems I built and run.</p>
+        <h2 id="results-h">Results you can check</h2>
+        <p class="src">From my personal builds: public code and committed evaluations.</p>
         <div class="res-grid">
           <div class="fte">
-            <div class="big"><span class="count" data-to="11">11</span><span class="unit">FTE</span></div>
-            <p>of manual work automated.</p>
+            <div class="big wide"><span class="count" data-to="140">140</span>+</div>
+            <p>automated tests running in CI across four builds.</p>
           </div>
           <div class="metrics">
-            <div class="metric"><div class="num"><span class="count" data-to="3000" data-fmt="comma">3,000</span>+</div><p>tasks a day through distributed RabbitMQ orchestration</p></div>
-            <div class="metric"><div class="num">30<em>→</em>5 min</div><p>workflow processing time after automation (approx.)</p></div>
-            <div class="metric"><div class="num">~<span class="count" data-to="80">80</span>%</div><p>less manual work across automated workflows</p></div>
-            <div class="metric"><div class="num"><span class="count" data-to="25">25</span>+</div><p>modular ETL pipelines normalising external data</p></div>
+            <div class="metric"><div class="num">100<em>%</em></div><p>complete-hit@3 for fixed-size chunks on 32 labelled questions, vs 90.6% for semantic</p></div>
+            <div class="metric"><div class="num">10<em>/</em>10</div><p>live retest cases passed after fixing the 3 failures a live test caught</p></div>
+            <div class="metric"><div class="num">7<em>/</em>7</div><p>role-based allow and deny cases pass in the permission-aware RAG</p></div>
+            <div class="metric"><div class="num"><span class="count" data-to="5">5</span></div><p>evaluation reports committed alongside the code</p></div>
           </div>
         </div>
       </section>
@@ -365,9 +366,9 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
             <div class="meta"><span class="kind prod">Production</span><span>Edvoy, 2026–now</span></div>
             <div class="body">
               <h3 class="title">AI workflow automation platform</h3>
-              <p class="outcome">Workflow processing cut from ~30 min to ~5 min, with ~80% less manual work.</p>
-              <p class="detail">I architected the orchestration system: n8n and Hermes connected to Slack, Jira and Gmail, RAG over email threads, LangGraph workflows that extract requirements, and decision rules with guardrails before any agent acts. RabbitMQ workers run 3,000+ tasks a day underneath.</p>
-              <ul class="tags" aria-label="Stack"><li>n8n</li><li>Hermes</li><li>LangGraph</li><li>RabbitMQ</li><li>RAG</li></ul>
+              <p class="outcome">Agents act only after decision rules and guardrails have cleared the step.</p>
+              <p class="detail">I designed its architecture and built the workflow and its pipeline. A Jira poller starts it on tickets that an existing mail automation creates, RAG pulls context from the email thread, and a decision directory decides when the system acts and when it alerts the responsible person on Slack. Colleagues built some components inside it.</p>
+              <ul class="tags" aria-label="Stack"><li>n8n</li><li>Hermes</li><li>LangGraph</li><li>RAG</li></ul>
               <p class="next">Internal system, described at architecture level only.</p>
             </div>
           </li>
@@ -443,9 +444,8 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
           <div>
             <h3>Data Engineer <span>(promoted)</span></h3>
             <ul>
-              <li>Architected the AI-assisted workflow automation system (n8n + Hermes) and built its pipeline and parts of the execution logic. It runs major production workflows.</li>
-              <li>Distributed task orchestration on RabbitMQ: async scheduling, parallel execution and resilient processing for <strong>3,000+ tasks a day</strong>.</li>
-              <li>Application automation engine across 70+ university configurations.</li>
+              <li>Designed the architecture of an AI-assisted workflow automation system (n8n + Hermes) and built its workflow and pipeline; in production since October 2026: Jira-triggered, RAG over email threads, Slack alerts, and a decision directory with guardrails. Colleagues built some of its components.</li>
+              <li>Designed the architecture of the initial RabbitMQ-based application automation and built its pipeline and university-specific configurations; later containerised it as three services so one failure can't stop the rest, as part of its move to AWS.</li>
             </ul>
           </div>
         </div>
@@ -454,7 +454,7 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
           <div>
             <h3>Junior Data Engineer</h3>
             <ul>
-              <li>Built <strong>25+ modular ETL pipelines</strong> that normalise heterogeneous external data into standard internal formats.</li>
+              <li>Built modular ETL pipelines that normalise heterogeneous external data into standard internal formats.</li>
               <li>Built a real-time OTP event service on GCP Pub/Sub with webhooks: acknowledgement, duplicate detection and timeout handling.</li>
             </ul>
           </div>
@@ -490,7 +490,7 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
               <tr data-tier="prod"><td>RabbitMQ, distributed task orchestration</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
               <tr data-tier="prod"><td>n8n, Hermes, LangGraph agent workflows</td><td><a href="#work-edvoy">Edvoy automation platform</a>, <a href="review.html">Code Review Agent</a></td><td><span class="tier prod">Production</span></td></tr>
               <tr data-tier="prod"><td>RAG over email threads</td><td><a href="#work-edvoy">Edvoy automation platform</a></td><td><span class="tier prod">Production</span></td></tr>
-              <tr data-tier="prod"><td>Slack, Jira and Gmail integrations</td><td><a href="#work-edvoy">Edvoy automation platform</a></td><td><span class="tier prod">Production</span></td></tr>
+              <tr data-tier="prod"><td>Slack and Jira integrations</td><td><a href="#work-edvoy">Edvoy automation platform</a></td><td><span class="tier prod">Production</span></td></tr>
               <tr data-tier="prod"><td>GCP Pub/Sub, webhooks, event-driven design</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
               <tr data-tier="prod"><td>ETL pipelines, data normalisation</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
               <tr data-tier="prod"><td>Idempotency, retries, failure recovery</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
