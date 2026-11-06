@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Prefer email, or it's private?
+    url: https://sudharsan2816.github.io/#feedback
+    about: Issues here are public. The feedback section on the site has an email link that needs no GitHub account.

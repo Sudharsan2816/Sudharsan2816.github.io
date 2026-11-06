@@ -1,0 +1,36 @@
+name: Bug report
+description: Something on the site or in one of the projects doesn't work the way the case study says.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time. This issue is public, so please leave out secrets and personal data.
+  - type: dropdown
+    id: project
+    attributes:
+      label: Project
+      options:
+        - Market Research Copilot
+        - AI Code Review Agent
+        - Permission-Aware RAG
+        - This portfolio site
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did and what you saw. Paste an error or a screenshot if you have one.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: A page, file, commit or line number, if you know it.
