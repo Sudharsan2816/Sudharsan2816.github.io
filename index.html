@@ -219,6 +219,22 @@ h2 {
 .job li strong { color: var(--ink); font-weight: 600; }
 .edu { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--rule); display: grid; gap: 4px; font-size: 14.5px; color: var(--muted); }
 .edu b { color: var(--ink); font-weight: 600; }
+.edu a { text-decoration: none; border-bottom: 1px solid var(--rule); color: var(--ink); }
+.edu a:hover { color: var(--red); border-color: var(--red); }
+.edu .nw { white-space: nowrap; }
+
+/* recommendations: verbatim excerpts, each attributed */
+.recs { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.rec { padding: 22px 22px 20px; border-radius: 16px; background: var(--raised); border: 1px solid var(--rule); display: grid; gap: 14px; }
+.rec blockquote { margin: 0; position: relative; padding-left: 30px; }
+.rec blockquote::before {
+  content: "\201C"; position: absolute; left: 0; top: -6px;
+  font-family: var(--display); font-weight: 800; font-size: 44px; line-height: 1; color: var(--red);
+}
+.rec blockquote p { margin: 0; font-size: 16.5px; line-height: 1.5; font-weight: 500; text-wrap: pretty; }
+.rec .by { margin: 0; padding-left: 30px; display: grid; gap: 1px; font-size: 13.5px; color: var(--muted); }
+.rec .by b { color: var(--ink); font-weight: 600; font-size: 14.5px; }
+.rec-link { margin-top: 16px; }
 
 /* proof table */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: -8px 0 16px; }
@@ -293,6 +309,7 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
       <ol>
         <li><a href="#results">Results</a></li>
         <li><a href="#work">Work</a></li>
+        <li><a href="#recs">Recommendations</a></li>
         <li><a href="#experience">Experience</a></li>
         <li><a href="#proof">Skills and proof</a></li>
         <li><a href="#notes">Notes</a></li>
@@ -315,6 +332,7 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
       <ol>
         <li><a href="#results">Results</a></li>
         <li><a href="#work">Work</a></li>
+        <li><a href="#recs">Recommendations</a></li>
         <li><a href="#experience">Experience</a></li>
         <li><a href="#proof">Proof</a></li>
         <li><a href="#notes">Notes</a></li>
@@ -393,6 +411,30 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
         <p class="counts"><b>4</b> builds, <b>141</b> automated tests in CI and <b>5</b> committed evaluation reports.</p>
       </section>
 
+      <section id="recs" aria-labelledby="recs-h">
+        <h2 id="recs-h">What colleagues say</h2>
+        <p class="lead">Excerpts quoted word for word from recommendations on my LinkedIn profile.</p>
+        <ul class="recs">
+          <li class="rec">
+            <blockquote><p>What makes him exceptional is his pragmatic caution: he builds systems where the model suggests, but logic and human review make the final call.</p></blockquote>
+            <p class="by"><b>Gibin Mathew</b><span>Data &amp; Automation Manager, Edvoy</span><span>Managed me directly · Oct 2026</span></p>
+          </li>
+          <li class="rec">
+            <blockquote><p>Whenever he presented his work, he explained it clearly and handled tough questions with composure. He's quick to learn, curious about how things really work, and careful about where AI should and shouldn't be trusted.</p></blockquote>
+            <p class="by"><b>Raj Gaurav</b><span>Head of Product</span><span>Senior to me, didn't manage me directly · Oct 2026</span></p>
+          </li>
+          <li class="rec">
+            <blockquote><p>Sudharsan always asks "what if this fails?" before he ships anything. Retries, duplicate handling, handing control back to a person when needed: he builds all of that in from the start. As a result, his systems rarely surprise us in production.</p></blockquote>
+            <p class="by"><b>Maneesh Kumar G</b><span>Data Engineer</span><span>Same team · Oct 2026</span></p>
+          </li>
+          <li class="rec">
+            <blockquote><p>Every university portal behaves differently, and when one of them broke, he was usually the one who worked out why.</p></blockquote>
+            <p class="by"><b>Mohammed Khaleelullah</b><span>Data Engineer</span><span>Same team · Oct 2026</span></p>
+          </li>
+        </ul>
+        <div class="row-links rec-link"><a href="https://www.linkedin.com/in/sudharsan-v-s-a851a3242/details/recommendations/" target="_blank" rel="noopener">Read the full recommendations on LinkedIn</a></div>
+      </section>
+
       <section id="experience" aria-labelledby="exp-h">
         <h2 id="exp-h">Experience at Edvoy, Chennai</h2>
         <div class="jobs">
@@ -433,7 +475,8 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
         </div>
         <div class="edu">
           <span><b>B.E. Electronics &amp; Communication</b>, Panimalar Engineering College, 2020–2024, CGPA 8.8/10</span>
-          <span><b>IBM Machine Learning with Python</b>, IBM / Coursera</span>
+          <span><b>Machine Learning with Python</b>, IBM on Coursera, May 2026<span class="nw"> · <a href="https://coursera.org/verify/OQZK1DY827GJ" target="_blank" rel="noopener">Verify</a></span></span>
+          <span><b>Introduction to Deep Learning &amp; Neural Networks with Keras</b>, IBM on Coursera, Jun 2026<span class="nw"> · <a href="https://coursera.org/verify/ASRRZDEMB9FU" target="_blank" rel="noopener">Verify</a></span></span>
         </div>
       </section>
 
