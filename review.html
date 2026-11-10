@@ -449,7 +449,7 @@ section > *, .evalgrid > * { min-width: 0; }
     <section id="failures" class="reveal" aria-labelledby="h-fail">
       <div class="sh"><span class="k">06</span><h2 id="h-fail">Failure modes and guardrails</h2></div>
       <div class="tw">
-        <table>
+        <table class="stack">
           <thead><tr><th>What goes wrong</th><th>What the system does</th></tr></thead>
           <tbody>
             <tr><td>Model invents an issue in unchanged code or another file</td><td>No changed line matches its evidence, so the finding is dropped and logged.</td></tr>

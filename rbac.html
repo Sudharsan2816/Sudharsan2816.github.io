@@ -380,7 +380,7 @@ section > *, .evalgrid > * { min-width: 0; }
         <div>
           <h3>Authorisation evaluation</h3>
           <div class="tw">
-            <table>
+            <table class="wide">
               <thead><tr><th>Case</th><th>Role</th><th>Intent</th><th>Decision</th><th>Result</th></tr></thead>
               <tbody>
                 <tr><td>Operational logs</td><td>Engineer</td><td>json</td><td>allowed</td><td><span class="pill pass">pass</span></td></tr>
@@ -428,7 +428,7 @@ section > *, .evalgrid > * { min-width: 0; }
     <section id="failures" class="reveal" aria-labelledby="h-fail">
       <div class="sh"><span class="k">06</span><h2 id="h-fail">Failure modes and guardrails</h2></div>
       <div class="tw">
-        <table>
+        <table class="stack">
           <thead><tr><th>What goes wrong</th><th>What the system does</th></tr></thead>
           <tbody>
             <tr><td>Engineer asks for salaries</td><td>Every required permission is off-limits, so it returns "Access denied" naming the source, retrieves nothing, and audits the denial.</td></tr>
