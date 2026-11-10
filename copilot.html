@@ -227,6 +227,7 @@ section > *, .evalgrid > * { min-width: 0; }
 @media (prefers-reduced-motion: reduce) { .stage .tg, .stage details { transition: none; } }
 </style>
 <link rel="stylesheet" href="try.css">
+<link rel="stylesheet" href="cmdk.css">
 </head>
 <body>
 
@@ -242,6 +243,7 @@ section > *, .evalgrid > * { min-width: 0; }
       <li><a href="#roadmap">Roadmap</a></li>
       <li><a href="#failures">Failures</a></li>
     </ul>
+    <button class="cmdk-btn" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span>Search</span><kbd>Ctrl K</kbd></button>
   </div>
 </nav>
 
@@ -546,5 +548,6 @@ section > *, .evalgrid > * { min-width: 0; }
   </footer>
 </div>
 <script src="try.js" defer></script>
+<script src="cmdk.js" defer></script>
 </body>
 </html>

@@ -319,6 +319,37 @@ html.js main > section:focus-within { opacity: 1; filter: none; }
   #proof td:nth-child(2) { line-height: 2; }
 }
 
+/* search button (command palette in cmdk.js) */
+.search-row { margin-top: -4px; }
+/* skills: map view (map.js) beside the table, wide screens only */
+.chips-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+.view-toggle { display: inline-flex; gap: 0; margin: -8px 0 16px; border: 1px solid var(--rule); border-radius: 999px; padding: 2px; float: right; }
+.vt { font: inherit; font-size: 13.5px; font-weight: 500; color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 3px 12px; cursor: pointer; }
+.vt[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.vt:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.emap { position: relative; clear: both; display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, 220px); column-gap: clamp(56px, 8vw, 110px); padding: 8px 0 4px; }
+.emap[hidden] { display: none; }
+.emap-lines { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+.emap-edge { fill: none; stroke: var(--rule); stroke-width: 1.25; transition: stroke .2s, stroke-width .2s, opacity .2s; }
+.emap.focusing .emap-edge { opacity: .25; }
+.emap.focusing .emap-edge.on { stroke: var(--red); stroke-width: 2; opacity: 1; }
+.emap-skills, .emap-srcs { list-style: none; margin: 0; padding: 0; position: relative; }
+.emap-skills { display: grid; gap: 4px; }
+.emap-srcs { display: grid; align-content: space-around; gap: 12px; }
+.emap-group { font-size: 13px; font-weight: 600; color: var(--muted); padding: 10px 0 2px; }
+.emap-group:first-child { padding-top: 0; }
+.emap-skill { width: 100%; font: inherit; font-size: 14.5px; line-height: 1.35; text-align: left; color: var(--ink); background: var(--raised); border: 1px solid var(--rule); border-radius: 10px; padding: 6px 10px; cursor: pointer; transition: border-color .2s, opacity .2s, background-color .2s; }
+.emap-src { display: grid; gap: 2px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--ink); background: var(--raised); text-decoration: none; transition: opacity .2s, background-color .2s, color .2s; }
+.emap-src .n { font-weight: 600; font-size: 15px; }
+.emap-src .k { font-size: 12.5px; color: var(--muted); }
+.emap.focusing .emap-skill:not(.on), .emap.focusing .emap-src:not(.on) { opacity: .35; }
+.emap-skill.on, .emap-skill[aria-pressed="true"] { border-color: var(--red); }
+.emap-src.on { background: var(--ink); color: var(--paper); }
+.emap-src.on .k { color: inherit; opacity: .75; }
+.emap-skill:focus-visible, .emap-src:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.emap-note { margin: 10px 0 0; font-size: 13.5px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .emap-edge, .emap-skill, .emap-src { transition: none; } }
+
 /* Phones: the skills table becomes stacked rows (skill, then where it's proven, tier on the right). */
 @media (max-width: 640px) {
   #proof table { min-width: 0; }
@@ -348,6 +379,7 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
 @media (prefers-reduced-motion: reduce) { .item, .toc a, .toc a::before { transition: none; } }
 
 </style>
+<link rel="stylesheet" href="cmdk.css">
 </head>
 <body>
 
@@ -388,6 +420,7 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
         <button class="copy" type="button" data-copy="email-hero" id="copy-hero">Copy</button>
       </span>
     </div>
+    <div class="search-row"><button class="cmdk-btn" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span>Search</span><kbd>Ctrl K</kbd></button></div>
   </header>
 
   <div>
@@ -556,6 +589,9 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
       <section id="proof" aria-labelledby="proof-h">
         <h2 id="proof-h">Skills, and where they're proven</h2>
         <div class="chips" role="group" aria-label="Filter skills"><button class="chip" type="button" data-f="all" aria-pressed="true">All</button><button class="chip" type="button" data-f="prod" aria-pressed="false">Production</button><button class="chip" type="button" data-f="build" aria-pressed="false">Personal builds</button></div>
+        <div class="view-toggle" role="group" aria-label="Show as" hidden><button class="vt" type="button" data-v="map" aria-pressed="true">Map</button><button class="vt" type="button" data-v="table" aria-pressed="false">Table</button></div>
+        <div class="emap" id="emap" hidden></div>
+        <p class="emap-note" id="emap-note" hidden>Point at a skill to see where it's proven, or click it to keep it lit. Each box on the right opens its evidence.</p>
         <div class="table-wrap">
           <table class="stack">
             <thead><tr><th scope="col">Skill</th><th scope="col">Proven in</th><th scope="col">Where</th></tr></thead>
@@ -566,7 +602,7 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
               <tr data-tier="prod"><td>Slack and Jira integrations</td><td><a href="#work-edvoy">Edvoy automation platform</a></td><td><span class="tier prod">Production</span></td></tr>
               <tr data-tier="prod"><td>GCP Pub/Sub, webhooks, event-driven design</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
               <tr data-tier="prod"><td>ETL pipelines, data normalisation</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
-              <tr data-tier="prod"><td>Idempotency, retries, failure recovery</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
+              <tr data-tier="prod"><td>Idempotency, retries, failure recovery</td><td><a href="#experience">Edvoy</a>, <a href="review.html">Code Review Agent</a></td><td><span class="tier prod">Production</span></td></tr>
               <tr data-tier="prod"><td>Python, async FastAPI</td><td><a href="#experience">Edvoy</a> and every build</td><td><span class="tier prod">Production</span></td></tr>
               <tr data-tier="prod"><td>MongoDB, AWS EC2/S3, Docker</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
               <tr data-tier="build"><td>Two-stage retrieval: FAISS + NIM reranking</td><td><a href="copilot.html">Market Research Copilot</a></td><td><span class="tier">Personal build</span></td></tr>
@@ -686,5 +722,7 @@ document.querySelectorAll('.chip').forEach(function (c) {
   update();
 })();
 </script>
+<script src="cmdk.js" defer></script>
+<script src="map.js" defer></script>
 </body>
 </html>
