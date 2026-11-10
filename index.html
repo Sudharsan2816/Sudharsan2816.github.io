@@ -1,4 +1,10 @@
 <title>Sudharsan V S</title>
+<meta property="og:url" content="https://sudharsan2816.github.io/">
+<meta property="og:image" content="https://sudharsan2816.github.io/og/home.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sudharsan V S: Data Engineer, building infrastructure for AI systems">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Data Engineer building infrastructure for AI systems: orchestration, event-driven pipelines, idempotency and guardrails.">
 <meta property="og:title" content="Sudharsan V S · Infrastructure for AI systems">
@@ -272,6 +278,29 @@ html.js main > section:not(.focus) { opacity: .28; }
 @media (hover: hover) { html.js main > section:not(.focus):hover { opacity: .8; filter: none; } }
 html.js main > section:focus-within { opacity: 1; filter: none; }
 
+/* try it: links to each project's replay */
+.tries { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.tries li { border-bottom: 1px solid var(--rule); }
+.tries a { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px 24px; padding: 16px 0; text-decoration: none; }
+@media (min-width: 640px) { .tries a { grid-template-columns: 190px minmax(0, 1fr) auto auto; align-items: baseline; } }
+.tries .p { font-weight: 600; font-size: 15px; }
+.tries .t { color: var(--muted); font-size: 15px; line-height: 1.45; transition: color .2s; }
+.tries .how { justify-self: start; font-size: 12.5px; padding: 1px 9px; border-radius: 999px; border: 1px solid var(--rule); color: var(--muted); white-space: nowrap; }
+.tries .how.live { border-color: var(--red); color: var(--red); }
+.tries .arr { display: none; color: var(--red); transition: transform .25s var(--ease); }
+@media (min-width: 640px) { .tries .arr { display: inline; } }
+.tries a:hover .t, .tries a:focus-visible .t { color: var(--ink); }
+.tries a:hover .p, .tries a:focus-visible .p { color: var(--red); }
+.tries a:hover .arr, .tries a:focus-visible .arr { transform: translateX(5px); }
+
+/* feedback */
+.fb { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 760px) { .fb { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.fbc { padding: 20px; border-radius: 16px; background: var(--raised); border: 1px solid var(--rule); display: grid; gap: 8px; align-content: start; min-width: 0; }
+.fbc h3 { margin: 0; font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 19px; line-height: 1.2; }
+.fbc p { margin: 0; color: var(--muted); font-size: 15px; }
+.fbc .row-links { margin-top: 4px; }
+
 /* contact */
 .contact h2 {
   font-family: var(--display); font-weight: 800; font-stretch: 120%;
@@ -310,11 +339,12 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
       <ol>
         <li><a href="#results">Results</a></li>
         <li><a href="#work">Work</a></li>
+        <li><a href="#try">Try it</a></li>
         <li><a href="#recs">Recommendations</a></li>
         <li><a href="#experience">Experience</a></li>
         <li><a href="#proof">Skills and proof</a></li>
         <li><a href="#notes">Notes</a></li>
-        
+        <li><a href="#feedback">Feedback</a></li>
       </ol>
     </nav>
 
@@ -333,11 +363,12 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
       <ol>
         <li><a href="#results">Results</a></li>
         <li><a href="#work">Work</a></li>
+        <li><a href="#try">Try it</a></li>
         <li><a href="#recs">Recommendations</a></li>
         <li><a href="#experience">Experience</a></li>
         <li><a href="#proof">Proof</a></li>
         <li><a href="#notes">Notes</a></li>
-        
+        <li><a href="#feedback">Feedback</a></li>
       </ol>
     </nav>
 
@@ -348,7 +379,7 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
         <div class="res-grid">
           <div class="fte">
             <div class="big wide"><span class="count" data-to="140">140</span>+</div>
-            <p>automated tests running in CI across four builds.</p>
+            <p>automated tests running in CI across my three personal builds.</p>
           </div>
           <div class="metrics">
             <div class="metric"><div class="num">100<em>%</em></div><p>complete-hit@3 for fixed-size chunks on 32 labelled questions, vs 90.6% for semantic</p></div>
@@ -409,7 +440,17 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
             </div>
           </li>
         </ol>
-        <p class="counts"><b>4</b> builds, <b>141</b> automated tests in CI and <b>5</b> committed evaluation reports.</p>
+        <p class="counts"><b>3</b> personal builds, <b>141</b> automated tests in CI and <b>5</b> committed evaluation reports.</p>
+      </section>
+
+      <section id="try" aria-labelledby="try-h">
+        <h2 id="try-h">Test the work yourself</h2>
+        <p class="lead">Nothing to install and no sign-up. Each one either replays a real, logged run or runs the project&rsquo;s own code, and says which.</p>
+        <ul class="tries">
+          <li><a href="copilot.html#try"><span class="p">Market Research Copilot</span><span class="t">Replay the live test: the answers it gave word for word, how long each took, and the three it failed before the fix</span><span class="how">Recorded run</span><span class="arr" aria-hidden="true">&rarr;</span></a></li>
+          <li><a href="review.html#try"><span class="p">AI Code Review Agent</span><span class="t">Put four model replies through the grounding step, see which claims survive, then flip the approval gate</span><span class="how">Recorded run</span><span class="arr" aria-hidden="true">&rarr;</span></a></li>
+          <li><a href="rbac.html#try"><span class="p">Permission-Aware RAG</span><span class="t">Pick a role, ask anything, and run the project&rsquo;s permission and injection checks in your browser</span><span class="how live">Runs live</span><span class="arr" aria-hidden="true">&rarr;</span></a></li>
+        </ul>
       </section>
 
       <section id="recs" aria-labelledby="recs-h">
@@ -520,6 +561,16 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
         </ul>
       </section>
 
+
+      <section id="feedback" aria-labelledby="fb-h">
+        <h2 id="fb-h">Found a bug, or see a better way?</h2>
+        <p class="lead">Tell me. Bug reports, suggestions and ideas for scaling any of these builds are all welcome. GitHub issues are public, so use email for anything private; email needs no account.</p>
+        <ul class="fb">
+          <li class="fbc"><h3>Report a bug</h3><p>Something that doesn&rsquo;t work the way a case study says, on this site or in the code.</p><div class="row-links"><a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=bug_report.yml" target="_blank" rel="noopener">Open a bug report</a><a href="mailto:vssudhan2003@gmail.com?subject=Bug%20report%20from%20your%20portfolio&amp;body=Project%3A%0AWhat%20happened%3A%0AWhat%20you%20expected%3A%0A">Email instead</a></div></li>
+          <li class="fbc"><h3>Suggest an improvement</h3><p>A better design choice, a clearer explanation, or a test I should add.</p><div class="row-links"><a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=suggestion.yml" target="_blank" rel="noopener">Make a suggestion</a><a href="mailto:vssudhan2003@gmail.com?subject=Suggestion%20from%20your%20portfolio&amp;body=Project%3A%0AWhat%20I%20would%20change%3A%0AWhy%3A%0A">Email instead</a></div></li>
+          <li class="fbc"><h3>Propose a scaling idea</h3><p>What breaks first at 10&times; or 100&times; the load or data, and what you&rsquo;d change.</p><div class="row-links"><a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=scaling_idea.yml" target="_blank" rel="noopener">Share a scaling idea</a><a href="mailto:vssudhan2003@gmail.com?subject=Scaling%20idea%20from%20your%20portfolio&amp;body=Project%3A%0AWhat%20breaks%20first%3A%0AWhat%20I%20would%20change%3A%0A">Email instead</a></div></li>
+        </ul>
+      </section>
 
       <footer>
         <span>© 2026 Sudharsan V S, Chennai</span>

@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>AI Code Review Agent</title>
+<meta name="description" content="An LLM pull-request reviewer where every finding must quote a changed line or it is dropped, and the verdict is computed in code. Run the grounding step yourself.">
+<meta property="og:title" content="AI Code Review Agent · Sudharsan V S">
+<meta property="og:description" content="An LLM pull-request reviewer where every finding must quote a changed line or it is dropped, and the verdict is computed in code. Run the grounding step yourself.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sudharsan2816.github.io/review.html">
+<meta property="og:image" content="https://sudharsan2816.github.io/og/review.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AI Code Review Agent case study">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -216,6 +226,7 @@ section > *, .evalgrid > * { min-width: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .stage .tg, .stage details { transition: none; } }
 </style>
+<link rel="stylesheet" href="try.css">
 </head>
 <body>
 
@@ -225,6 +236,7 @@ section > *, .evalgrid > * { min-width: 0; }
     <ul class="toc">
       <li><a href="#problem">Problem</a></li>
       <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#try">Try it</a></li>
       <li><a href="#decisions">Decisions</a></li>
       <li><a href="#evaluation">Evaluation</a></li>
       <li><a href="#roadmap">Roadmap</a></li>
@@ -302,6 +314,25 @@ section > *, .evalgrid > * { min-width: 0; }
         <li><b>persist_review</b><span>Saves every review to MongoDB before the posting decision, so a held review is never lost.</span></li>
         <li><b>Approval branch</b><span>Posts when auto-posting is allowed; otherwise ends and waits for <code>/review/approve</code>.</span></li>
       </ul>
+    </section>
+
+    <section id="try" class="reveal" aria-labelledby="h-try">
+      <div class="sh"><h2 id="h-try">Try it: put model replies through the grounding step</h2></div>
+      <p class="try-intro">The model’s reply is the one part of a review the code doesn’t control, so it is checked before anything is posted. Pick a case, read the change and what the model claimed, then <b>run the grounding step</b> to see which claims survive. These are the four model replies the CI tests use, run through the repo’s own grounding code (commit bc9bcb4) on 6 November 2026 and saved. No model is called from this page.</p>
+      <div class="rp" data-replay="review" data-src="review-run" hidden>
+        <div class="rp-top"><div class="rp-tabs" role="group" aria-label="Test cases"></div></div>
+        <div class="rp-main"></div>
+        <div class="rp-main gate">
+          <h3>Then the approval gate</h3>
+          <button class="rp-sw" type="button" role="switch" aria-checked="false"><span class="tr" aria-hidden="true"></span>Hold every review for a person (REQUIRE_HUMAN_APPROVAL)</button>
+          <ol class="trail" aria-label="Graph steps from the run log"></ol>
+          <p class="gate-res" style="margin:0"></p>
+          <p class="cap" style="margin:0">The two recorded runs of the full LangGraph pipeline use the CI test’s stand-in model and GitHub client; the steps are the graph’s own log line from each run.</p>
+        </div>
+      </div>
+      <p class="rp-fallback cap">Turn on JavaScript to run the replay. The same cases are described under Evaluation.</p>
+      <p class="rp-src"><a href="https://github.com/Sudharsan2816/Code_review_agent/blob/bc9bcb4/tests/test_grounding.py" target="_blank" rel="noopener">The test fixtures ↗</a><a href="https://github.com/Sudharsan2816/Code_review_agent/blob/bc9bcb4/app/services/review_grounding.py" target="_blank" rel="noopener">The grounding code ↗</a></p>
+      <script type="application/json" id="review-run">{"why":{"wrong-file":"app/api/routes/login.py is not in this pull request, so the finding has no changed line to quote and is dropped (test_grounding_drops_findings_for_files_outside_the_pr_diff).","docs-as-evidence":"A README line cannot be evidence for a claim about application code, so the security finding and the fix that quotes the same line are both dropped (test_readme_cannot_be_used_as_evidence_for_application_code_claims).","real-issue":"The quoted line matches a changed line in app/auth.py, so the finding stays with its line number taken from the diff, and a high-severity finding blocks the merge (test_high_severity_finding_requires_changes_only_when_evidence_matches).","low-doc":"The badge line is in the diff, so the note stays; at low severity it is a comment, not a reason to block (test_low_severity_documentation_finding_is_grounded_but_does_not_block)."},"commit":"bc9bcb4","run_on":"2026-11-06","source":"Code_review_agent tests/test_grounding.py and tests/test_review_graph.py fixtures, run through app/services/review_grounding.py and ReviewService.run_review","scenarios":[{"id":"wrong-file","title":"A finding about a file the PR never touched","diff":{"file":"README.md","patch":"@@ -1,2 +1,3 @@\n # Example\n+![Python](https://img.shields.io/badge/python-3.12-blue)\n-Old setup text\n+New setup text\n"},"model_output":{"bugs":[],"security":[{"file":"app/api/routes/login.py","line":10,"evidence":"options={}","description":"JWT expiry is not validated","severity":"critical"}],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":8,"security":8,"performance":8},"final_verdict":"APPROVE","summary":"No evidence-grounded issues were found in the changed lines.","dropped_items":1}},{"id":"docs-as-evidence","title":"A README line used as evidence for an application bug","diff":{"file":"README.md","patch":"@@ -1,2 +1,3 @@\n # Example\n+![Python](https://img.shields.io/badge/python-3.12-blue)\n-Old setup text\n+New setup text\n"},"model_output":{"bugs":[],"security":[{"file":"README.md","line":999,"evidence":"New setup text","description":"The login endpoint accepts expired JWT tokens.","severity":"critical"}],"performance":[],"code_quality":[],"suggested_fixes":[{"file":"README.md","issue":"JWT expiry validation","original":"New setup text","improved":"Change the application token decoder.","explanation":"Prevents unauthorized application access."}],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":8,"security":8,"performance":8},"final_verdict":"APPROVE","summary":"No evidence-grounded issues were found in the changed lines.","dropped_items":2}},{"id":"real-issue","title":"A real high-severity issue with the wrong line number","diff":{"file":"app/auth.py","patch":"@@ -1,2 +1,3 @@\n def authenticate(token):\n+    return decode(token, options={})\n"},"model_output":{"bugs":[],"security":[{"file":"app/auth.py","line":999,"evidence":"return decode(token, options={})","description":"Token expiry validation is disabled.","severity":"high"}],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[{"file":"app/auth.py","line":2,"evidence":"return decode(token, options={})","description":"Token expiry validation is disabled.","severity":"high"}],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":8,"security":5,"performance":8},"final_verdict":"REQUEST_CHANGES","summary":"Found 1 evidence-grounded issue(s), including 1 high/critical issue(s) that should be resolved before merge.","dropped_items":0}},{"id":"low-doc","title":"A small documentation note","diff":{"file":"README.md","patch":"@@ -1,2 +1,3 @@\n # Example\n+![Python](https://img.shields.io/badge/python-3.12-blue)\n-Old setup text\n+New setup text\n"},"model_output":{"bugs":[],"security":[],"performance":[],"code_quality":[{"file":"README.md","line":null,"evidence":"![Python](https://img.shields.io/badge/python-3.12-blue)","description":"The badge should state the supported Python range.","severity":"low"}],"suggested_fixes":[],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[],"performance":[],"code_quality":[{"file":"README.md","line":2,"evidence":"![Python](https://img.shields.io/badge/python-3.12-blue)","description":"The badge should state the supported Python range.","severity":"low"}],"suggested_fixes":[],"scores":{"quality":6,"security":8,"performance":8},"final_verdict":"COMMENT","summary":"Found 1 evidence-grounded low/medium issue(s); none are severe enough to block the merge.","dropped_items":0}}],"approval_gate":[{"require_human_approval":false,"posted_to_github":true,"github_posts":1,"saved":1,"approvals":["auto"],"log":"Review graph steps: fetched diff for PR #7 → llm review generated → llm response parsed → review grounded against the diff → review persisted id=review-1 → review comment posted to GitHub","steps":["fetched diff for PR #7","llm review generated","llm response parsed","review grounded against the diff","review persisted id=review-1","review comment posted to GitHub"]},{"require_human_approval":true,"posted_to_github":false,"github_posts":0,"saved":1,"approvals":[],"log":"Review graph steps: fetched diff for PR #7 → llm review generated → llm response parsed → review grounded against the diff → review persisted id=review-1","steps":["fetched diff for PR #7","llm review generated","llm response parsed","review grounded against the diff","review persisted id=review-1"]}]}</script>
     </section>
 
     <section id="decisions" class="reveal" aria-labelledby="h-dec">
@@ -445,8 +476,11 @@ section > *, .evalgrid > * { min-width: 0; }
         <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/blob/main/app/agents/review_agent.py" target="_blank" rel="noopener">LangGraph pipeline ↗</a>
         <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/blob/main/app/services/review_grounding.py" target="_blank" rel="noopener">Grounding logic ↗</a>
         <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/pull/4" target="_blank" rel="noopener">PR #4: wiring the graph ↗</a>
+      
+        <a class="ulink" href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=bug_report.yml&title=%5BBug%5D%20AI%20Code%20Review%20Agent%3A%20" target="_blank" rel="noopener">Report a bug ↗</a>
+        <a class="ulink" href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=suggestion.yml&title=%5BSuggestion%5D%20AI%20Code%20Review%20Agent%3A%20" target="_blank" rel="noopener">Suggest an improvement ↗</a>
+        <a class="ulink" href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=scaling_idea.yml&title=%5BScaling%5D%20AI%20Code%20Review%20Agent%3A%20" target="_blank" rel="noopener">Propose a scaling idea ↗</a>
       </div>
-      <p class="cap">Demo video and hosted demo: not recorded yet.</p>
     </section>
   </main>
 
@@ -455,5 +489,6 @@ section > *, .evalgrid > * { min-width: 0; }
     <a class="ulink" href="./">Back to portfolio</a>
   </footer>
 </div>
+<script src="try.js" defer></script>
 </body>
 </html>

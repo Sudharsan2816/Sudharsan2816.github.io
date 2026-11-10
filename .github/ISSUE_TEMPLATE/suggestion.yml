@@ -1,0 +1,32 @@
+name: Suggestion
+description: A better design choice, a clearer explanation, or a test worth adding.
+title: "[Suggestion] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: Ideas and disagreements are both welcome. This issue is public.
+  - type: dropdown
+    id: project
+    attributes:
+      label: Project
+      options:
+        - Market Research Copilot
+        - AI Code Review Agent
+        - Permission-Aware RAG
+        - This portfolio site
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you'd change
+      description: The change, and the problem it fixes.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it's better
+      description: Trade-offs welcome, including what it would cost.
