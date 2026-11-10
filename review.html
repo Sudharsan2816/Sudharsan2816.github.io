@@ -259,7 +259,7 @@ section > *, .evalgrid > * { min-width: 0; }
     <div class="fact" role="listitem"><div class="n">6<small> nodes</small></div><p>LangGraph state machine; approval is a branch, not a flag</p></div>
     <div class="fact" role="listitem"><div class="n">0</div><p>findings kept without an exact changed line as evidence</p></div>
     <div class="fact" role="listitem"><div class="n">401</div><p>for any webhook without a valid HMAC-SHA256 signature</p></div>
-    <div class="fact" role="listitem"><div class="n">16</div><p>tests in CI, covering grounding, the graph and security</p></div>
+    <div class="fact" role="listitem"><div class="n">22</div><p>tests in CI, covering grounding, the graph, security and duplicate deliveries</p></div>
   </div>
 
   <main>
@@ -389,10 +389,11 @@ section > *, .evalgrid > * { min-width: 0; }
             <tr><td>Graph posts, holds for approval, or skips posting on request</td><td class="num">3</td><td><span class="pill pass">pass</span></td></tr>
             <tr><td>Missing signature rejected; missing secret rejects all; valid signature accepted; API token enforced</td><td class="num">4</td><td><span class="pill pass">pass</span></td></tr>
             <tr><td>Provider timeout enforced; NVIDIA client wiring; markdown rendering</td><td class="num">3</td><td><span class="pill pass">pass</span></td></tr>
+            <tr><td>A commit delivered twice or reopened gets one review; a new push is reviewed; a failed review can be retried; reviews still run if the claim store is down; claims are unique and expire</td><td class="num">6</td><td><span class="pill pass">pass</span></td></tr>
           </tbody>
         </table>
       </div>
-      <p class="cap">16 tests, run on every push in GitHub Actions. All use stubs for GitHub, the LLM and MongoDB; none call a real model.</p>
+      <p class="cap">22 tests, run on every push in GitHub Actions. All use stubs for GitHub, the LLM and MongoDB; none call a real model.</p>
     </section>
 
     <section id="roadmap" class="reveal" aria-labelledby="h-road">
@@ -434,6 +435,13 @@ section > *, .evalgrid > * { min-width: 0; }
             <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/4" target="_blank" rel="noopener">PR #4</a><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/3" target="_blank" rel="noopener">PR #3</a></p>
           </details>
         </li>
+        <li class="stage">
+          <details>
+            <summary><time datetime="2026-11-10">Nov 2026</time><span class="st">One review per commit</span><span class="so">Redelivered and repeated webhooks no longer start a second review.</span><span class="tg" aria-hidden="true">+</span></summary>
+            <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>GitHub redelivers webhooks, and opened or reopened events can arrive for a commit that was already reviewed. Each one started a full review and could post a second comment.</dd></div><div><dt class="change">Change</dt><dd>The webhook claims repository, PR and head commit as a MongoDB <code>_id</code> before starting, so the database decides races and later deliveries return &ldquo;duplicate&rdquo;. A failed review releases its claim so a redelivery can retry; if the claim store is down, the review runs anyway.</dd></div><div><dt class="still-open">Still open</dt><dd>Reviews run as in-process background tasks, so a server restart mid-review still loses the work.</dd></div></dl>
+            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/5" target="_blank" rel="noopener">PR #5</a></p>
+          </details>
+        </li>
         <li class="stage now"><div class="now-row"><span class="st">Open now</span><a href="#next">Limitations and what I'd do next</a></div></li>
       </ol>
     </section>
@@ -451,7 +459,7 @@ section > *, .evalgrid > * { min-width: 0; }
             <tr><td>Forged or unsigned webhook</td><td>401 before the payload is parsed. With no secret configured, every webhook is rejected.</td></tr>
             <tr><td>Very large diff</td><td>Cut at 80,000 characters with a marker; findings can only cite lines that were actually sent.</td></tr>
             <tr><td>Posting to GitHub fails</td><td>The review is already saved in MongoDB, so it can be approved and posted again.</td></tr>
-            <tr><td>GitHub delivers the same event twice</td><td><strong>Not handled.</strong> Both deliveries run a full review. Known gap.</td></tr>
+            <tr><td>GitHub delivers the same event twice</td><td>The first delivery claims the repository, PR and head commit; later ones are acknowledged as duplicates. A failed review releases its claim so a redelivery can retry.</td></tr>
             <tr><td>Server restarts mid-review</td><td><strong>Not handled.</strong> In-flight background work is lost. Known gap.</td></tr>
           </tbody>
         </table>
@@ -462,7 +470,6 @@ section > *, .evalgrid > * { min-width: 0; }
       <div class="sh"><span class="k">07</span><h2 id="h-next">Limitations and what I'd do next</h2></div>
       <ul class="next">
         <li>Build a labelled set of pull requests with seeded bugs and measure precision, recall and the share of model findings that grounding drops.</li>
-        <li>Deduplicate deliveries by repository, PR and head commit, so a redelivered event can't produce a second review.</li>
         <li>Move reviews from in-process background tasks to a durable queue with retries, the way I run task orchestration in production.</li>
         <li>Ground multi-line evidence, so real issues that span several changed lines aren't dropped.</li>
         <li>Add rate limiting on the API routes, and deploy a demo against a sandbox repository.</li>

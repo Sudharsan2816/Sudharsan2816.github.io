@@ -421,9 +421,9 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
             <div class="body">
               <h3 class="title"><a href="review.html">AI Code Review Agent</a></h3>
               <p class="outcome">Every review runs as a LangGraph state machine whose approval gate is a real branch: post to the PR, or hold for a human.</p>
-              <p class="detail">Webhooks without a valid HMAC-SHA256 signature are rejected. Findings that don't quote a changed line are dropped, and the verdict is computed in code. 16 tests in CI.</p>
+              <p class="detail">Webhooks without a valid HMAC-SHA256 signature are rejected. Findings that don't quote a changed line are dropped, and the verdict is computed in code. Each commit is reviewed once, however often GitHub delivers it. 22 tests in CI.</p>
               <ul class="tags" aria-label="Stack"><li>LangGraph</li><li>FastAPI</li><li>GitHub API</li><li>Claude API</li><li>MongoDB</li></ul>
-              <p class="next"><b>Next:</b> repeated webhook deliveries for the same commit are not deduplicated yet.</p>
+              <p class="next"><b>Next:</b> reviews run as in-process background tasks, so a server restart mid-review loses the work.</p>
               <div class="row-links"><a href="review.html">Read the case study</a><a href="https://github.com/Sudharsan2816/Code_review_agent/tree/main" target="_blank" rel="noopener">Code</a></div>
             </div>
           </li>
@@ -440,7 +440,7 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
             </div>
           </li>
         </ol>
-        <p class="counts"><b>3</b> personal builds, <b>141</b> automated tests in CI and <b>5</b> committed evaluation reports.</p>
+        <p class="counts"><b>3</b> personal builds, <b>147</b> automated tests in CI and <b>5</b> committed evaluation reports.</p>
       </section>
 
       <section id="try" aria-labelledby="try-h">
