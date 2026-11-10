@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Sudharsan V S</title>
 <meta property="og:url" content="https://sudharsan2816.github.io/">
 <meta property="og:image" content="https://sudharsan2816.github.io/og/home.png">
@@ -301,6 +306,31 @@ html.js main > section:focus-within { opacity: 1; filter: none; }
 .fbc p { margin: 0; color: var(--muted); font-size: 15px; }
 .fbc .row-links { margin-top: 4px; }
 
+/* Phones and tablets: finger-sized targets (44px) without moving the layout. The invisible ::after
+   strip extends each small link's hit area; rows that wrap get extra gap so strips don't overlap. */
+@media (pointer: coarse) {
+  .mbar ol { padding-block: 0; }
+  .mbar a { display: inline-block; padding-block: 13px; }
+  .contact-row a, .copy { display: inline-flex; align-items: center; min-height: 44px; }
+  .row-links { row-gap: 20px; }
+  .row-links a, .edu a, td a { position: relative; }
+  .row-links a::after, .edu a::after, td a::after { content: ""; position: absolute; left: -4px; right: -4px; top: 50%; height: 44px; transform: translateY(-50%); }
+  .chip { min-height: 40px; }
+  #proof td:nth-child(2) { line-height: 2; }
+}
+
+/* Phones: the skills table becomes stacked rows (skill, then where it's proven, tier on the right). */
+@media (max-width: 640px) {
+  #proof table { min-width: 0; }
+  #proof thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+  #proof table, #proof tbody { display: block; }
+  #proof tr:not([hidden]) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  #proof td { display: block; border: 0; padding: 0; }
+  #proof td:nth-child(1) { font-weight: 600; }
+  #proof td:nth-child(2) { grid-column: 1; color: var(--muted); font-size: 14px; }
+  #proof td:nth-child(3) { grid-column: 2; grid-row: 1 / span 2; align-self: start; }
+}
+
 /* contact */
 .contact h2 {
   font-family: var(--display); font-weight: 800; font-stretch: 120%;
@@ -318,6 +348,8 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
 @media (prefers-reduced-motion: reduce) { .item, .toc a, .toc a::before { transition: none; } }
 
 </style>
+</head>
+<body>
 
 <a class="skip" href="#work">Skip to work</a>
 
@@ -525,7 +557,7 @@ footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; ga
         <h2 id="proof-h">Skills, and where they're proven</h2>
         <div class="chips" role="group" aria-label="Filter skills"><button class="chip" type="button" data-f="all" aria-pressed="true">All</button><button class="chip" type="button" data-f="prod" aria-pressed="false">Production</button><button class="chip" type="button" data-f="build" aria-pressed="false">Personal builds</button></div>
         <div class="table-wrap">
-          <table>
+          <table class="stack">
             <thead><tr><th scope="col">Skill</th><th scope="col">Proven in</th><th scope="col">Where</th></tr></thead>
             <tbody>
               <tr data-tier="prod"><td>RabbitMQ, distributed task orchestration</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
@@ -654,3 +686,5 @@ document.querySelectorAll('.chip').forEach(function (c) {
   update();
 })();
 </script>
+</body>
+</html>
