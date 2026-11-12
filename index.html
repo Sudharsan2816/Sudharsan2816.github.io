@@ -3,726 +3,264 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Sudharsan V S</title>
+<title>Sudharsan V S · Infrastructure for AI systems</title>
+<meta name="description" content="Data Engineer building the infrastructure AI systems run on: orchestration, event-driven pipelines, idempotency and guardrails. RAG and agent builds with public code, 147 tests in CI and committed evaluations.">
+<meta property="og:title" content="Sudharsan V S · Infrastructure for AI systems">
+<meta property="og:description" content="Orchestration, event-driven pipelines and guardrails for AI systems, plus RAG and agent builds with public code and committed evaluations.">
+<meta property="og:type" content="website">
 <meta property="og:url" content="https://sudharsan2816.github.io/">
 <meta property="og:image" content="https://sudharsan2816.github.io/og/home.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Sudharsan V S: Data Engineer, building infrastructure for AI systems">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Data Engineer building infrastructure for AI systems: orchestration, event-driven pipelines, idempotency and guardrails.">
-<meta property="og:title" content="Sudharsan V S · Infrastructure for AI systems">
-<meta property="og:description" content="Orchestration, event-driven pipelines and guardrails for AI systems, plus RAG and agent builds with public code and committed evaluations.">
-<meta property="og:type" content="website">
+<meta name="theme-color" content="#F2EDE4">
+<link rel="canonical" href="https://sudharsan2816.github.io/">
+<link rel="alternate" type="text/plain" href="llms.txt" title="Profile for AI agents">
+<link rel="alternate" type="application/json" href="profile.json" title="Structured profile">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,300..900&family=Instrument+Sans:wght@400;500;600&display=swap">
-<style>
-/* Layout: two columns on wide screens. The left column (vermilion bar, name, headline, contact, section nav)
-   stays pinned while the evidence scrolls on the right. One column on phones, with a slim section bar. */
-:root {
-  --paper: #e8e6e2;      /* warm grey sheet from the reference */
-  --raised: #f1f0ec;
-  --ink: #171717;
-  --muted: #5d5953;
-  --rule: #cdc8c0;
-  --red: #dd4128;        /* vermilion block */
-  --on-ink: #f1f0ec;
-  --on-ink-muted: #a8a49c;
-  --on-red: #171717;
-  --display: "Anybody", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
-  --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
-  --ease: cubic-bezier(.2, .75, .2, 1);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #181716; --raised: #211f1d; --ink: #ecebe6; --muted: #a39f97; --rule: #3a3734;
-    --red: #ef5638; --on-ink: #181716; --on-ink-muted: #5f5b55; --on-red: #171717;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #181716; --raised: #211f1d; --ink: #ecebe6; --muted: #a39f97; --rule: #3a3734;
-  --red: #ef5638; --on-ink: #181716; --on-ink-muted: #5f5b55; --on-red: #171717;
-  color-scheme: dark;
-}
-@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-body {
-  background: var(--paper); color: var(--ink);
-  font-family: var(--body); font-size: 16px; line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-::selection { background: var(--red); color: var(--on-red); }
-a { color: inherit; }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 3px; }
-
-.skip { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); top: -60px; z-index: 40; background: var(--ink); color: var(--paper); padding: 8px 14px; border-radius: 6px; text-decoration: none; font-size: 14px; }
-.skip:focus { top: calc(8px + env(safe-area-inset-top, 0px)); }
-
-/* ---------- shell ---------- */
-.shell {
-  max-width: 1200px; margin: 0 auto;
-  padding-left: max(20px, env(safe-area-inset-left, 0px));
-  padding-right: max(20px, env(safe-area-inset-right, 0px));
-  display: grid; grid-template-columns: minmax(0, 1fr);
-}
-@media (min-width: 1024px) {
-  .shell { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; }
-}
-
-/* ---------- left column ---------- */
-.intro { padding-block: 40px 24px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-content: start; min-width: 0; }
-@media (min-width: 1024px) {
-  .intro {
-    position: sticky; top: env(safe-area-inset-top, 0px);
-    height: 100vh; height: 100dvh; padding-block: 64px 40px; overflow-y: auto; scrollbar-width: none;
-  }
-}
-.nameplate { position: relative; isolation: isolate; padding: 18px 0 12px; }
-.nameplate .bar {
-  position: absolute; z-index: -1; top: 0; bottom: 0; left: 46%;
-  width: clamp(44px, 16%, 84px); background: var(--red); transform-origin: 50% 100%;
-}
-.name {
-  margin: 0; font-family: var(--display); font-weight: 800; font-stretch: 72%;
-  font-size: clamp(44px, 13vw, 84px); line-height: .84; letter-spacing: -.02em;
-  text-transform: uppercase; white-space: nowrap;
-}
-.name small { display: block; font-size: .36em; font-weight: 700; font-stretch: 100%; letter-spacing: .02em; margin-top: 10px; }
-h1 {
-  margin: 0; font-family: var(--display); font-weight: 600; font-stretch: 96%;
-  font-size: clamp(24px, 2.6vw, 32px); line-height: 1.15; letter-spacing: -.005em; text-wrap: balance; max-width: 20ch;
-}
-h1 .pipe { color: var(--muted); font-weight: 300; padding-inline: .1em; }
-.value { margin: 0; color: var(--muted); max-width: 46ch; font-size: 17px; }
-.value strong { color: var(--ink); font-weight: 600; }
-
-.toc { display: none; }
-@media (min-width: 1024px) {
-  .name { font-size: clamp(52px, 4.6vw, 76px); }
-  .intro { gap: 20px; }
-  h1 { font-size: clamp(24px, 2.2vw, 30px); }
-  .toc { display: block; margin-block: 18px 6px; }
-  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
-  .toc a {
-    display: inline-flex; align-items: center; gap: 14px; padding: 4px 0;
-    text-decoration: none; color: var(--muted); font-size: 15px; font-weight: 500;
-    transition: color .2s;
-  }
-  .toc a::before { content: ""; width: 28px; height: 1px; background: currentColor; transition: width .3s var(--ease), background-color .2s; }
-  .toc a:hover, .toc a[aria-current="true"] { color: var(--ink); }
-  .toc a:hover::before, .toc a[aria-current="true"]::before { width: 64px; }
-  .toc a[aria-current="true"]::before { background: var(--red); height: 2px; }
-}
-
-.contact-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; font-size: 15px; }
-.contact-row a { text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 1px; transition: border-color .2s, color .2s; }
-.contact-row a:hover { color: var(--red); border-color: var(--red); }
-.email { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
-.email .addr { user-select: all; overflow-wrap: anywhere; }
-.copy {
-  font: inherit; font-size: 13px; color: var(--ink); background: transparent;
-  border: 1px solid var(--rule); border-radius: 999px; padding: 2px 11px; cursor: pointer;
-  transition: background .2s, color .2s, border-color .2s;
-}
-.copy:hover { border-color: var(--ink); }
-.copy.done { background: var(--red); border-color: var(--red); color: var(--on-red); }
-.role-line { margin: 0; font-size: 14px; color: var(--muted); }
-@media (min-width: 1024px) and (max-height: 960px) { .role-line { display: none; } }
-@media (min-width: 1024px) and (max-height: 780px) { .intro { gap: 14px; padding-block: 40px 28px; } .toc a { padding: 2px 0; } .toc { margin-block: 6px 0; } }
-
-/* mobile section bar */
-.mbar {
-  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
-  background: var(--paper); border-bottom: 1px solid var(--rule);
-  margin-inline: calc(-1 * max(20px, env(safe-area-inset-left, 0px)));
-  padding-inline: max(20px, env(safe-area-inset-left, 0px));
-  overflow-x: auto; scrollbar-width: none;
-}
-.mbar::-webkit-scrollbar { display: none; }
-.mbar ol { list-style: none; margin: 0; padding: 12px 0; display: flex; gap: 20px; white-space: nowrap; }
-.mbar a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted); }
-.mbar a[aria-current="true"] { color: var(--ink); box-shadow: 0 2px 0 var(--red); }
-@media (min-width: 1024px) { .mbar { display: none; } }
-
-/* ---------- right column ---------- */
-main { padding-block: 32px 40px; display: grid; gap: 96px; min-width: 0; }
-@media (min-width: 1024px) { main { padding-block: 72px 56px; } }
-main > section { scroll-margin-top: 64px; min-width: 0; }
-h2 {
-  margin: 0 0 22px; font-family: var(--display); font-weight: 700; font-stretch: 108%;
-  font-size: 22px; line-height: 1.2; letter-spacing: -.005em;
-}
-.lead { margin: -10px 0 24px; color: var(--muted); max-width: 60ch; }
-
-/* results */
-.results { background: var(--ink); color: var(--on-ink); border-radius: 16px; padding: 26px clamp(20px, 3vw, 32px) 28px; display: grid; gap: 22px; }
-.results h2 { margin: 0; color: var(--on-ink); }
-.results .src { margin: -16px 0 0; font-size: 14px; color: var(--on-ink-muted); }
-.res-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
-@media (min-width: 640px) { .res-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 32px; } }
-.fte { display: grid; gap: 10px; align-content: start; }
-.fte .big {
-  font-family: var(--display); font-weight: 800; font-stretch: 76%;
-  font-size: clamp(88px, 9vw, 132px); line-height: .8; letter-spacing: -.03em; color: var(--red);
-  font-variant-numeric: tabular-nums;
-}
-.fte .big .unit { font-size: .28em; font-stretch: 110%; color: var(--on-ink); letter-spacing: .02em; margin-left: .15em; }
-.fte p { margin: 0; font-size: 15px; line-height: 1.45; }
-.fte .big.wide { font-size: clamp(72px, 7vw, 104px); }
-.metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; }
-.metric { padding: 14px 16px 12px 0; min-width: 0; border-top: 1px solid var(--on-ink-muted); display: grid; gap: 4px; align-content: start; }
-.metric .num { font-family: var(--display); font-weight: 800; font-stretch: 84%; font-size: clamp(24px, 2.2vw, 32px); white-space: nowrap; line-height: 1; font-variant-numeric: tabular-nums; }
-.metric .num em { font-style: normal; color: var(--red); font-weight: 400; }
-.metric p { margin: 0; font-size: 13.5px; line-height: 1.4; color: var(--on-ink-muted); }
-
-/* work list */
-.work { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
-.item {
-  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px 28px;
-  padding: 22px; border-radius: 16px; background: var(--raised); border: 1px solid var(--rule);
-  transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .2s;
-}
-@media (min-width: 640px) { .item { grid-template-columns: 132px minmax(0, 1fr); } }
-@media (hover: hover) {
-  .item:hover { transform: translateY(-4px); box-shadow: 0 18px 36px -24px rgba(0,0,0,.45); border-color: var(--ink); }
-  .item:hover .title { color: var(--red); }
-}
-.meta { font-size: 13px; color: var(--muted); padding-top: 3px; display: grid; gap: 2px; align-content: start; }
-.meta .kind { font-weight: 600; color: var(--ink); }
-.meta .kind.prod { color: var(--red); }
-.body { display: grid; gap: 10px; min-width: 0; }
-.title { margin: 0; font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 21px; line-height: 1.2; transition: color .2s; }
-.title a { text-decoration: none; }
-.title a::after { content: ""; position: absolute; inset: 0; border-radius: 16px; } /* whole row opens the case study */
-.outcome { margin: 0; font-weight: 600; font-size: 16.5px; line-height: 1.45; }
-.detail { margin: 0; color: var(--muted); font-size: 15px; }
-.tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-.tags li { font-size: 12.5px; padding: 2px 10px; border-radius: 999px; background: var(--raised); border: 1px solid var(--rule); }
-.item:hover .tags li { background: var(--paper); }
-.next { margin: 0; font-size: 14px; color: var(--muted); }
-.next b { color: var(--ink); font-weight: 600; }
-.row-links { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; position: relative; z-index: 1; }
-.row-links a { text-decoration: none; border-bottom: 1px solid var(--rule); }
-.row-links a:hover { color: var(--red); border-color: var(--red); }
-.counts { margin: 22px 0 0; font-size: 14px; color: var(--muted); }
-.counts b { color: var(--ink); }
-
-/* experience */
-.job { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px 28px; }
-@media (min-width: 640px) { .job { grid-template-columns: 132px minmax(0, 1fr); } }
-.job + .job { margin-top: 26px; }
-.jobs { position: relative; padding-left: 28px; }
-.jobs::before { content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 2px; background: var(--red); transform-origin: top; }
-.job { position: relative; }
-.job::before { content: ""; position: absolute; left: -28px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 2px solid var(--red); box-sizing: border-box; }
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .jobs::before { animation: draw-line linear both; animation-timeline: view(); animation-range: entry 10% cover 60%; }
-  }
-}
-@keyframes draw-line { from { transform: scaleY(.04); } to { transform: scaleY(1); } }
-.when { font-size: 13px; color: var(--muted); padding-top: 3px; font-variant-numeric: tabular-nums; }
-.job h3 { margin: 0 0 8px; font-size: 17px; font-weight: 600; }
-.job h3 span { font-weight: 400; color: var(--muted); }
-.job ul { margin: 0; padding-left: 18px; display: grid; gap: 7px; color: var(--muted); font-size: 15px; }
-.job li::marker { color: var(--red); }
-.job li strong { color: var(--ink); font-weight: 600; }
-.edu { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--rule); display: grid; gap: 4px; font-size: 14.5px; color: var(--muted); }
-.edu b { color: var(--ink); font-weight: 600; }
-.edu a { text-decoration: none; border-bottom: 1px solid var(--rule); color: var(--ink); }
-.edu a:hover { color: var(--red); border-color: var(--red); }
-.edu .nw { white-space: nowrap; }
-
-/* recommendations: verbatim excerpts, each attributed */
-.recs { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
-.rec { padding: 22px 22px 20px; border-radius: 16px; background: var(--raised); border: 1px solid var(--rule); display: grid; gap: 14px; }
-.rec blockquote { margin: 0; position: relative; padding-left: 30px; }
-.rec blockquote::before {
-  content: "\201C"; position: absolute; left: 0; top: -6px;
-  font-family: var(--display); font-weight: 800; font-size: 44px; line-height: 1; color: var(--red);
-}
-.rec blockquote p { margin: 0; font-size: 16.5px; line-height: 1.5; font-weight: 500; text-wrap: pretty; }
-.rec .by { margin: 0; padding-left: 30px; display: grid; gap: 1px; font-size: 13.5px; color: var(--muted); }
-.rec .by b { color: var(--ink); font-weight: 600; font-size: 14.5px; }
-.rec-link { margin-top: 16px; }
-
-/* proof table */
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: -8px 0 16px; }
-.chip { font: inherit; font-size: 13.5px; font-weight: 500; color: var(--ink); background: transparent; border: 1px solid var(--rule); border-radius: 999px; padding: 4px 13px; cursor: pointer; transition: border-color .2s, background-color .2s, color .2s; }
-.chip:hover { border-color: var(--ink); }
-.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-tr[hidden] { display: none; }
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 520px; }
-th { text-align: left; font-weight: 600; font-size: 13px; color: var(--muted); padding: 0 12px 10px 0; border-bottom: 1px solid var(--ink); }
-td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
-td a { text-decoration: none; border-bottom: 1px solid var(--rule); }
-td a:hover { color: var(--red); border-color: var(--red); }
-.tier { font-size: 12.5px; padding: 1px 9px; border-radius: 999px; border: 1px solid var(--rule); white-space: nowrap; color: var(--muted); }
-.tier.prod { border-color: var(--red); color: var(--red); }
-.table-note { margin: 12px 0 0; font-size: 13.5px; color: var(--muted); }
-
-/* notes */
-.notes { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
-.notes li { border-bottom: 1px solid var(--rule); }
-.notes a { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px 24px; padding: 14px 0; text-decoration: none; }
-@media (min-width: 640px) { .notes a { grid-template-columns: 132px minmax(0, 1fr) auto; align-items: baseline; } }
-.notes time { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.notes .t { font-weight: 600; font-size: 16px; line-height: 1.35; transition: color .2s; }
-.notes .arr { display: none; color: var(--red); transition: transform .25s var(--ease); }
-@media (min-width: 640px) { .notes .arr { display: inline; } }
-.notes a:hover .t, .notes a:focus-visible .t { color: var(--red); }
-.notes a:hover .arr, .notes a:focus-visible .arr { transform: translateX(5px); }
-/* focus on the current section: the section in the middle of the screen is sharp, the rest dim back */
-html.js main > section { transition: opacity .45s var(--ease), filter .45s var(--ease), translate .8s var(--ease); }
-@media (prefers-reduced-motion: no-preference) { html.js main > section:not(.in) { translate: -48px 0; } }
-html.js main > section:not(.focus) { opacity: .28; }
-@media (prefers-reduced-motion: no-preference) { html.js main > section:not(.focus) { filter: blur(1.5px); } }
-@media (hover: hover) { html.js main > section:not(.focus):hover { opacity: .8; filter: none; } }
-html.js main > section:focus-within { opacity: 1; filter: none; }
-
-/* try it: links to each project's replay */
-.tries { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
-.tries li { border-bottom: 1px solid var(--rule); }
-.tries a { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px 24px; padding: 16px 0; text-decoration: none; }
-@media (min-width: 640px) { .tries a { grid-template-columns: 190px minmax(0, 1fr) auto auto; align-items: baseline; } }
-.tries .p { font-weight: 600; font-size: 15px; }
-.tries .t { color: var(--muted); font-size: 15px; line-height: 1.45; transition: color .2s; }
-.tries .how { justify-self: start; font-size: 12.5px; padding: 1px 9px; border-radius: 999px; border: 1px solid var(--rule); color: var(--muted); white-space: nowrap; }
-.tries .how.live { border-color: var(--red); color: var(--red); }
-.tries .arr { display: none; color: var(--red); transition: transform .25s var(--ease); }
-@media (min-width: 640px) { .tries .arr { display: inline; } }
-.tries a:hover .t, .tries a:focus-visible .t { color: var(--ink); }
-.tries a:hover .p, .tries a:focus-visible .p { color: var(--red); }
-.tries a:hover .arr, .tries a:focus-visible .arr { transform: translateX(5px); }
-
-/* feedback */
-.fb { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 760px) { .fb { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.fbc { padding: 20px; border-radius: 16px; background: var(--raised); border: 1px solid var(--rule); display: grid; gap: 8px; align-content: start; min-width: 0; }
-.fbc h3 { margin: 0; font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 19px; line-height: 1.2; }
-.fbc p { margin: 0; color: var(--muted); font-size: 15px; }
-.fbc .row-links { margin-top: 4px; }
-
-/* Phones and tablets: finger-sized targets (44px) without moving the layout. The invisible ::after
-   strip extends each small link's hit area; rows that wrap get extra gap so strips don't overlap. */
-@media (pointer: coarse) {
-  .mbar ol { padding-block: 0; }
-  .mbar a { display: inline-block; padding-block: 13px; }
-  .contact-row a, .copy { display: inline-flex; align-items: center; min-height: 44px; }
-  .row-links { row-gap: 20px; }
-  .row-links a, .edu a, td a { position: relative; }
-  .row-links a::after, .edu a::after, td a::after { content: ""; position: absolute; left: -4px; right: -4px; top: 50%; height: 44px; transform: translateY(-50%); }
-  .chip { min-height: 40px; }
-  #proof td:nth-child(2) { line-height: 2; }
-}
-
-/* search button (command palette in cmdk.js) */
-.search-row { margin-top: -4px; }
-/* skills: map view (map.js) beside the table, wide screens only */
-.chips-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
-.view-toggle { display: inline-flex; gap: 0; margin: -8px 0 16px; border: 1px solid var(--rule); border-radius: 999px; padding: 2px; float: right; }
-.vt { font: inherit; font-size: 13.5px; font-weight: 500; color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 3px 12px; cursor: pointer; }
-.vt[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
-.vt:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
-.emap { position: relative; clear: both; display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, 220px); column-gap: clamp(56px, 8vw, 110px); padding: 8px 0 4px; }
-.emap[hidden] { display: none; }
-.emap-lines { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
-.emap-edge { fill: none; stroke: var(--rule); stroke-width: 1.25; transition: stroke .2s, stroke-width .2s, opacity .2s; }
-.emap.focusing .emap-edge { opacity: .25; }
-.emap.focusing .emap-edge.on { stroke: var(--red); stroke-width: 2; opacity: 1; }
-.emap-skills, .emap-srcs { list-style: none; margin: 0; padding: 0; position: relative; }
-.emap-skills { display: grid; gap: 4px; }
-.emap-srcs { display: grid; align-content: space-around; gap: 12px; }
-.emap-group { font-size: 13px; font-weight: 600; color: var(--muted); padding: 10px 0 2px; }
-.emap-group:first-child { padding-top: 0; }
-.emap-skill { width: 100%; font: inherit; font-size: 14.5px; line-height: 1.35; text-align: left; color: var(--ink); background: var(--raised); border: 1px solid var(--rule); border-radius: 10px; padding: 6px 10px; cursor: pointer; transition: border-color .2s, opacity .2s, background-color .2s; }
-.emap-src { display: grid; gap: 2px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--ink); background: var(--raised); text-decoration: none; transition: opacity .2s, background-color .2s, color .2s; }
-.emap-src .n { font-weight: 600; font-size: 15px; }
-.emap-src .k { font-size: 12.5px; color: var(--muted); }
-.emap.focusing .emap-skill:not(.on), .emap.focusing .emap-src:not(.on) { opacity: .35; }
-.emap-skill.on, .emap-skill[aria-pressed="true"] { border-color: var(--red); }
-.emap-src.on { background: var(--ink); color: var(--paper); }
-.emap-src.on .k { color: inherit; opacity: .75; }
-.emap-skill:focus-visible, .emap-src:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
-.emap-note { margin: 10px 0 0; font-size: 13.5px; color: var(--muted); }
-@media (prefers-reduced-motion: reduce) { .emap-edge, .emap-skill, .emap-src { transition: none; } }
-
-/* Phones: the skills table becomes stacked rows (skill, then where it's proven, tier on the right). */
-@media (max-width: 640px) {
-  #proof table { min-width: 0; }
-  #proof thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
-  #proof table, #proof tbody { display: block; }
-  #proof tr:not([hidden]) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
-  #proof td { display: block; border: 0; padding: 0; }
-  #proof td:nth-child(1) { font-weight: 600; }
-  #proof td:nth-child(2) { grid-column: 1; color: var(--muted); font-size: 14px; }
-  #proof td:nth-child(3) { grid-column: 2; grid-row: 1 / span 2; align-self: start; }
-}
-
-/* contact */
-.contact h2 {
-  font-family: var(--display); font-weight: 800; font-stretch: 120%;
-  font-size: clamp(40px, 6vw, 72px); line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: 16px;
-}
-.contact p { margin: 0 0 18px; color: var(--muted); max-width: 48ch; }
-
-footer { padding-top: 28px; border-top: 1px solid var(--rule); display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
-
-/* one load moment: the vermilion bar rises behind the name */
-@media (prefers-reduced-motion: no-preference) {
-  .nameplate .bar { animation: rise-bar .9s var(--ease) both; }
-}
-@keyframes rise-bar { from { transform: scaleY(0); } }
-@media (prefers-reduced-motion: reduce) { .item, .toc a, .toc a::before { transition: none; } }
-
-</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="pw.css">
 <link rel="stylesheet" href="cmdk.css">
+<script>document.documentElement.classList.add('js');</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Sudharsan V S","jobTitle":"Data Engineer","worksFor":{"@type":"Organization","name":"Edvoy"},"address":{"@type":"PostalAddress","addressLocality":"Chennai","addressCountry":"IN"},"url":"https://sudharsan2816.github.io/","sameAs":["https://github.com/Sudharsan2816","https://www.linkedin.com/in/sudharsan-v-s-a851a3242"],"knowsAbout":["Data engineering","Event-driven pipelines","RabbitMQ","GCP Pub/Sub","Retrieval-augmented generation","LangGraph","FastAPI","LLM evaluation"]}</script>
 </head>
-<body>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
 
-<a class="skip" href="#work">Skip to work</a>
-
-<div class="shell">
-  <header class="intro">
-    <div class="nameplate">
-      <span class="bar" aria-hidden="true"></span>
-      <p class="name">Sudharsan<small>V S</small></p>
-    </div>
-
-    <div style="display:grid; gap:14px">
-      <h1>Data Engineer<span class="pipe">|</span>Building Infrastructure for AI Systems</h1>
-      <p class="value">I build the backend that makes LLM workflows dependable: orchestration, event-driven pipelines, idempotency and guardrails. Every build below ships with <strong>its tests and committed evaluations</strong>, in public.</p>
-    </div>
-
-    <p class="role-line">Data Engineer at Edvoy, Chennai</p>
-
-    <nav class="toc" aria-label="Sections">
-      <ol>
-        <li><a href="#results">Results</a></li>
-        <li><a href="#work">Work</a></li>
-        <li><a href="#try">Try it</a></li>
-        <li><a href="#recs">Recommendations</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#proof">Skills and proof</a></li>
-        <li><a href="#notes">Notes</a></li>
-        <li><a href="#feedback">Feedback</a></li>
-      </ol>
-    </nav>
-
-    <div class="contact-row">
-      <a href="https://github.com/Sudharsan2816" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/sudharsan-v-s-a851a3242" target="_blank" rel="noopener">LinkedIn</a>
-      <span class="email">
-        <span class="addr" id="email-hero">vssudhan2003@gmail.com</span>
-        <button class="copy" type="button" data-copy="email-hero" id="copy-hero">Copy</button>
-      </span>
-    </div>
-    <div class="search-row"><button class="cmdk-btn" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span>Search</span><kbd>Ctrl K</kbd></button></div>
-  </header>
-
-  <div>
-    <nav class="mbar" aria-label="Sections">
-      <ol>
-        <li><a href="#results">Results</a></li>
-        <li><a href="#work">Work</a></li>
-        <li><a href="#try">Try it</a></li>
-        <li><a href="#recs">Recommendations</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#proof">Proof</a></li>
-        <li><a href="#notes">Notes</a></li>
-        <li><a href="#feedback">Feedback</a></li>
-      </ol>
-    </nav>
-
-    <main>
-      <section id="results" class="results" aria-labelledby="results-h">
-        <h2 id="results-h">Results you can check</h2>
-        <p class="src">From my personal builds: public code and committed evaluations.</p>
-        <div class="res-grid">
-          <div class="fte">
-            <div class="big wide"><span class="count" data-to="140">140</span>+</div>
-            <p>automated tests running in CI across my three personal builds.</p>
-          </div>
-          <div class="metrics">
-            <div class="metric"><div class="num">100<em>%</em></div><p>complete-hit@3 for fixed-size chunks on 32 labelled questions, vs 90.6% for semantic</p></div>
-            <div class="metric"><div class="num">10<em>/</em>10</div><p>live retest cases passed after fixing the 3 failures a live test caught</p></div>
-            <div class="metric"><div class="num">7<em>/</em>7</div><p>role-based allow and deny cases pass in the permission-aware RAG</p></div>
-            <div class="metric"><div class="num"><span class="count" data-to="5">5</span></div><p>evaluation reports committed alongside the code</p></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="work" aria-labelledby="work-h">
-        <h2 id="work-h">Selected work</h2>
-        <ol class="work">
-          <li class="item" id="work-edvoy">
-            <div class="meta"><span class="kind prod">Production</span><span>Edvoy, 2026–now</span></div>
-            <div class="body">
-              <h3 class="title">AI workflow automation platform</h3>
-              <p class="outcome">Agents act only after decision rules and guardrails have cleared the step.</p>
-              <p class="detail">I designed its architecture and built the workflow and its pipeline. A Jira poller starts it on tickets that an existing mail automation creates, RAG pulls context from the email thread, and a decision directory decides when the system acts and when it alerts the responsible person on Slack. Colleagues built some components inside it.</p>
-              <ul class="tags" aria-label="Stack"><li>n8n</li><li>Hermes</li><li>LangGraph</li><li>RAG</li></ul>
-              <p class="next">Internal system, described at architecture level only.</p>
-            </div>
-          </li>
-
-          <li class="item" id="work-copilot">
-            <div class="meta"><span class="kind">Personal build</span><span>RAG</span></div>
-            <div class="body">
-              <h3 class="title"><a href="copilot.html">Market Research Copilot</a></h3>
-              <p class="outcome">Fixed-size chunks beat semantic chunking on 32 labelled questions: complete-hit@3 of 100% vs 90.6%.</p>
-              <p class="detail">FAISS pulls 20 candidates, NVIDIA NIM reranks to 6, and a relevance threshold makes it decline questions the documents don't cover. A live test caught 3 failures; after fixes the retest passed 10 of 10.</p>
-              <ul class="tags" aria-label="Stack"><li>FastAPI</li><li>FAISS</li><li>NVIDIA NIM</li><li>React</li><li>Docker</li></ul>
-              <p class="next"><b>Next:</b> the benchmark corpus is 6 pages; growing the labelled set before generalising.</p>
-              <div class="row-links"><a href="copilot.html">Read the case study</a><a href="https://github.com/Sudharsan2816/Projects/tree/main/ai-market-research-copilot" target="_blank" rel="noopener">Code</a></div>
-            </div>
-          </li>
-
-          <li class="item" id="work-review">
-            <div class="meta"><span class="kind">Personal build</span><span>Agents</span></div>
-            <div class="body">
-              <h3 class="title"><a href="review.html">AI Code Review Agent</a></h3>
-              <p class="outcome">Every review runs as a LangGraph state machine whose approval gate is a real branch: post to the PR, or hold for a human.</p>
-              <p class="detail">Webhooks without a valid HMAC-SHA256 signature are rejected. Findings that don't quote a changed line are dropped, and the verdict is computed in code. Each commit is reviewed once, however often GitHub delivers it. 22 tests in CI.</p>
-              <ul class="tags" aria-label="Stack"><li>LangGraph</li><li>FastAPI</li><li>GitHub API</li><li>Claude API</li><li>MongoDB</li></ul>
-              <p class="next"><b>Next:</b> reviews run as in-process background tasks, so a server restart mid-review loses the work.</p>
-              <div class="row-links"><a href="review.html">Read the case study</a><a href="https://github.com/Sudharsan2816/Code_review_agent/tree/main" target="_blank" rel="noopener">Code</a></div>
-            </div>
-          </li>
-
-          <li class="item" id="work-rbac">
-            <div class="meta"><span class="kind">Personal build</span><span>Secure RAG</span></div>
-            <div class="body">
-              <h3 class="title"><a href="rbac.html">Permission-Aware RAG</a></h3>
-              <p class="outcome">Every retriever filters by the user's role, so restricted documents never reach the model. 7 of 7 allow/deny cases pass.</p>
-              <p class="detail">JWT login across six roles, retrieval over PDFs, CSV incident reports, JSON logs and SQLite records, redaction of sensitive values, and an audit log of every query. 29 tests in CI.</p>
-              <ul class="tags" aria-label="Stack"><li>FastAPI</li><li>FAISS</li><li>JWT</li><li>SQLite</li><li>Docker</li></ul>
-              <p class="next"><b>Next:</b> prompt-injection screening is pattern-based; a classifier would catch paraphrased attacks.</p>
-              <div class="row-links"><a href="rbac.html">Read the case study</a><a href="https://github.com/Sudharsan2816/Projects/tree/main/enterprise-rag" target="_blank" rel="noopener">Code</a></div>
-            </div>
-          </li>
-        </ol>
-        <p class="counts"><b>3</b> personal builds, <b>147</b> automated tests in CI and <b>5</b> committed evaluation reports.</p>
-      </section>
-
-      <section id="try" aria-labelledby="try-h">
-        <h2 id="try-h">Test the work yourself</h2>
-        <p class="lead">Nothing to install and no sign-up. Each one either replays a real, logged run or runs the project&rsquo;s own code, and says which.</p>
-        <ul class="tries">
-          <li><a href="copilot.html#try"><span class="p">Market Research Copilot</span><span class="t">Replay the live test: the answers it gave word for word, how long each took, and the three it failed before the fix</span><span class="how">Recorded run</span><span class="arr" aria-hidden="true">&rarr;</span></a></li>
-          <li><a href="review.html#try"><span class="p">AI Code Review Agent</span><span class="t">Put four model replies through the grounding step, see which claims survive, then flip the approval gate</span><span class="how">Recorded run</span><span class="arr" aria-hidden="true">&rarr;</span></a></li>
-          <li><a href="rbac.html#try"><span class="p">Permission-Aware RAG</span><span class="t">Pick a role, ask anything, and run the project&rsquo;s permission and injection checks in your browser</span><span class="how live">Runs live</span><span class="arr" aria-hidden="true">&rarr;</span></a></li>
-        </ul>
-      </section>
-
-      <section id="recs" aria-labelledby="recs-h">
-        <h2 id="recs-h">What colleagues say</h2>
-        <p class="lead">Excerpts quoted word for word from recommendations on my LinkedIn profile.</p>
-        <ul class="recs">
-          <li class="rec">
-            <blockquote><p>What makes him exceptional is his pragmatic caution: he builds systems where the model suggests, but logic and human review make the final call.</p></blockquote>
-            <p class="by"><b>Gibin Mathew</b><span>Data &amp; Automation Manager, Edvoy</span><span>Managed me directly · Oct 2026</span></p>
-          </li>
-          <li class="rec">
-            <blockquote><p>Whenever he presented his work, he explained it clearly and handled tough questions with composure. He's quick to learn, curious about how things really work, and careful about where AI should and shouldn't be trusted.</p></blockquote>
-            <p class="by"><b>Raj Gaurav</b><span>Head of Product</span><span>Senior to me, didn't manage me directly · Oct 2026</span></p>
-          </li>
-          <li class="rec">
-            <blockquote><p>Sudharsan always asks "what if this fails?" before he ships anything. Retries, duplicate handling, handing control back to a person when needed: he builds all of that in from the start. As a result, his systems rarely surprise us in production.</p></blockquote>
-            <p class="by"><b>Maneesh Kumar G</b><span>Data Engineer</span><span>Same team · Oct 2026</span></p>
-          </li>
-          <li class="rec">
-            <blockquote><p>Every university portal behaves differently, and when one of them broke, he was usually the one who worked out why.</p></blockquote>
-            <p class="by"><b>Mohammed Khaleelullah</b><span>Data Engineer</span><span>Same team · Oct 2026</span></p>
-          </li>
-        </ul>
-        <div class="row-links rec-link"><a href="https://www.linkedin.com/in/sudharsan-v-s-a851a3242/details/recommendations/" target="_blank" rel="noopener">Read the full recommendations on LinkedIn</a></div>
-      </section>
-
-      <section id="experience" aria-labelledby="exp-h">
-        <h2 id="exp-h">Experience at Edvoy, Chennai</h2>
-        <div class="jobs">
-        <div class="job">
-          <div class="when">May 2026 – now</div>
-          <div>
-            <h3>Data Engineer <span>(promoted)</span></h3>
-            <ul>
-              <li>Designed the architecture of an AI-assisted workflow automation system (n8n + Hermes) and built its workflow and pipeline; in production since October 2026: Jira-triggered, RAG over email threads, Slack alerts, and a decision directory with guardrails. Colleagues built some of its components.</li>
-              <li>Designed the architecture of the initial RabbitMQ-based application automation and built its pipeline and university-specific configurations; later containerised it as three services so one failure can't stop the rest, as part of its move to AWS.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="job">
-          <div class="when">Nov 2024 – May 2026</div>
-          <div>
-            <h3>Junior Data Engineer</h3>
-            <ul>
-              <li>Built modular ETL pipelines that normalise heterogeneous external data into standard internal formats.</li>
-              <li>Built a real-time OTP event service on GCP Pub/Sub with webhooks: acknowledgement, duplicate detection and timeout handling.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="job">
-          <div class="when">Aug – Oct 2024</div>
-          <div><h3>Data Intern</h3></div>
-        </div>
-        <div class="job">
-          <div class="when">Across the role</div>
-          <div>
-            <ul>
-              <li>Async Python and FastAPI services with idempotency, retries, failure recovery and duplicate prevention.</li>
-              <li>MongoDB (including centralised logging), AWS EC2 and S3, Docker and Docker Compose.</li>
-            </ul>
-          </div>
-        </div>
-        </div>
-        <div class="edu">
-          <span><b>B.E. Electronics &amp; Communication</b>, Panimalar Engineering College, 2020–2024, CGPA 8.8/10</span>
-          <span><b>Machine Learning with Python</b>, IBM on Coursera, May 2026<span class="nw"> · <a href="https://coursera.org/verify/OQZK1DY827GJ" target="_blank" rel="noopener">Verify</a></span></span>
-          <span><b>Introduction to Deep Learning &amp; Neural Networks with Keras</b>, IBM on Coursera, Jun 2026<span class="nw"> · <a href="https://coursera.org/verify/ASRRZDEMB9FU" target="_blank" rel="noopener">Verify</a></span></span>
-        </div>
-      </section>
-
-      <section id="proof" aria-labelledby="proof-h">
-        <h2 id="proof-h">Skills, and where they're proven</h2>
-        <div class="chips" role="group" aria-label="Filter skills"><button class="chip" type="button" data-f="all" aria-pressed="true">All</button><button class="chip" type="button" data-f="prod" aria-pressed="false">Production</button><button class="chip" type="button" data-f="build" aria-pressed="false">Personal builds</button></div>
-        <div class="view-toggle" role="group" aria-label="Show as" hidden><button class="vt" type="button" data-v="map" aria-pressed="true">Map</button><button class="vt" type="button" data-v="table" aria-pressed="false">Table</button></div>
-        <div class="emap" id="emap" hidden></div>
-        <p class="emap-note" id="emap-note" hidden>Point at a skill to see where it's proven, or click it to keep it lit. Each box on the right opens its evidence.</p>
-        <div class="table-wrap">
-          <table class="stack">
-            <thead><tr><th scope="col">Skill</th><th scope="col">Proven in</th><th scope="col">Where</th></tr></thead>
-            <tbody>
-              <tr data-tier="prod"><td>RabbitMQ, distributed task orchestration</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
-              <tr data-tier="prod"><td>n8n, Hermes, LangGraph agent workflows</td><td><a href="#work-edvoy">Edvoy automation platform</a>, <a href="review.html">Code Review Agent</a></td><td><span class="tier prod">Production</span></td></tr>
-              <tr data-tier="prod"><td>RAG over email threads</td><td><a href="#work-edvoy">Edvoy automation platform</a></td><td><span class="tier prod">Production</span></td></tr>
-              <tr data-tier="prod"><td>Slack and Jira integrations</td><td><a href="#work-edvoy">Edvoy automation platform</a></td><td><span class="tier prod">Production</span></td></tr>
-              <tr data-tier="prod"><td>GCP Pub/Sub, webhooks, event-driven design</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
-              <tr data-tier="prod"><td>ETL pipelines, data normalisation</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
-              <tr data-tier="prod"><td>Idempotency, retries, failure recovery</td><td><a href="#experience">Edvoy</a>, <a href="review.html">Code Review Agent</a></td><td><span class="tier prod">Production</span></td></tr>
-              <tr data-tier="prod"><td>Python, async FastAPI</td><td><a href="#experience">Edvoy</a> and every build</td><td><span class="tier prod">Production</span></td></tr>
-              <tr data-tier="prod"><td>MongoDB, AWS EC2/S3, Docker</td><td><a href="#experience">Edvoy</a></td><td><span class="tier prod">Production</span></td></tr>
-              <tr data-tier="build"><td>Two-stage retrieval: FAISS + NIM reranking</td><td><a href="copilot.html">Market Research Copilot</a></td><td><span class="tier">Personal build</span></td></tr>
-              <tr data-tier="build"><td>Chunking benchmarks, retrieval eval (hit@k, MRR)</td><td><a href="copilot.html">Market Research Copilot</a></td><td><span class="tier">Personal build</span></td></tr>
-              <tr data-tier="build"><td>NVIDIA NIM embeddings, SQLAlchemy</td><td><a href="copilot.html">Market Research Copilot</a></td><td><span class="tier">Personal build</span></td></tr>
-              <tr data-tier="build"><td>Role-filtered retrieval, JWT, audit logs</td><td><a href="rbac.html">Permission-Aware RAG</a></td><td><span class="tier">Personal build</span></td></tr>
-              <tr data-tier="build"><td>HMAC webhook verification, human approval gates</td><td><a href="review.html">Code Review Agent</a></td><td><span class="tier">Personal build</span></td></tr>
-              <tr data-tier="build"><td>GitHub API, Claude and OpenAI APIs</td><td><a href="review.html">Code Review Agent</a></td><td><span class="tier">Personal build</span></td></tr>
-              <tr data-tier="tool"><td>Claude Code, Cursor, Codex, GitHub Copilot</td><td><a href="#experience">Daily work</a></td><td><span class="tier">Tooling</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="table-note">Production means it runs at Edvoy. Personal builds are learning projects with public code and committed evaluations.</p>
-      </section>
-
-      <section id="notes" aria-labelledby="notes-h">
-        <h2 id="notes-h">Engineering notes</h2>
-        <ul class="notes">
-          <li><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/RAG_EVALUATION.md" target="_blank" rel="noopener"><time datetime="2026-09-13">13 Sep 2026</time><span class="t">A RAG regression suite: recall, citations and a faithfulness check</span><span class="arr" aria-hidden="true">→</span></a></li>
-          <li><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/FIXED_CHUNK_SIZE_SWEEP_2026-08-26.md" target="_blank" rel="noopener"><time datetime="2026-08-26">26 Aug 2026</time><span class="t">Picking a chunk size by sweep, and why it landed on 305 words</span><span class="arr" aria-hidden="true">→</span></a></li>
-          <li><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHUNKING_BENCHMARK_2026-08-25.md" target="_blank" rel="noopener"><time datetime="2026-08-25">25 Aug 2026</time><span class="t">Fixed vs semantic chunking on 32 labelled questions</span><span class="arr" aria-hidden="true">→</span></a></li>
-          <li><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHATBOT_LIVE_TEST_RESULTS_2026-08-09.md" target="_blank" rel="noopener"><time datetime="2026-08-09">9 Aug 2026</time><span class="t">A live chat test: three failures and how each was fixed</span><span class="arr" aria-hidden="true">→</span></a></li>
-          <li><a href="https://github.com/Sudharsan2816/Projects/blob/main/enterprise-rag/docs/RBAC_EVALUATION.md" target="_blank" rel="noopener"><time datetime="2026-08-01">1 Aug 2026</time><span class="t">Filtering every retriever by role: seven allow and deny cases</span><span class="arr" aria-hidden="true">→</span></a></li>
-        </ul>
-      </section>
-
-
-      <section id="feedback" aria-labelledby="fb-h">
-        <h2 id="fb-h">Found a bug, or see a better way?</h2>
-        <p class="lead">Tell me. Bug reports, suggestions and ideas for scaling any of these builds are all welcome. GitHub issues are public, so use email for anything private; email needs no account.</p>
-        <ul class="fb">
-          <li class="fbc"><h3>Report a bug</h3><p>Something that doesn&rsquo;t work the way a case study says, on this site or in the code.</p><div class="row-links"><a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=bug_report.yml" target="_blank" rel="noopener">Open a bug report</a><a href="mailto:vssudhan2003@gmail.com?subject=Bug%20report%20from%20your%20portfolio&amp;body=Project%3A%0AWhat%20happened%3A%0AWhat%20you%20expected%3A%0A">Email instead</a></div></li>
-          <li class="fbc"><h3>Suggest an improvement</h3><p>A better design choice, a clearer explanation, or a test I should add.</p><div class="row-links"><a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=suggestion.yml" target="_blank" rel="noopener">Make a suggestion</a><a href="mailto:vssudhan2003@gmail.com?subject=Suggestion%20from%20your%20portfolio&amp;body=Project%3A%0AWhat%20I%20would%20change%3A%0AWhy%3A%0A">Email instead</a></div></li>
-          <li class="fbc"><h3>Propose a scaling idea</h3><p>What breaks first at 10&times; or 100&times; the load or data, and what you&rsquo;d change.</p><div class="row-links"><a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=scaling_idea.yml" target="_blank" rel="noopener">Share a scaling idea</a><a href="mailto:vssudhan2003@gmail.com?subject=Scaling%20idea%20from%20your%20portfolio&amp;body=Project%3A%0AWhat%20breaks%20first%3A%0AWhat%20I%20would%20change%3A%0A">Email instead</a></div></li>
-        </ul>
-      </section>
-
-      <footer>
-        <span>© 2026 Sudharsan V S, Chennai</span>
-      </footer>
-    </main>
-  </div>
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" aria-hidden="true"><span>SUDHARSAN V S   ●   DATA ENGINEER · EDVOY, CHENNAI   ●   147 TESTS IN CI   ●   5 EVAL REPORTS   ●   3 TRY-IT DEMOS, 1 RUNS LIVE   ●   FOR AI AGENTS: /llms.txt   ●   </span><span>SUDHARSAN V S   ●   DATA ENGINEER · EDVOY, CHENNAI   ●   147 TESTS IN CI   ●   5 EVAL REPORTS   ●   3 TRY-IT DEMOS, 1 RUNS LIVE   ●   FOR AI AGENTS: /llms.txt   ●   </span><span>SUDHARSAN V S   ●   DATA ENGINEER · EDVOY, CHENNAI   ●   147 TESTS IN CI   ●   5 EVAL REPORTS   ●   3 TRY-IT DEMOS, 1 RUNS LIVE   ●   FOR AI AGENTS: /llms.txt   ●   </span><span>SUDHARSAN V S   ●   DATA ENGINEER · EDVOY, CHENNAI   ●   147 TESTS IN CI   ●   5 EVAL REPORTS   ●   3 TRY-IT DEMOS, 1 RUNS LIVE   ●   FOR AI AGENTS: /llms.txt   ●   </span></div>
 </div>
 
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><b>Sudharsan</b><small>v s</small></a>
+    <nav class="nav only-wide" aria-label="Sections">
+      <a href="#pipeline">Pipeline</a><a href="#work">Case studies</a><a href="#try">Try it</a><a href="#now">Now</a><a href="#experience">Experience</a><a href="#writing">Writing</a>
+    </nav>
+    <div class="acts">
+      <button class="search" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span class="search-l">search</span><kbd>Ctrl K</kbd></button>
+      <a class="pill-btn only-wide" href="#contact">Contact</a>
+    </div>
+  </div>
+</header>
 
-<script>
-document.querySelectorAll('.copy').forEach(function (btn) {
-  btn.addEventListener('click', function () {
-    var el = document.getElementById(btn.getAttribute('data-copy'));
-    var text = el.textContent.trim();
-    var reset = function () { setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1600); };
-    var done = function () { btn.textContent = 'Copied'; btn.classList.add('done'); reset(); };
-    var fallback = function () {
-      var r = document.createRange(); r.selectNodeContents(el);
-      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-      btn.textContent = 'Selected'; reset();
-    };
-    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
-  });
-});
+<main id="main" class="wrap">
 
-/* Results count up once when the band comes into view; the final numbers are already in the HTML. */
-(function () {
-  var band = document.getElementById('results');
-  if (!band || !('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var nums = band.querySelectorAll('.count');
-  var io = new IntersectionObserver(function (es) {
-    if (!es[0].isIntersecting) return; io.disconnect();
-    nums.forEach(function (el) {
-      var to = +el.getAttribute('data-to'), comma = el.getAttribute('data-fmt') === 'comma', t0 = null, dur = 1200;
-      function step(t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / dur), v = Math.round(to * (1 - Math.pow(1 - p, 3))); el.textContent = comma ? v.toLocaleString('en-US') : v; if (p < 1) requestAnimationFrame(step); }
-      requestAnimationFrame(step);
-    });
-  }, { threshold: 0.35 });
-  io.observe(band);
-})();
+<section class="hero" aria-labelledby="h1">
+  <div class="hero-main">
+    <p class="prompt" aria-hidden="true">sudharsan@chennai:~$ whoami<span class="cursor"></span></p>
+    <h1 id="h1">Sudharsan<br><span class="mk">V S</span></h1>
+    <p class="hero-sub">I build the infrastructure AI systems run on.</p>
+    <p class="hero-lede">Orchestration, event-driven pipelines, idempotency and guardrails: the backend that makes LLM workflows dependable. Every build below ships with its tests and committed evaluations, in public.</p>
+    <div class="ctas">
+      <a class="btn" href="#pipeline">Follow the pipeline ↓</a>
+      <a class="btn o" href="#try">Try a demo</a>
+    </div>
+    <dl class="meta">
+      <div><dt>ROLE</dt><dd>Data Engineer, Edvoy</dd></div>
+      <div><dt>BASED</dt><dd>Chennai, India</dd></div>
+      <div><dt>BUILDS</dt><dd>Pipelines · RAG · agents</dd></div>
+      <div><dt>PROOF</dt><dd><span class="ok-dot" aria-hidden="true">●</span> 147 tests in CI</dd></div>
+    </dl>
+  </div>
+  <figure class="fig" aria-hidden="true">
+    <div class="fig-h"><b>FIG.01</b><span>MONOGRAM · ASCII</span></div>
+    <div class="fig-art"><pre>     -==--   -  ------               ---:   -
+  -*%%-   -+%% .-%%%%#       -#- .-*#+.   -+#+
+ =%@@+.     -#= .+%%%%=.      -  =###...    =*
+.*@%%#..      +...#%%##.     -  .####=...    --
+ *%%%%%+=...    ..+#%%#=     - . *####*-:. .
+ .*%%%%%%%*+- .  ..###%#.   -   .:*#####**+=.
+   -+#%%%%%%%#..  .=%##%=.  -    . -+*#*#**#*=
+    ...-+#%%#%# . ..*####..-        . .-=*****=
+  *  . . .+%%##.   .-####+:      -=    ...+***=.
+  ##      .##%=     .*####=       *=     .:***-
+  +%*-    =#*-       -####-       **=-    +*=
+       ----            .          :    :::</pre></div>
+    <figcaption><span>svs.txt → ascii</span><span>CHENNAI, IN</span></figcaption>
+  </figure>
+</section>
 
-/* Skills table filter: all, production, or personal builds. */
-document.querySelectorAll('.chip').forEach(function (c) {
-  c.addEventListener('click', function () {
-    var f = c.getAttribute('data-f');
-    document.querySelectorAll('.chip').forEach(function (x) { x.setAttribute('aria-pressed', x === c ? 'true' : 'false'); });
-    document.querySelectorAll('#proof tbody tr').forEach(function (r) { r.hidden = !(f === 'all' || r.getAttribute('data-tier') === f); });
-  });
-});
+<section id="ask" class="sec" aria-labelledby="h-ask" data-ask>
+  <div class="sh"><span class="sh-n">01</span><h2 id="h-ask">Ask the portfolio</h2><span class="sh-cmd">$ help</span></div>
+  <div class="ask">
+    <div class="term">
+      <div class="term-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>sudharsan@portfolio — zsh</span><span class="term-ok">● no model · every line links to a page</span></div>
+      <div class="term-out" aria-live="polite">
+        <p class="term-note">A command line over this site. It looks things up; it doesn’t generate them.</p>
+        <p class="no-js">Commands need JavaScript. Everything they look up is on this page and the case studies below.</p>
+      </div>
+      <div class="term-cmds js-only" role="group" aria-label="Try a command"></div>
+      <form class="term-in js-only" autocomplete="off"><span aria-hidden="true">$</span><label class="sr-only" for="ask-in">Type a command</label><input id="ask-in" type="text" placeholder="type a command, or ‘help’" spellcheck="false" autocapitalize="off" enterkeyhint="go"></form>
+      <p class="trace-line only-narrow js-only"></p>
+    </div>
+    <div class="trace js-only">
+      <p class="trace-h">ROUTE TRACE</p>
+      <dl></dl>
+      <p class="trace-foot">Answers come from the pages on this site, in one keystroke. Nothing here can make up a fact, because nothing is generated.</p>
+    </div>
+  </div>
+</section>
 
-/* Sections slide in from the left the first time they enter the screen. */
-(function () {
-  var secs = document.querySelectorAll('main > section');
-  if (!('IntersectionObserver' in window)) { secs.forEach(function (s) { s.classList.add('in'); }); return; }
-  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: 0.08 });
-  secs.forEach(function (s) { io.observe(s); });
-})();
+<section id="pipeline" class="sec" aria-labelledby="h-pipe" data-pipeline>
+  <div class="sh"><span class="sh-n">02</span><h2 id="h-pipe">The pipeline</h2><span class="sh-cmd">$ cat work/*.yaml | wire</span></div>
+  <p class="intro">Everything I’ve built, wired to the stage of an AI system it proves. Pick a system or a stage; its wires light up and the readme shows the evidence.</p>
+  <div class="board wb only-wide js-only" data-board></div>
+  <div class="only-narrow js-only" data-pm></div>
+  <ul class="pipe-fallback">
+    <li><b>AI workflow automation</b> (Edvoy, in production since Oct 2026): orchestration, retrieval and guardrails. Internal system, described at architecture level only.</li>
+    <li><b>Event-driven pipelines</b> (Edvoy): RabbitMQ, GCP Pub/Sub and ETL; ingestion and orchestration.</li>
+    <li><b><a href="copilot.html">Market Research Copilot</a></b>: ingestion, retrieval and evaluation; 96 tests in CI.</li>
+    <li><b><a href="review.html">AI Code Review Agent</a></b>: orchestration, guardrails and evaluation; 22 tests in CI.</li>
+    <li><b><a href="rbac.html">Permission-Aware RAG</a></b>: ingestion, retrieval, guardrails and evaluation; 29 tests in CI.</li>
+  </ul>
+  <details class="skills">
+    <summary><span>Skills, and where they’re proven</span><span class="sk-n">16 · production, personal builds, tooling</span><span class="sign" aria-hidden="true"></span></summary>
+    <div class="tw"><table><thead><tr><th>Skill</th><th>Proven in</th><th>Tier</th></tr></thead><tbody><tr><td>RabbitMQ, distributed task orchestration</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>n8n, Hermes, LangGraph agent workflows</td><td><a href="#experience">Edvoy automation platform</a>, <a href="review.html">Code Review Agent</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>RAG over email threads</td><td><a href="#experience">Edvoy automation platform</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Slack and Jira integrations</td><td><a href="#experience">Edvoy automation platform</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>GCP Pub/Sub, webhooks, event-driven design</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>ETL pipelines, data normalisation</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Idempotency, retries, failure recovery</td><td><a href="#experience">Edvoy</a>, <a href="review.html">Code Review Agent</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Python, async FastAPI</td><td><a href="#experience">Edvoy</a> and every build</td><td><span class="pill prod">Production</span></td></tr><tr><td>MongoDB, AWS EC2/S3, Docker</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Two-stage retrieval: FAISS + NIM reranking</td><td><a href="copilot.html">Market Research Copilot</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>Chunking benchmarks, retrieval eval (hit@k, MRR)</td><td><a href="copilot.html#evaluation">Market Research Copilot</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>NVIDIA NIM embeddings, SQLAlchemy</td><td><a href="copilot.html">Market Research Copilot</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>Role-filtered retrieval, JWT, audit logs</td><td><a href="rbac.html">Permission-Aware RAG</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>HMAC webhook verification, human approval gates</td><td><a href="review.html">Code Review Agent</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>GitHub API, Claude and OpenAI APIs</td><td><a href="review.html">Code Review Agent</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>Claude Code, Cursor, Codex, GitHub Copilot</td><td>Daily work</td><td><span class="pill tool">Tooling</span></td></tr></tbody></table></div>
+  </details>
+</section>
 
-/* Track the section in view: highlight it in both navs and keep it in focus while the rest dim. */
-(function () {
-  document.documentElement.classList.add('js');
-  var links = document.querySelectorAll('.toc a, .mbar a');
-  var sections = [].slice.call(document.querySelectorAll('main > section[id]'));
-  if (!sections.length) return;
-  var current = -1, ticking = false;
-  function update() {
-    ticking = false;
-    var line = innerHeight * 0.45, i = 0;
-    sections.forEach(function (s, k) { if (s.getBoundingClientRect().top <= line) i = k; });
-    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) i = sections.length - 1;
-    if (i === current) return; current = i;
-    var id = sections[i].id;
-    sections.forEach(function (s, k) { s.classList.toggle('focus', k === i); });
-    links.forEach(function (a) { a.setAttribute('aria-current', a.getAttribute('href') === '#' + id ? 'true' : 'false'); });
-    var bar = document.querySelector('.mbar');
-    var active = document.querySelector('.mbar a[aria-current="true"]');
-    if (bar && active && bar.offsetParent) { bar.scrollLeft = active.offsetLeft - bar.clientWidth / 2 + active.clientWidth / 2; }
-  }
-  addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
-  addEventListener('resize', update);
-  update();
-})();
-</script>
+<section id="work" class="sec" aria-labelledby="h-work" data-carousel>
+  <div class="sh"><span class="sh-n">03</span><h2 id="h-work">Case studies</h2>
+    <span class="cs-ctl"><span class="lbl only-wide js-only">01 / 03</span><span class="lbl-m only-narrow mono" style="font-size:11.5px;color:var(--graphite)">swipe →</span><button class="sq-btn js-only" type="button" data-prev aria-label="Previous case study">←</button><button class="sq-btn f js-only" type="button" data-next aria-label="Next case study">→</button></span>
+  </div>
+  <ul class="cases" aria-label="Case studies">
+    <li class="case">
+      <p class="case-k"><span>CASE 01</span><span>RAG</span></p>
+      <h3>Market Research Copilot</h3>
+      <p class="case-m"><b>100%</b><span>complete-hit@3 for fixed-size chunks, vs 90.6% semantic</span></p>
+      <p class="case-l">The most important decision was the least glamorous one, and the benchmark shows why.</p>
+      <p class="case-a"><a href="copilot.html">Read the case study →</a><a class="g" href="copilot.html#try">Replay the live test →</a></p>
+    </li>
+    <li class="case">
+      <p class="case-k"><span>CASE 02</span><span>AGENTS</span></p>
+      <h3>AI Code Review Agent</h3>
+      <p class="case-m"><b>22</b><span>tests in CI; one review per commit</span></p>
+      <p class="case-l">Findings that don’t quote a changed line are dropped, and the verdict is computed in code.</p>
+      <p class="case-a"><a href="review.html">Read the case study →</a><a class="g" href="review.html#try">Run the grounding step →</a></p>
+    </li>
+    <li class="case">
+      <p class="case-k"><span>CASE 03</span><span>SECURE RAG</span></p>
+      <h3>Permission-Aware RAG</h3>
+      <p class="case-m"><b>7/7</b><span>role allow and deny cases pass</span></p>
+      <p class="case-l">Restricted documents never reach the model: every retriever filters by role.</p>
+      <p class="case-a"><a href="rbac.html">Read the case study →</a><a class="g" href="rbac.html#try">Run the checks in your browser →</a></p>
+    </li>
+  </ul>
+</section>
+
+<section id="try" class="sec" aria-labelledby="h-try">
+  <div class="sh"><span class="sh-n">04</span><h2 id="h-try">Test the work yourself</h2><span class="sh-cmd">$ ls demos/</span></div>
+  <p class="intro">No install, no sign-up. Each one says whether it replays a logged run or runs live.</p>
+  <ul class="rows">
+    <li><a href="copilot.html#try"><span><span class="rows-p">~/copilot/try<span class="only-narrow"> · recorded run</span></span><span class="rows-t">Replay the Copilot’s live test, answer by answer</span></span><span class="badge">RECORDED RUN</span><span class="arr" aria-hidden="true">→</span></a></li>
+    <li><a href="review.html#try"><span><span class="rows-p">~/code-review/try<span class="only-narrow"> · recorded run</span></span><span class="rows-t">Put model replies through the grounding step</span></span><span class="badge">RECORDED RUN</span><span class="arr" aria-hidden="true">→</span></a></li>
+    <li><a href="rbac.html#try"><span><span class="rows-p" style="color:var(--signal-deep)">~/permission-rag/try<span class="only-narrow"> · ● runs live</span></span><span class="rows-t">Run the permission checks in your browser</span></span><span class="badge live">● RUNS LIVE</span><span class="arr" aria-hidden="true">→</span></a></li>
+  </ul>
+</section>
+
+<section id="now" class="sec" aria-labelledby="h-now">
+  <div class="sh"><span class="sh-n">05</span><h2 id="h-now">Currently</h2><span class="sh-cmd">$ tail -f /now</span></div>
+  <div class="now">
+    <p><time datetime="2026-11">2026-11 ● latest</time><span>Code Review Agent: each commit is now reviewed once, however often GitHub delivers the webhook. 22 tests in CI.</span></p>
+    <p><time datetime="2026-11">2026-11</time><span>Market Research Copilot: wrote a script that measures the reranker’s lift on its own; running it is next.</span></p>
+    <p><time datetime="2026-10">2026-10</time><span>Edvoy: the AI workflow automation system I designed went into production.</span></p>
+    <p><time datetime="2026-09">2026-09</time><span>Copilot: a regression suite for recall, citations and faithfulness now gates CI.</span></p>
+  </div>
+</section>
+
+<section id="recs" class="sec" aria-labelledby="h-recs">
+  <div class="sh"><span class="sh-n">06</span><h2 id="h-recs">What colleagues say</h2><span class="sh-cmd">quoted word for word · LinkedIn</span></div>
+  <figure class="lead-q">
+    <blockquote>“What makes him exceptional is his pragmatic caution: he builds systems where <mark>the model suggests, but logic and human review make the final call.</mark>”</blockquote>
+    <figcaption>GIBIN MATHEW · DATA &amp; AUTOMATION MANAGER, EDVOY · MANAGED ME DIRECTLY</figcaption>
+  </figure>
+  <div class="qs" tabindex="0" role="region" aria-label="More recommendations">
+    <figure class="qcard"><blockquote>“Sudharsan always asks ‘what if this fails?’ before he ships anything. Retries, duplicate handling, handing control back to a person when needed: he builds all of that in from the start. As a result, his systems rarely surprise us in production.”</blockquote><figcaption>MANEESH KUMAR G · DATA ENGINEER · SAME TEAM</figcaption></figure>
+    <figure class="qcard"><blockquote>“He’s quick to learn, curious about how things really work, and careful about where AI should and shouldn’t be trusted.”</blockquote><figcaption>RAJ GAURAV · HEAD OF PRODUCT</figcaption></figure>
+    <figure class="qcard"><blockquote>“Every university portal behaves differently, and when one of them broke, he was usually the one who worked out why.”</blockquote><figcaption>MOHAMMED KHALEELULLAH · DATA ENGINEER · SAME TEAM</figcaption></figure>
+  </div>
+  <a class="more" href="https://www.linkedin.com/in/sudharsan-v-s-a851a3242/details/recommendations/" target="_blank" rel="noopener">Read the full recommendations on LinkedIn ↗</a>
+</section>
+
+<section id="experience" class="sec" aria-labelledby="h-exp">
+  <div class="sh"><span class="sh-n">07</span><h2 id="h-exp">Experience</h2><span class="sh-cmd">$ git log --author=me edvoy/</span></div>
+  <details class="xp" open>
+    <summary><span class="xp-when">May 2026 → now</span><h3 class="xp-t">Data Engineer <em>promoted</em></h3><span class="sign" aria-hidden="true"></span></summary>
+    <ul>
+      <li>Designed the architecture of an AI-assisted workflow automation system (n8n + Hermes) and built its workflow and pipeline; in production since October 2026: Jira-triggered, RAG over email threads, Slack alerts, and a decision directory with guardrails. Colleagues built some of its components.</li>
+      <li>Designed the architecture of the initial RabbitMQ-based application automation and built its pipeline and university-specific configurations; later containerised it as three services so one failure can’t stop the rest, as part of its move to AWS.</li>
+    </ul>
+  </details>
+  <details class="xp">
+    <summary><span class="xp-when">Nov 2024 → May 2026</span><h3 class="xp-t">Junior Data Engineer</h3><span class="sign" aria-hidden="true"></span></summary>
+    <ul>
+      <li>Built modular ETL pipelines that normalise heterogeneous external data into standard internal formats.</li>
+      <li>Built a real-time OTP event service on GCP Pub/Sub with webhooks: acknowledgement, duplicate detection and timeout handling.</li>
+    </ul>
+  </details>
+  <details class="xp">
+    <summary><span class="xp-when">Across the role</span><h3 class="xp-t">Reliability and infrastructure</h3><span class="sign" aria-hidden="true"></span></summary>
+    <ul>
+      <li>Async Python and FastAPI services with idempotency, retries, failure recovery and duplicate prevention.</li>
+      <li>MongoDB (including centralised logging), AWS EC2 and S3, Docker and Docker Compose.</li>
+    </ul>
+  </details>
+  <div class="xp xp-static"><div class="xp-row"><span class="xp-when">Aug → Oct 2024</span><h3 class="xp-t">Data Intern</h3></div></div>
+  <p class="edu">
+    <span><b>B.E. Electronics &amp; Communication</b>, Panimalar Engineering College, 2020–2024, CGPA 8.8/10</span>
+    <span><b>Machine Learning with Python</b>, IBM on Coursera, May 2026 · <a href="https://coursera.org/verify/OQZK1DY827GJ" target="_blank" rel="noopener">Verify ↗</a></span>
+    <span><b>Introduction to Deep Learning &amp; Neural Networks with Keras</b>, IBM on Coursera, Jun 2026 · <a href="https://coursera.org/verify/ASRRZDEMB9FU" target="_blank" rel="noopener">Verify ↗</a></span>
+  </p>
+</section>
+
+<section id="writing" class="sec" aria-labelledby="h-wr">
+  <div class="sh"><span class="sh-n">08</span><h2 id="h-wr">Engineering notes</h2><span class="sh-cmd">$ ls -t notes/</span></div>
+  <ul class="notes">
+    <li><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/RAG_EVALUATION.md" target="_blank" rel="noopener"><time datetime="2026-09-13">2026-09-13</time><span class="t">A RAG regression suite: recall, citations and a faithfulness check</span><span class="arr" aria-hidden="true">↗</span></a></li>
+    <li><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/FIXED_CHUNK_SIZE_SWEEP_2026-08-26.md" target="_blank" rel="noopener"><time datetime="2026-08-26">2026-08-26</time><span class="t">Picking a chunk size by sweep, and why it landed on 305 words</span><span class="arr" aria-hidden="true">↗</span></a></li>
+    <li><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHUNKING_BENCHMARK_2026-08-25.md" target="_blank" rel="noopener"><time datetime="2026-08-25">2026-08-25</time><span class="t">Fixed vs semantic chunking on 32 labelled questions</span><span class="arr" aria-hidden="true">↗</span></a></li>
+    <li><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHATBOT_LIVE_TEST_RESULTS_2026-08-09.md" target="_blank" rel="noopener"><time datetime="2026-08-09">2026-08-09</time><span class="t">A live chat test: three failures and how each was fixed</span><span class="arr" aria-hidden="true">↗</span></a></li>
+    <li><a href="https://github.com/Sudharsan2816/Projects/blob/main/enterprise-rag/docs/RBAC_EVALUATION.md" target="_blank" rel="noopener"><time datetime="2026-08-01">2026-08-01</time><span class="t">Filtering every retriever by role: seven allow and deny cases</span><span class="arr" aria-hidden="true">↗</span></a></li>
+  </ul>
+</section>
+
+</main>
+
+<footer id="contact" class="foot" aria-labelledby="h-contact">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-l">
+        <h2 id="h-contact">Found a bug, or see a better way? <em>Tell me.</em></h2>
+        <p class="foot-p">Bug reports, suggestions and ideas for scaling any of these builds are all welcome. GitHub issues are public, so use email for anything private; email needs no account.</p>
+      </div>
+      <div class="foot-links">
+        <a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=bug_report.yml" target="_blank" rel="noopener">Report a bug <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=suggestion.yml" target="_blank" rel="noopener">Suggest an improvement <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=scaling_idea.yml" target="_blank" rel="noopener">Propose a scaling idea <span aria-hidden="true">↗</span></a>
+        <a class="mail" href="mailto:vssudhan2003@gmail.com">vssudhan2003@gmail.com <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <p class="foot-bot">
+      <span><span class="sq-g" aria-hidden="true">●</span> for AI agents: <a href="llms.txt">/llms.txt</a> · <a href="profile.json">/profile.json</a></span>
+      <a href="https://github.com/Sudharsan2816" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/sudharsan-v-s-a851a3242" target="_blank" rel="noopener">LinkedIn</a>
+      <span class="r">© 2026 Sudharsan V S · Chennai</span>
+    </p>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Quick links">
+  <a href="#pipeline"><svg class="g" viewBox="0 0 20 20" aria-hidden="true"><circle cx="4" cy="5" r="2"/><circle cx="4" cy="15" r="2"/><circle cx="16" cy="10" r="2"/><path d="M6 5c4 0 4 5 8 5M6 15c4 0 4-5 8-5"/></svg>Pipeline</a>
+  <a href="#work"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="5" width="14" height="11" rx="2"/><path d="M6 2.5h8"/></svg>Cases</a>
+  <a href="#try"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4l10 6-10 6z"/></svg>Try it</a>
+  <a class="y" href="#contact"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M3 5.5l7 5 7-5"/></svg>Contact</a>
+</nav>
+
+<script type="application/json" id="pw-data">{"commands":["whoami","ls work","cat results","tail -f now","open demos","contact"],"outputs":{"whoami":{"match":"about","src":"index.html#top","kw":"110px","lines":[["name","Sudharsan V S","#top"],["role","Data Engineer at Edvoy, Chennai (promoted May 2026)","#experience"],["builds","Orchestration, event-driven pipelines and guardrails for LLM workflows","#pipeline"],["proof","147 automated tests in CI across three personal builds","#work"]]},"ls work":{"match":"work index","src":"index.html#pipeline","kw":"200px","lines":[["prod/ai-workflow","n8n · Hermes · LangGraph · RAG (architecture level)","#pipeline"],["prod/pipelines","RabbitMQ · Pub/Sub · ETL (architecture level)","#experience"],["builds/copilot","RAG, 96 tests: the case study","copilot.html"],["builds/code-review","agents, 22 tests: the case study","review.html"],["builds/permission-rag","secure RAG, 29 tests: the case study","rbac.html"]]},"cat results":{"match":"results","src":"copilot.html · rbac.html #evaluation","kw":"170px","lines":[["complete-hit@3","100% fixed vs 90.6% semantic, 32 questions","copilot.html#evaluation"],["live retest","10/10 after fixing the 3 failures a live test caught","copilot.html#try"],["allow / deny","7/7 role cases pass","rbac.html#evaluation"],["eval reports","5 committed alongside the code","#writing"]]},"tail -f now":{"match":"now","src":"index.html#now","kw":"90px","lines":[["2026-11","One review per commit in the Code Review Agent","review.html#roadmap"],["2026-11","Reranker-lift script written; running it next","#now"],["2026-10","AI workflow automation in production at Edvoy","#experience"]]},"open demos":{"match":"demos","src":"copilot · review · rbac #try","kw":"200px","lines":[["copilot/try","Replay the live test (recorded run)","copilot.html#try"],["code-review/try","Run the grounding step (recorded run)","review.html#try"],["permission-rag/try","Run the permission checks (runs live)","rbac.html#try"]]},"contact":{"match":"contact","src":"index.html#contact","kw":"110px","lines":[["email","vssudhan2003@gmail.com","mailto:vssudhan2003@gmail.com"],["github","github.com/Sudharsan2816","https://github.com/Sudharsan2816"],["linkedin","linkedin.com/in/sudharsan-v-s-a851a3242","https://www.linkedin.com/in/sudharsan-v-s-a851a3242"],["feedback","Report a bug or suggest an improvement","#contact"]]},"help":{"match":"help","src":"this command line","kw":"130px","lines":[["whoami","Who I am, in four lines",null,"whoami"],["ls work","Everything I’ve built",null,"ls work"],["cat results","The numbers, with where they come from",null,"cat results"],["tail -f now","What I’m working on",null,"tail -f now"],["open demos","The three try-it demos",null,"open demos"],["contact","Email, GitHub, LinkedIn",null,"contact"]]}},"projects":[{"code":"prod.workflow","tag":"PROD","name":"AI workflow automation","sub":"Edvoy · in production since Oct 2026","stages":[1,2,3],"prod":true,"kind":"PRODUCTION · EDVOY · 2026 → NOW","lede":"Agents act only after decision rules and guardrails have cleared the step.","body":"I designed its architecture and built the workflow and its pipeline: a Jira poller starts it, RAG pulls context from the email thread, and a decision directory decides when to act and when to alert the responsible person on Slack. Colleagues built some components.","metric":"Oct 2026","metricNote":"in production since","stack":"n8n · Hermes · LangGraph · RAG","note":"Internal system, described at architecture level only."},{"code":"prod.pipelines","tag":"PROD","name":"Event-driven pipelines","sub":"Edvoy · RabbitMQ, Pub/Sub, ETL","stages":[0,1],"prod":true,"kind":"PRODUCTION · EDVOY · 2024 → NOW","lede":"I designed the architecture of the initial RabbitMQ-based application automation and built its pipeline.","body":"Later containerised as three services so one failure can’t stop the rest. Before that: modular ETL pipelines for heterogeneous external data, and a real-time OTP event service on GCP Pub/Sub with acknowledgement, duplicate detection and timeouts.","metric":"3","metricNote":"services, so one failure can’t stop the rest","stack":"RabbitMQ · GCP Pub/Sub · Docker · AWS","note":"Internal systems, described at architecture level only."},{"code":"build.copilot","tag":"BUILD","name":"Market Research Copilot","sub":"RAG · 96 tests in CI","stages":[0,2,4],"prod":false,"kind":"PERSONAL BUILD · RAG","lede":"Fixed-size chunks beat semantic chunking on 32 labelled questions.","body":"FAISS pulls 20 candidates, an NVIDIA NIM reranker keeps 6, and a 0.35 relevance floor makes it decline questions the documents don’t cover. A live test caught 3 failures; the retest passed 10 of 10.","metric":"100%","metricNote":"complete-hit@3, vs 90.6% semantic","stack":"FastAPI · FAISS · NVIDIA NIM · React · Docker","caseHref":"copilot.html","tryHref":"copilot.html#try","codeHref":"https://github.com/Sudharsan2816/Projects/tree/main/ai-market-research-copilot"},{"code":"build.review","tag":"BUILD","name":"AI Code Review Agent","sub":"Agents · 22 tests in CI","stages":[1,3,4],"prod":false,"kind":"PERSONAL BUILD · AGENTS","lede":"A LangGraph state machine whose approval gate is a real branch: post to the PR, or hold for a human.","body":"HMAC-SHA256 webhooks, findings that must quote a changed line, a verdict computed in code, and one review per commit however often GitHub delivers it.","metric":"1×","metricNote":"review per commit","stack":"LangGraph · FastAPI · GitHub API · Claude API · MongoDB","caseHref":"review.html","tryHref":"review.html#try","codeHref":"https://github.com/Sudharsan2816/Code_review_agent"},{"code":"build.rbac","tag":"BUILD","name":"Permission-Aware RAG","sub":"Secure RAG · 29 tests in CI","stages":[0,2,3,4],"prod":false,"kind":"PERSONAL BUILD · SECURE RAG","lede":"Every retriever filters by role, so restricted documents never reach the model.","body":"JWT login across six roles, retrieval over PDFs, CSV incident reports, JSON logs and SQLite, redaction of sensitive values, and an audit log of every query.","metric":"7/7","metricNote":"role allow and deny cases pass","stack":"FastAPI · FAISS · JWT · SQLite · Docker","caseHref":"rbac.html","tryHref":"rbac.html#try","codeHref":"https://github.com/Sudharsan2816/Projects/tree/main/enterprise-rag"}],"stages":[{"key":"ingest","name":"Ingest","sub":"ETL, parsing","line":"Getting messy data into a shape the system can trust.","proofs":{"1":"Modular ETL pipelines that normalise heterogeneous external data into standard internal formats.","2":"Parses PDF, CSV, TXT and Markdown; CSVs become 50-row text chunks so tables stay retrievable.","4":"Retrieval over PDFs, CSV incident reports, JSON logs and SQLite records."}},{"key":"orchestrate","name":"Orchestrate","sub":"queues, events","line":"Moving work through queues and events without losing or repeating it.","proofs":{"0":"An n8n + Hermes workflow, started by a Jira poller on tickets an existing mail automation creates.","1":"RabbitMQ application automation, later three containerised services; a Pub/Sub event service with duplicate detection.","3":"A LangGraph state machine; each commit is reviewed once, however often GitHub delivers the webhook."}},{"key":"retrieve","name":"Retrieve","sub":"RAG, rerank","line":"Finding the right context, and refusing when there isn’t any.","proofs":{"0":"RAG pulls context from the email thread behind each ticket.","2":"FAISS fetches 20, a 0.35 floor drops weak matches, and a NIM reranker keeps 6.","4":"Every retriever filters by role, so restricted documents never reach the model."}},{"key":"guard","name":"Guard","sub":"rules, approvals","line":"Deciding when the system may act on its own, and when a person must.","proofs":{"0":"A decision directory and guardrails decide when it acts and when it alerts the responsible person on Slack.","3":"Findings that don’t quote a changed line are dropped; the verdict is computed in code; the approval gate is a real branch.","4":"Pattern-based prompt-injection screening, redaction of sensitive values, and an audit log of every query."}},{"key":"evaluate","name":"Evaluate","sub":"tests, evals","line":"Proving it works with numbers that are committed, not claimed.","proofs":{"2":"Fixed vs semantic chunking on 32 labelled questions: complete-hit@3 100% vs 90.6%. Live retest 10/10.","3":"22 tests in CI, including six for duplicate webhook deliveries.","4":"7 of 7 role allow and deny cases pass; 29 tests in CI."}}]}</script>
+<script src="pw.js" defer></script>
 <script src="cmdk.js" defer></script>
-<script src="map.js" defer></script>
 </body>
 </html>

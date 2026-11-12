@@ -1,0 +1,190 @@
+{
+  "name": "Sudharsan V S",
+  "headline": "Data Engineer building the infrastructure AI systems run on",
+  "location": "Chennai, India",
+  "url": "https://sudharsan2816.github.io/",
+  "updated": "2026-11",
+  "contact": {
+    "email": "vssudhan2003@gmail.com",
+    "github": "https://github.com/Sudharsan2816",
+    "linkedin": "https://www.linkedin.com/in/sudharsan-v-s-a851a3242"
+  },
+  "experience": [
+    {
+      "title": "Data Engineer",
+      "company": "Edvoy",
+      "location": "Chennai",
+      "start": "2026-05",
+      "end": null,
+      "note": "promoted",
+      "highlights": [
+        "Designed the architecture of an AI-assisted workflow automation system (n8n + Hermes) and built its workflow and pipeline; in production since October 2026: Jira-triggered, RAG over email threads, Slack alerts, and a decision directory with guardrails. Colleagues built some of its components.",
+        "Designed the architecture of the initial RabbitMQ-based application automation and built its pipeline and university-specific configurations; later containerised it as three services so one failure can't stop the rest, as part of its move to AWS."
+      ]
+    },
+    {
+      "title": "Junior Data Engineer",
+      "company": "Edvoy",
+      "location": "Chennai",
+      "start": "2024-11",
+      "end": "2026-05",
+      "highlights": [
+        "Built modular ETL pipelines that normalise heterogeneous external data into standard internal formats.",
+        "Built a real-time OTP event service on GCP Pub/Sub with webhooks: acknowledgement, duplicate detection and timeout handling."
+      ]
+    },
+    {
+      "title": "Data Intern",
+      "company": "Edvoy",
+      "location": "Chennai",
+      "start": "2024-08",
+      "end": "2024-10",
+      "highlights": []
+    }
+  ],
+  "across_the_role": [
+    "Async Python and FastAPI services with idempotency, retries, failure recovery and duplicate prevention.",
+    "MongoDB (including centralised logging), AWS EC2 and S3, Docker and Docker Compose."
+  ],
+  "projects": [
+    {
+      "name": "Market Research Copilot",
+      "kind": "personal build",
+      "topic": "RAG",
+      "case_study": "https://sudharsan2816.github.io/copilot.html",
+      "code": "https://github.com/Sudharsan2816/Projects/tree/main/ai-market-research-copilot",
+      "stack": [
+        "FastAPI",
+        "FAISS",
+        "NVIDIA NIM",
+        "React",
+        "Docker"
+      ],
+      "tests_in_ci": 96,
+      "results": [
+        "Fixed-size chunks beat semantic chunking on 32 labelled questions: complete-hit@3 100% vs 90.6%",
+        "305-word chunks with 38 words of overlap, picked by a size sweep: hit@1 71.9%, MRR 0.885",
+        "Live chat test passed 9 of 12; after fixes the retest passed 10 of 10"
+      ]
+    },
+    {
+      "name": "AI Code Review Agent",
+      "kind": "personal build",
+      "topic": "Agents",
+      "case_study": "https://sudharsan2816.github.io/review.html",
+      "code": "https://github.com/Sudharsan2816/Code_review_agent",
+      "stack": [
+        "LangGraph",
+        "FastAPI",
+        "GitHub API",
+        "Claude API",
+        "MongoDB"
+      ],
+      "tests_in_ci": 22,
+      "results": [
+        "Findings that don't quote a changed line are dropped; the verdict is computed in code",
+        "Approval is a branch in the LangGraph state machine",
+        "Webhooks without a valid HMAC-SHA256 signature get 401",
+        "One review per commit, however often GitHub delivers the webhook"
+      ],
+      "not_measured": "Review quality (precision, recall, false-positive rate)"
+    },
+    {
+      "name": "Permission-Aware RAG",
+      "kind": "personal build",
+      "topic": "Secure RAG",
+      "case_study": "https://sudharsan2816.github.io/rbac.html",
+      "code": "https://github.com/Sudharsan2816/Projects/tree/main/enterprise-rag",
+      "stack": [
+        "FastAPI",
+        "FAISS",
+        "JWT",
+        "SQLite",
+        "Docker"
+      ],
+      "tests_in_ci": 29,
+      "results": [
+        "7 of 7 allow and deny cases pass, including cross-role denial",
+        "6 roles mapped to 11 data permissions across 4 source types"
+      ],
+      "not_measured": "Retrieval quality"
+    }
+  ],
+  "skills": {
+    "production_at_edvoy": [
+      "RabbitMQ, distributed task orchestration",
+      "n8n, Hermes, LangGraph agent workflows",
+      "RAG over email threads",
+      "Slack and Jira integrations",
+      "GCP Pub/Sub, webhooks, event-driven design",
+      "ETL pipelines, data normalisation",
+      "Idempotency, retries, failure recovery",
+      "Python, async FastAPI",
+      "MongoDB, AWS EC2/S3, Docker"
+    ],
+    "personal_builds": [
+      "Two-stage retrieval: FAISS + NIM reranking",
+      "Chunking benchmarks, retrieval eval (hit@k, MRR)",
+      "NVIDIA NIM embeddings, SQLAlchemy",
+      "Role-filtered retrieval, JWT, audit logs",
+      "HMAC webhook verification, human approval gates",
+      "GitHub API, Claude and OpenAI APIs"
+    ],
+    "tooling": [
+      "Claude Code",
+      "Cursor",
+      "Codex",
+      "GitHub Copilot"
+    ]
+  },
+  "education": [
+    {
+      "degree": "B.E. Electronics & Communication",
+      "school": "Panimalar Engineering College",
+      "years": "2020-2024",
+      "cgpa": "8.8/10"
+    }
+  ],
+  "certificates": [
+    {
+      "name": "Machine Learning with Python",
+      "issuer": "IBM on Coursera",
+      "date": "2026-05",
+      "verify": "https://coursera.org/verify/OQZK1DY827GJ"
+    },
+    {
+      "name": "Introduction to Deep Learning & Neural Networks with Keras",
+      "issuer": "IBM on Coursera",
+      "date": "2026-06",
+      "verify": "https://coursera.org/verify/ASRRZDEMB9FU"
+    }
+  ],
+  "notes": [
+    {
+      "date": "2026-09-13",
+      "title": "A RAG regression suite: recall, citations and a faithfulness check",
+      "url": "https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/RAG_EVALUATION.md"
+    },
+    {
+      "date": "2026-08-26",
+      "title": "Picking a chunk size by sweep, and why it landed on 305 words",
+      "url": "https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/FIXED_CHUNK_SIZE_SWEEP_2026-08-26.md"
+    },
+    {
+      "date": "2026-08-25",
+      "title": "Fixed vs semantic chunking on 32 labelled questions",
+      "url": "https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHUNKING_BENCHMARK_2026-08-25.md"
+    },
+    {
+      "date": "2026-08-09",
+      "title": "A live chat test: three failures and how each was fixed",
+      "url": "https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHATBOT_LIVE_TEST_RESULTS_2026-08-09.md"
+    },
+    {
+      "date": "2026-08-01",
+      "title": "Filtering every retriever by role: seven allow and deny cases",
+      "url": "https://github.com/Sudharsan2816/Projects/blob/main/enterprise-rag/docs/RBAC_EVALUATION.md"
+    }
+  ],
+  "note": "Production work at Edvoy is described at architecture level only."
+}

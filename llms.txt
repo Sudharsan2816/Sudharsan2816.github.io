@@ -1,0 +1,51 @@
+# Sudharsan V S
+
+> Data Engineer at Edvoy in Chennai, India, building the infrastructure AI systems run on: orchestration, event-driven pipelines, idempotency and guardrails. Three personal builds (RAG, an agent, and permission-aware RAG) have public code, 147 automated tests in CI between them, and committed evaluation reports.
+
+This file is a plain-text summary of https://sudharsan2816.github.io/ for AI agents and tools. Every number below is on the site, with a link to where it comes from. A structured version: https://sudharsan2816.github.io/profile.json
+
+## Role
+
+- Data Engineer, Edvoy, Chennai (May 2026 to now; promoted from Junior Data Engineer, Nov 2024 to May 2026; Data Intern, Aug to Oct 2024)
+- Designed the architecture of an AI-assisted workflow automation system (n8n + Hermes) and built its workflow and pipeline; in production since October 2026: Jira-triggered, RAG over email threads, Slack alerts, and a decision directory with guardrails. Colleagues built some of its components.
+- Designed the architecture of the initial RabbitMQ-based application automation and built its pipeline; later containerised it as three services so one failure can't stop the rest, as part of its move to AWS.
+- Built modular ETL pipelines that normalise heterogeneous external data, and a real-time OTP event service on GCP Pub/Sub with acknowledgement, duplicate detection and timeout handling.
+- Production work at Edvoy is described at architecture level only; no internal metrics are published.
+
+## Case studies (personal builds, public code)
+
+- [Market Research Copilot](https://sudharsan2816.github.io/copilot.html): document-grounded RAG. Fixed-size chunks beat semantic chunking on 32 labelled questions (complete-hit@3 100% vs 90.6%); a sweep picked 305-word chunks with 38 words of overlap; FAISS fetches 20, a 0.35 relevance floor drops weak matches, an NVIDIA NIM reranker keeps 6. A live test passed 9 of 12; after fixes the retest passed 10 of 10. 96 tests in CI. Code: https://github.com/Sudharsan2816/Projects/tree/main/ai-market-research-copilot
+- [AI Code Review Agent](https://sudharsan2816.github.io/review.html): LangGraph pull-request reviewer. Every finding must quote a changed line or it is dropped; the verdict is computed in code; approval is a real branch in the graph; HMAC-SHA256 webhooks; one review per commit. 22 tests in CI. Review quality (precision, recall) is not yet measured. Code: https://github.com/Sudharsan2816/Code_review_agent
+- [Permission-Aware RAG](https://sudharsan2816.github.io/rbac.html): access control lives in the retrievers, not the prompt. 6 roles, 11 data permissions, 4 source types; 7 of 7 allow and deny cases pass; 29 tests plus the authorisation eval in CI. Retrieval quality is not measured. Code: https://github.com/Sudharsan2816/Projects/tree/main/enterprise-rag
+
+## Try it
+
+- [Replay the Copilot's live test](https://sudharsan2816.github.io/copilot.html#try): recorded run, answers word for word from the committed log
+- [Put model replies through the grounding step](https://sudharsan2816.github.io/review.html#try): recorded run of the CI fixtures
+- [Run the permission checks](https://sudharsan2816.github.io/rbac.html#try): runs the project's own Python in the browser with Pyodide
+
+## Skills, and where they're proven
+
+- Production (Edvoy): RabbitMQ and distributed task orchestration; n8n, Hermes and LangGraph agent workflows; RAG over email threads; Slack and Jira integrations; GCP Pub/Sub, webhooks and event-driven design; ETL pipelines and data normalisation; idempotency, retries and failure recovery; Python and async FastAPI; MongoDB, AWS EC2/S3, Docker
+- Personal builds: two-stage retrieval (FAISS + NIM reranking); chunking benchmarks and retrieval evaluation (hit@k, MRR); NVIDIA NIM embeddings, SQLAlchemy; role-filtered retrieval, JWT, audit logs; HMAC webhook verification and human approval gates; GitHub API, Claude and OpenAI APIs
+- Tooling: Claude Code, Cursor, Codex, GitHub Copilot
+
+## Engineering notes
+
+- [A RAG regression suite: recall, citations and a faithfulness check](https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/RAG_EVALUATION.md) (2026-09-13)
+- [Picking a chunk size by sweep, and why it landed on 305 words](https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/FIXED_CHUNK_SIZE_SWEEP_2026-08-26.md) (2026-08-26)
+- [Fixed vs semantic chunking on 32 labelled questions](https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHUNKING_BENCHMARK_2026-08-25.md) (2026-08-25)
+- [A live chat test: three failures and how each was fixed](https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHATBOT_LIVE_TEST_RESULTS_2026-08-09.md) (2026-08-09)
+- [Filtering every retriever by role: seven allow and deny cases](https://github.com/Sudharsan2816/Projects/blob/main/enterprise-rag/docs/RBAC_EVALUATION.md) (2026-08-01)
+
+## Education
+
+- B.E. Electronics & Communication, Panimalar Engineering College, 2020 to 2024, CGPA 8.8/10
+- Machine Learning with Python, IBM on Coursera, May 2026 (https://coursera.org/verify/OQZK1DY827GJ)
+- Introduction to Deep Learning & Neural Networks with Keras, IBM on Coursera, Jun 2026 (https://coursera.org/verify/ASRRZDEMB9FU)
+
+## Contact
+
+- Email: vssudhan2003@gmail.com
+- GitHub: https://github.com/Sudharsan2816
+- LinkedIn: https://www.linkedin.com/in/sudharsan-v-s-a851a3242

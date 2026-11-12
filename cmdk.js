@@ -6,14 +6,15 @@
   var EMAIL = 'vssudhan2003@gmail.com';
   var ISS = 'https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=';
   var ITEMS = [
-    ['Home', 'Results you can check', 'index.html#results', 'numbers tests'],
-    ['Home', 'Selected work', 'index.html#work', 'projects builds'],
+    ['Home', 'Ask the portfolio (a command line)', 'index.html#ask', 'terminal console whoami commands'],
+    ['Home', 'The pipeline: systems wired to stages', 'index.html#pipeline', 'projects map evidence skills stack'],
+    ['Home', 'Case studies', 'index.html#work', 'projects builds work'],
     ['Home', 'Test the work yourself', 'index.html#try', 'demo replay try'],
-    ['Home', 'What colleagues say', 'index.html#recs', 'recommendations references'],
-    ['Home', 'Experience at Edvoy', 'index.html#experience', 'job work history data engineer'],
-    ['Home', 'Skills, and where they’re proven', 'index.html#proof', 'stack map evidence'],
-    ['Home', 'Engineering notes', 'index.html#notes', 'blog writing reports'],
-    ['Home', 'Feedback', 'index.html#feedback', 'bug suggestion contact'],
+    ['Home', 'Currently', 'index.html#now', 'now latest news'],
+    ['Home', 'What colleagues say', 'index.html#recs', 'recommendations references quotes'],
+    ['Home', 'Experience at Edvoy', 'index.html#experience', 'job work history data engineer education certificates'],
+    ['Home', 'Engineering notes', 'index.html#writing', 'blog writing reports notes'],
+    ['Home', 'Contact and feedback', 'index.html#contact', 'bug suggestion contact email'],
     ['Case study', 'Market Research Copilot', 'copilot.html', 'rag faiss chunking reranking'],
     ['Case study', 'AI Code Review Agent', 'review.html', 'langgraph github webhook agent'],
     ['Case study', 'Permission-Aware RAG', 'rbac.html', 'rbac security roles jwt'],
@@ -23,9 +24,11 @@
     ['Copilot', 'Copilot: architecture', 'copilot.html#architecture', 'diagram'],
     ['Copilot', 'Copilot: evaluation and results', 'copilot.html#evaluation', 'benchmark hit@3 mrr'],
     ['Copilot', 'Copilot: how it was built', 'copilot.html#roadmap', 'roadmap stages'],
+    ['Copilot', 'Copilot: key decisions', 'copilot.html#decisions', 'trade-offs chunking'],
     ['Code Review Agent', 'Code Review Agent: architecture', 'review.html#architecture', 'diagram langgraph'],
     ['Code Review Agent', 'Code Review Agent: failure modes', 'review.html#failures', 'guardrails duplicate'],
     ['Code Review Agent', 'Code Review Agent: how it was built', 'review.html#roadmap', 'roadmap stages'],
+    ['Code Review Agent', 'Code Review Agent: evaluation', 'review.html#evaluation', 'tests behaviour'],
     ['Permission-Aware RAG', 'Permission-Aware RAG: architecture', 'rbac.html#architecture', 'diagram'],
     ['Permission-Aware RAG', 'Permission-Aware RAG: evaluation', 'rbac.html#evaluation', 'allow deny cases'],
     ['Permission-Aware RAG', 'Permission-Aware RAG: how it was built', 'rbac.html#roadmap', 'roadmap stages'],
@@ -36,6 +39,8 @@
     ['Contact', 'Send an email', 'mailto:' + EMAIL, 'mail contact'],
     ['Contact', 'GitHub profile', 'https://github.com/Sudharsan2816', 'code'],
     ['Contact', 'LinkedIn profile', 'https://www.linkedin.com/in/sudharsan-v-s-a851a3242', 'social'],
+    ['For AI agents', 'Plain-text profile (llms.txt)', 'llms.txt', 'agent llm machine readable'],
+    ['For AI agents', 'Structured profile (profile.json)', 'profile.json', 'agent json machine readable'],
     ['Feedback', 'Report a bug', ISS + 'bug_report.yml', 'issue broken'],
     ['Feedback', 'Suggest an improvement', ISS + 'suggestion.yml', 'idea issue'],
     ['Feedback', 'Propose a scaling idea', ISS + 'scaling_idea.yml', 'scale issue load']
@@ -127,11 +132,11 @@
     dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
     dlg.addEventListener('close', function () { document.documentElement.classList.remove('cmdk-open'); if (lastFocus && lastFocus.focus) lastFocus.focus(); });
   }
-  function open() {
+  function open(q) {
     if (!dlg) build();
     if (dlg.open) return;
     lastFocus = document.activeElement;
-    input.value = '';
+    input.value = typeof q === 'string' ? q : '';
     render();
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
     document.documentElement.classList.add('cmdk-open');
@@ -145,8 +150,9 @@
     else if (e.key === '/' && !typing && !(dlg && dlg.open)) { e.preventDefault(); open(); }
   });
   var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+  window.cmdkOpen = open;
   document.querySelectorAll('[data-cmdk-open]').forEach(function (b) {
-    b.addEventListener('click', open);
+    b.addEventListener('click', function () { open(); });
     var k = b.querySelector('kbd'); if (k) k.textContent = mac ? '⌘K' : 'Ctrl K';
   });
 })();
