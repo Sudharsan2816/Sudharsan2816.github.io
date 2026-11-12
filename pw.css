@@ -152,6 +152,22 @@ html:not(.js) .js-only { display: none !important; }
   .fig { max-width: 330px; padding: 12px 12px 10px; }
 }
 
+/* ---------- 01 what I build ---------- */
+.cps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.cp { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 18px 20px 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.cp:first-child { border-top: 3px solid var(--marker); }
+.cp-k { margin: 0; display: flex; justify-content: space-between; font: 12px var(--mono); color: var(--graphite); }
+.cp h3 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: 25px; line-height: 1.1; letter-spacing: -.01em; }
+.cp-chips { margin: 0; display: flex; flex-wrap: wrap; gap: 5px; }
+.cp-chips span { font: 11.5px var(--mono); padding: 2px 7px; border-radius: 5px; background: var(--paper); border: 1px solid var(--rule); color: var(--ink); }
+.cp-ev { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--body-ink); }
+.cp-a { margin: auto 0 0; display: flex; flex-wrap: wrap; gap: 0 18px; border-top: 1px solid var(--rule-soft); padding-top: 4px; font-size: 14px; font-weight: 600; }
+.cp-a a { display: inline-flex; align-items: center; min-height: 40px; color: var(--ink); }
+.cp-tools { margin: 14px 0 0; font-size: 14.5px; color: var(--body-ink); }
+.cp-tools span { font: 12px var(--mono); color: var(--graphite); margin-right: 10px; }
+@media (max-width: 999px) { .cps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 639px) { .cps { grid-template-columns: minmax(0, 1fr); } .cp h3 { font-size: 22px; } }
+
 /* ---------- 01 ask the portfolio ---------- */
 .ask { display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch; }
 .term { flex: 2.2 1 520px; min-width: 0; background: var(--card); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
@@ -254,40 +270,29 @@ html:not(.js) .js-only { display: none !important; }
 .wb-foot .r { margin-left: auto; }
 .sq-y { color: var(--marker); } .sq-w { color: var(--board-text); } .sq-g { color: var(--signal); }
 
-/* ---------- 02 pipeline: phone rail ---------- */
-.pm-chips { margin: 0 calc(var(--gutter) * -1) 12px; padding: 0 var(--gutter) 2px; }
-.pm-chips .chip { border-radius: 999px; }
-.pm { position: relative; border-radius: 18px; padding: 14px 12px 12px 36px; background-size: 18px 18px; }
-.pm-rail { position: absolute; left: 17px; top: 22px; bottom: 54px; width: 2px; background: var(--node-bd); }
-.pm-head { margin: 0 0 12px; font: 11px var(--mono); color: var(--board-muted); }
-.pm-line { margin: -4px 0 12px; font-size: 14px; line-height: 1.45; }
-.pm-list { display: flex; flex-direction: column; gap: 10px; }
-.pm-item { position: relative; }
-.pm-item.dim .pm-card { border-color: #2A2822; }
-.pm-item.dim .pm-name { color: #938D82; }
-.pm-item.dim .tag { background: #9C968A; }
-.pm-item.dim .tag.prod { background: #B89A2E; }
-.pm-port { position: absolute; left: -24px; top: 26px; width: 11px; height: 11px; border-radius: 50%; background: var(--wire); border: 2px solid var(--board); }
-.pm-stub { position: absolute; left: -14px; top: 31px; width: 14px; height: 2px; background: var(--wire); }
-.pm-item.on .pm-port, .pm-item.on .pm-stub { background: var(--signal); }
-.pm-card { background: var(--node); border: 1px solid var(--node-bd); border-radius: 12px; overflow: hidden; }
-.pm-item.open .pm-card { border-color: var(--signal); background: var(--node-hi); }
-.pm-btn { width: 100%; display: block; padding: 0; text-align: left; background: transparent; border: 0; color: var(--board-text); cursor: pointer; }
-.pm-btn .node-h { padding: 7px 10px; font-size: 10.5px; }
-.pm-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px 12px; }
-.pm-row > span:first-child { flex: 1; min-width: 0; }
-.pm-name { display: block; font-size: 16px; font-weight: 600; line-height: 1.3; }
-.badges { display: flex; gap: 4px; margin-top: 7px; }
-.badges i { width: 24px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font: normal 10.5px var(--mono); border-radius: 4px; border: 1px solid var(--node-bd); color: #6B665B; }
-.badges i.y { border-color: var(--signal); color: var(--signal); }
-.sign { flex: none; width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--node-bd); display: inline-flex; align-items: center; justify-content: center; font: 16px var(--mono); }
-.pm-proof { margin: 0; padding: 0 12px 12px; font-size: 13.5px; line-height: 1.5; }
-.pm-proof span { color: var(--signal); font: 11px var(--mono); }
-.pm-body { border-top: 1px solid var(--node-bd); padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-.pm-body p { margin: 0; }
-.pm-body .rd-metric b { font-size: 30px; }
-.pm-body .rd-links a { min-height: 44px; }
-.pm-foot { margin: 12px 0 0; display: flex; flex-wrap: wrap; gap: 4px 14px; font: 10.5px var(--mono); color: var(--board-muted); }
+/* ---------- 02 pipeline: the same board on phones and tablets ---------- */
+@media (max-width: 999px) {
+  .wb { grid-template-columns: minmax(0, 1fr) clamp(30px, 9vw, 90px) minmax(0, .92fr) 22px; padding: 14px 10px 0; border-radius: 16px; background-size: 18px 18px; }
+  .wb-k { margin-bottom: 14px; font-size: 11px; }
+  .wb-k.c1 { grid-column: 1 / -1; }
+  .wb-k.c3, .wb-k.c5 { display: none; }
+  .wb-col { gap: 10px; }
+  .wb-col.c5 { grid-column: 1 / -1; grid-row: 3; margin-top: 30px; }
+  .node { height: 76px; }
+  .node-h { padding: 5px 8px; font-size: 10px; }
+  .nh-code, .nh-pre { display: none; }
+  .node-t { padding: 6px 9px 0; font-size: 13.5px; line-height: 1.25; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .wb-col.c1 .node-s { display: none; }
+  .wb-col.c3 .node-s { padding: 1px 9px 0; font-size: 11.5px; }
+  .port { top: calc(50% - 5px); }
+  .readme { height: auto; }
+  .readme .port.l { top: -6px; left: auto; right: 6px; }
+  .readme-b { overflow: visible; padding: 14px 14px 16px; }
+  .rd-title { font-size: 24px; }
+  .rd-links a { min-height: 44px; }
+  .wb-foot { grid-row: 4; margin: 18px -10px 0; padding: 8px 12px; gap: 4px 14px; font-size: 10.5px; }
+  .wb-foot .r { margin-left: 0; }
+}
 .pipe-fallback { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
 .pipe-fallback li { padding: 12px 0; border-bottom: 1px solid var(--rule); }
 

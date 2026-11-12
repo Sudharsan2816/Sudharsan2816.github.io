@@ -1,8 +1,17 @@
 # Sudharsan V S
 
-> Data Engineer at Edvoy in Chennai, India, building the infrastructure AI systems run on: orchestration, event-driven pipelines, idempotency and guardrails. Three personal builds (RAG, an agent, and permission-aware RAG) have public code, 147 automated tests in CI between them, and committed evaluation reports.
+> AI engineer building RAG pipelines and LLM agents, and the evaluations that prove them. Data Engineer at Edvoy in Chennai, India, where he designed a production AI workflow system (RAG over email threads, n8n + Hermes + LangGraph, guardrails). Three public builds (RAG, an agent, and permission-aware RAG) have public code, 147 automated tests in CI between them, and committed evaluation reports.
 
 This file is a plain-text summary of https://sudharsan2816.github.io/ for AI agents and tools. Every number below is on the site, with a link to where it comes from. A structured version: https://sudharsan2816.github.io/profile.json
+
+## What I build
+
+- RAG pipelines: chunking benchmarks, embeddings, FAISS, reranking, relevance thresholds, citations, follow-up rewriting
+- LLM agents and workflows: LangGraph, n8n, Hermes, state machines, human-in-the-loop approval, decision rules
+- Evaluation: hit@k, MRR, recall@k, citation precision, faithfulness checks, regression suites in CI, live tests
+- Guardrails and AI security: grounding model output in evidence, prompt-injection screening, role-based retrieval, redaction, audit logs, HMAC-verified webhooks
+- Production backend for LLM apps: Python, async FastAPI, RabbitMQ, GCP Pub/Sub, idempotency, retries, Docker, AWS, MongoDB
+- LLM APIs: Claude API, OpenAI API, NVIDIA NIM, Gemini API, prompt caching, timeouts and fallbacks
 
 ## Role
 

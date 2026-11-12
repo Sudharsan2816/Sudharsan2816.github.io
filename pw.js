@@ -27,7 +27,7 @@
     var out = root.querySelector('.term-out'), cmdsWrap = root.querySelector('.term-cmds'), form = root.querySelector('.term-in'), input = form.querySelector('input');
     var trace = root.querySelector('.trace dl'), traceLine = root.querySelector('.trace-line');
     var O = data.outputs, order = data.commands, buttons = {};
-    var alias = { about: 'whoami', me: 'whoami', who: 'whoami', ls: 'ls work', work: 'ls work', projects: 'ls work', results: 'cat results', numbers: 'cat results', proof: 'cat results',
+    var alias = { stack: 'skills', capabilities: 'skills', 'cat capabilities.md': 'skills', rag: 'skills', agents: 'skills', evals: 'skills', about: 'whoami', me: 'whoami', who: 'whoami', ls: 'ls work', work: 'ls work', projects: 'ls work', results: 'cat results', numbers: 'cat results', proof: 'cat results',
       now: 'tail -f now', news: 'tail -f now', demos: 'open demos', demo: 'open demos', try: 'open demos', email: 'contact', mail: 'contact', hire: 'contact', '?': 'help', man: 'help' };
     function setTrace(input, matched, src, n) {
       if (trace) trace.innerHTML = '';
@@ -78,9 +78,8 @@
   /* ---------- 02 the pipeline ---------- */
   function pipeline(sec) {
     var P = data.projects, S = data.stages, L = ['I', 'O', 'R', 'G', 'E'];
-    var wb = sec.querySelector('[data-board]'), pm = sec.querySelector('[data-pm]');
+    var wb = sec.querySelector('[data-board]');
     var sel = { t: 'p', i: 0 };
-    var stg = -1, open = 0;
 
     /* wide board */
     var pBtns = [], sBtns = [], svg, readmeBody, readmeHead, litLabel;
@@ -97,7 +96,7 @@
       var c1 = h('div', { class: 'wb-col c1', role: 'group', 'aria-label': 'Systems I have built' });
       P.forEach(function (p, pi) {
         var b = h('button', { type: 'button', class: 'node', 'aria-pressed': 'false', on: { click: function () { sel = { t: 'p', i: pi }; renderBoard(); } } }, [
-          h('span', { class: 'node-h' }, [h('span', { text: '0' + (pi + 1) + ' · ' + p.code }), h('span', { class: 'tag' + (p.prod ? ' prod' : ''), text: p.tag })]),
+          h('span', { class: 'node-h' }, [h('span', {}, ['0' + (pi + 1), h('span', { class: 'nh-code', text: ' · ' + p.code })]), h('span', { class: 'tag' + (p.prod ? ' prod' : ''), text: p.tag })]),
           h('span', { class: 'node-t', text: p.name }), h('span', { class: 'node-s', text: p.sub }), h('span', { class: 'port r', 'aria-hidden': 'true' })
         ]);
         pBtns.push(b); c1.appendChild(b);
@@ -106,7 +105,7 @@
       S.forEach(function (s, si) {
         var n = P.filter(function (p) { return p.stages.indexOf(si) >= 0; }).length;
         var b = h('button', { type: 'button', class: 'node', 'aria-pressed': 'false', on: { click: function () { sel = { t: 's', i: si }; renderBoard(); } } }, [
-          h('span', { class: 'node-h' }, [h('span', { text: 'stage.' + s.key }), h('span', { text: n + ' in' })]),
+          h('span', { class: 'node-h' }, [h('span', {}, [h('span', { class: 'nh-pre', text: 'stage.' }), s.key]), h('span', { text: n + ' in' })]),
           h('span', { class: 'node-t', text: s.name }), h('span', { class: 'node-s', text: s.sub }),
           h('span', { class: 'port l', 'aria-hidden': 'true' }), h('span', { class: 'port r', 'aria-hidden': 'true' })
         ]);
@@ -131,9 +130,16 @@
         var a = mid(pBtns[pi], 'r'), z = mid(sBtns[si], 'l'), mx = (a.x + z.x) / 2, on = sel.t === 'p' ? sel.i === pi : sel.i === si;
         paths.push({ d: 'M' + a.x + ' ' + a.y + ' C' + mx + ' ' + a.y + ', ' + mx + ' ' + z.y + ', ' + z.x + ' ' + z.y, on: on });
       }); });
+      var b0 = wb.getBoundingClientRect(), rr = rd.getBoundingClientRect(), stacked = rr.top > sBtns[S.length - 1].getBoundingClientRect().bottom;
       S.forEach(function (s, si) {
-        var a = mid(sBtns[si], 'r'), z = mid(rd, 'l'), mx = (a.x + z.x) / 2;
-        paths.push({ d: 'M' + a.x + ' ' + a.y + ' C' + mx + ' ' + a.y + ', ' + mx + ' ' + z.y + ', ' + z.x + ' ' + z.y, on: sOn(si) });
+        var a = mid(sBtns[si], 'r');
+        if (stacked) {
+          var bx = a.x + 11, ry = rr.top - b0.top;
+          paths.push({ d: 'M' + a.x + ' ' + a.y + ' C' + bx + ' ' + a.y + ', ' + bx + ' ' + a.y + ', ' + bx + ' ' + (a.y + 10) + ' L' + bx + ' ' + ry, on: sOn(si) });
+        } else {
+          var z = mid(rd, 'l'), mx = (a.x + z.x) / 2;
+          paths.push({ d: 'M' + a.x + ' ' + a.y + ' C' + mx + ' ' + a.y + ', ' + mx + ' ' + z.y + ', ' + z.x + ' ' + z.y, on: sOn(si) });
+        }
       });
       var nWork = 0; P.forEach(function (p) { nWork += p.stages.length; });
       paths.forEach(function (p, k) { if (p.on && k < nWork) lit++; });
@@ -168,51 +174,8 @@
       drawWires();
     }
 
-    /* phone rail */
-    var chips = [], items = [], pmHead, pmLine;
-    function buildRail() {
-      pm.innerHTML = '';
-      var chipRow = h('div', { class: 'swipe pm-chips', role: 'group', 'aria-label': 'Filter by stage' });
-      [{ name: 'All' }].concat(S).forEach(function (s, k) {
-        var b = h('button', { type: 'button', class: 'chip', 'aria-pressed': 'false', text: s.name, on: { click: function () { stg = k - 1; renderRail(); } } });
-        chips.push(b); chipRow.appendChild(b);
-      });
-      pmHead = h('p', { class: 'pm-head', 'aria-live': 'polite' }); pmLine = h('p', { class: 'pm-line' });
-      var list = h('div', { class: 'pm-list' });
-      P.forEach(function (p, pi) {
-        var badges = h('span', { class: 'badges', 'aria-label': 'Stages: ' + p.stages.map(function (i) { return S[i].name; }).join(', ') }, L.map(function (l, i) { return h('i', { class: p.stages.indexOf(i) >= 0 ? 'y' : null, 'aria-hidden': 'true', text: l }); }));
-        var sign = h('span', { class: 'sign', 'aria-hidden': 'true' });
-        var btn = h('button', { type: 'button', class: 'pm-btn', 'aria-expanded': 'false', 'aria-controls': 'pm-b' + pi, on: { click: function () { open = open === pi ? -1 : pi; renderRail(); } } }, [
-          h('span', { class: 'node-h' }, [h('span', { text: '0' + (pi + 1) + ' · ' + p.code }), h('span', { class: 'tag' + (p.prod ? ' prod' : ''), text: p.tag })]),
-          h('span', { class: 'pm-row' }, [h('span', {}, [h('span', { class: 'pm-name', text: p.name }), badges]), sign])
-        ]);
-        var proof = h('p', { class: 'pm-proof' });
-        var body = h('div', { class: 'pm-body', id: 'pm-b' + pi });
-        var card = h('div', { class: 'pm-card' }, [btn, proof, body]);
-        var it = h('div', { class: 'pm-item' }, [h('span', { class: 'pm-port', 'aria-hidden': 'true' }), h('span', { class: 'pm-stub', 'aria-hidden': 'true' }), card]);
-        items.push({ el: it, btn: btn, sign: sign, proof: proof, body: body }); list.appendChild(it);
-      });
-      pm.appendChild(chipRow);
-      pm.appendChild(h('div', { class: 'board pm' }, [h('span', { class: 'pm-rail', 'aria-hidden': 'true' }), pmHead, pmLine, list,
-        h('p', { class: 'pm-foot' }, [h('span', {}, [h('span', { class: 'sq-y', text: '■' }), ' production']), h('span', {}, [h('span', { class: 'sq-w', text: '■' }), ' personal build']), h('span', { text: 'I O R G E = the 5 stages' })])]));
-      renderRail();
-    }
-    function renderRail() {
-      chips.forEach(function (b, k) { b.setAttribute('aria-pressed', k - 1 === stg ? 'true' : 'false'); });
-      pmHead.textContent = stg < 0 ? 'patch · work.graph · tap a system' : 'stage.' + S[stg].key + ' · ' + P.filter(function (p) { return p.stages.indexOf(stg) >= 0; }).length + ' systems prove it';
-      pmLine.textContent = stg < 0 ? '' : S[stg].line; pmLine.hidden = stg < 0;
-      items.forEach(function (it, pi) {
-        var p = P[pi], has = stg < 0 || p.stages.indexOf(stg) >= 0, isOpen = open === pi;
-        it.el.classList.toggle('dim', !has); it.el.classList.toggle('on', stg >= 0 ? has : isOpen); it.el.classList.toggle('open', isOpen);
-        it.btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false'); it.sign.textContent = isOpen ? '−' : '+';
-        it.proof.innerHTML = ''; it.proof.hidden = !(stg >= 0 && has && S[stg].proofs[pi]);
-        if (!it.proof.hidden) { it.proof.appendChild(h('span', { text: 'proves ' + S[stg].name.toLowerCase() + ' · ' })); it.proof.append(S[stg].proofs[pi]); }
-        it.body.hidden = !isOpen;
-        if (isOpen) { readmeFor(it.body, false, { t: 'p', i: pi }); it.body.querySelector('.rd-title').remove(); }
-      });
-    }
     sec.querySelector('.pipe-fallback') && sec.querySelector('.pipe-fallback').setAttribute('hidden', '');
-    buildBoard(); buildRail();
+    buildBoard();
   }
 
   /* ---------- 03 the case-study carousel ---------- */
