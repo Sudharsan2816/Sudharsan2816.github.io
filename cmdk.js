@@ -6,6 +6,7 @@
   var EMAIL = 'vssudhan2003@gmail.com';
   var ISS = 'https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=';
   var ITEMS = [
+    ['Home', 'What I build: RAG, agents, evals, guardrails', 'index.html#build', 'skills capabilities stack rag llm agents evaluation genai ai engineer'],
     ['Home', 'Ask the portfolio (a command line)', 'index.html#ask', 'terminal console whoami commands'],
     ['Home', 'The pipeline: systems wired to stages', 'index.html#pipeline', 'projects map evidence skills stack'],
     ['Home', 'Case studies', 'index.html#work', 'projects builds work'],

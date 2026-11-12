@@ -152,6 +152,22 @@ html:not(.js) .js-only { display: none !important; }
   .fig { max-width: 330px; padding: 12px 12px 10px; }
 }
 
+/* ---------- 01 what I build ---------- */
+.cps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.cp { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 18px 20px 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.cp:first-child { border-top: 3px solid var(--marker); }
+.cp-k { margin: 0; display: flex; justify-content: space-between; font: 12px var(--mono); color: var(--graphite); }
+.cp h3 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: 25px; line-height: 1.1; letter-spacing: -.01em; }
+.cp-chips { margin: 0; display: flex; flex-wrap: wrap; gap: 5px; }
+.cp-chips span { font: 11.5px var(--mono); padding: 2px 7px; border-radius: 5px; background: var(--paper); border: 1px solid var(--rule); color: var(--ink); }
+.cp-ev { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--body-ink); }
+.cp-a { margin: auto 0 0; display: flex; flex-wrap: wrap; gap: 0 18px; border-top: 1px solid var(--rule-soft); padding-top: 4px; font-size: 14px; font-weight: 600; }
+.cp-a a { display: inline-flex; align-items: center; min-height: 40px; color: var(--ink); }
+.cp-tools { margin: 14px 0 0; font-size: 14.5px; color: var(--body-ink); }
+.cp-tools span { font: 12px var(--mono); color: var(--graphite); margin-right: 10px; }
+@media (max-width: 999px) { .cps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 639px) { .cps { grid-template-columns: minmax(0, 1fr); } .cp h3 { font-size: 22px; } }
+
 /* ---------- 01 ask the portfolio ---------- */
 .ask { display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch; }
 .term { flex: 2.2 1 520px; min-width: 0; background: var(--card); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }

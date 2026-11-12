@@ -27,7 +27,7 @@
     var out = root.querySelector('.term-out'), cmdsWrap = root.querySelector('.term-cmds'), form = root.querySelector('.term-in'), input = form.querySelector('input');
     var trace = root.querySelector('.trace dl'), traceLine = root.querySelector('.trace-line');
     var O = data.outputs, order = data.commands, buttons = {};
-    var alias = { about: 'whoami', me: 'whoami', who: 'whoami', ls: 'ls work', work: 'ls work', projects: 'ls work', results: 'cat results', numbers: 'cat results', proof: 'cat results',
+    var alias = { stack: 'skills', capabilities: 'skills', 'cat capabilities.md': 'skills', rag: 'skills', agents: 'skills', evals: 'skills', about: 'whoami', me: 'whoami', who: 'whoami', ls: 'ls work', work: 'ls work', projects: 'ls work', results: 'cat results', numbers: 'cat results', proof: 'cat results',
       now: 'tail -f now', news: 'tail -f now', demos: 'open demos', demo: 'open demos', try: 'open demos', email: 'contact', mail: 'contact', hire: 'contact', '?': 'help', man: 'help' };
     function setTrace(input, matched, src, n) {
       if (trace) trace.innerHTML = '';

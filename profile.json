@@ -1,6 +1,62 @@
 {
   "name": "Sudharsan V S",
-  "headline": "Data Engineer building the infrastructure AI systems run on",
+  "headline": "AI engineer building RAG pipelines, LLM agents and their evaluations",
+  "current_title": "Data Engineer, Edvoy (designed its production AI workflow system)",
+  "capabilities": {
+    "rag_pipelines": [
+      "chunking benchmarks",
+      "embeddings",
+      "FAISS",
+      "reranking",
+      "relevance thresholds",
+      "citations",
+      "follow-up rewriting"
+    ],
+    "llm_agents_and_workflows": [
+      "LangGraph",
+      "n8n",
+      "Hermes",
+      "state machines",
+      "human-in-the-loop approval",
+      "decision rules"
+    ],
+    "evaluation": [
+      "hit@k",
+      "MRR",
+      "recall@k",
+      "citation precision",
+      "faithfulness checks",
+      "regression suites in CI",
+      "live tests"
+    ],
+    "guardrails_and_ai_security": [
+      "grounding",
+      "prompt-injection screening",
+      "role-based retrieval",
+      "redaction",
+      "audit logs",
+      "HMAC webhooks"
+    ],
+    "production_backend": [
+      "Python",
+      "async FastAPI",
+      "RabbitMQ",
+      "GCP Pub/Sub",
+      "idempotency",
+      "retries",
+      "Docker",
+      "AWS",
+      "MongoDB"
+    ],
+    "llm_apis": [
+      "Claude API",
+      "OpenAI API",
+      "NVIDIA NIM",
+      "Gemini API",
+      "prompt caching",
+      "timeouts and fallbacks"
+    ]
+  },
   "location": "Chennai, India",
   "url": "https://sudharsan2816.github.io/",
   "photo": "https://sudharsan2816.github.io/img/portrait.webp",
