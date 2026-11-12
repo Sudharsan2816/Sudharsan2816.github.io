@@ -746,7 +746,7 @@ tr.win td:first-child { box-shadow: inset 3px 0 0 var(--marker); padding-left: 8
 @media (max-width: 999px) { .rv { grid-template-columns: minmax(0, 1fr); } }
 
 /* rbac */
-.rb { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 14px; align-items: start; }
+.rb { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); grid-template-rows: auto 1fr; gap: 14px; align-items: start; }
 .rb-l { grid-column: 1; grid-row: 1; } .rb-r { grid-column: 2; grid-row: 1 / span 2; } .rb > .rb-own { grid-column: 1; grid-row: 2; }
 .rb-l, .rb-r { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .rb-k { margin: 0 0 6px; font: 11.5px var(--mono); color: var(--graphite); }
