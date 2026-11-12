@@ -277,4 +277,11 @@
   var cs = document.querySelector('[data-carousel]'); if (cs) carousel(cs);
   document.querySelectorAll('[data-arch]').forEach(arch);
   wideOpen('.xp', true);
+  document.querySelectorAll('[data-fig]').forEach(function (fig) {
+    var b = fig.querySelector('.fig-sw'); if (!b) return;
+    b.addEventListener('click', function () {
+      var on = !fig.classList.contains('photo');
+      fig.classList.toggle('photo', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.textContent = on ? 'show ascii' : 'show photo';
+    });
+  });
 })();
