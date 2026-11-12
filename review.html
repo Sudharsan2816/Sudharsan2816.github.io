@@ -3,501 +3,265 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="claude:viewport-fit-sides" content="cover">
-<title>AI Code Review Agent</title>
-<meta name="description" content="An LLM pull-request reviewer where every finding must quote a changed line or it is dropped, and the verdict is computed in code. Run the grounding step yourself.">
-<meta property="og:title" content="AI Code Review Agent · Sudharsan V S">
-<meta property="og:description" content="An LLM pull-request reviewer where every finding must quote a changed line or it is dropped, and the verdict is computed in code. Run the grounding step yourself.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://sudharsan2816.github.io/review.html">
-<meta property="og:image" content="https://sudharsan2816.github.io/og/review.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="AI Code Review Agent case study">
-<meta name="twitter:card" content="summary_large_image">
+<title>AI Code Review Agent · Sudharsan V S</title>
+<meta content="An LLM pull-request reviewer where every finding must quote a changed line or it is dropped, and the verdict is computed in code. Run the grounding step yourself." name="description"/>
+<meta content="AI Code Review Agent · Sudharsan V S" property="og:title"/>
+<meta content="An LLM pull-request reviewer where every finding must quote a changed line or it is dropped, and the verdict is computed in code. Run the grounding step yourself." property="og:description"/>
+<meta content="article" property="og:type"/>
+<meta content="https://sudharsan2816.github.io/review.html" property="og:url"/>
+<meta content="https://sudharsan2816.github.io/og/review.png" property="og:image"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="630" property="og:image:height"/>
+<meta content="AI Code Review Agent case study" property="og:image:alt"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta name="theme-color" content="#F2EDE4">
+<link rel="canonical" href="https://sudharsan2816.github.io/review.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<style>
-/* Layout: case-study sheet in the homepage's system; facts strip, then the eight standard sections down one reading column. */
-:root {
-  --paper: #e7e5e1; --sheet: #efeeea; --ink: #141414; --muted: #5b5853; --rule: #c7c3bc;
-  --red: #e0442c; --on-ink: #efeeea; --on-ink-muted: #a9a59e; --on-red: #141414;
-  --good: #2f7a4a; --nav-bg: rgba(231, 229, 225, 0.85);
-  --display: "Anybody", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
-  --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --ease: cubic-bezier(.2, .75, .2, 1);
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #171615; --sheet: #1f1e1c; --ink: #ecebe6; --muted: #a29e97; --rule: #3a3835;
-    --red: #f0563c; --on-ink: #171615; --on-ink-muted: #5f5b55; --on-red: #141414;
-    --good: #5fbf83; --nav-bg: rgba(23, 22, 21, 0.85); color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #171615; --sheet: #1f1e1c; --ink: #ecebe6; --muted: #a29e97; --rule: #3a3835;
-  --red: #f0563c; --on-ink: #171615; --on-ink-muted: #5f5b55; --on-red: #141414;
-  --good: #5fbf83; --nav-bg: rgba(23, 22, 21, 0.85); color-scheme: dark;
-}
-* { box-sizing: border-box; }
-:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
-@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 16.5px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-img { max-width: 100%; }
-::selection { background: var(--red); color: var(--on-red); }
-a { color: inherit; }
-a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 4px; }
-
-.wrap {
-  max-width: 1040px; margin: 0 auto;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--nav-bg); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); }
-.nav .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 10px; }
-.back { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; display: inline-flex; gap: 8px; align-items: center; }
-.back span { display: inline-block; transition: transform .25s var(--ease); }
-.back:hover span { transform: translateX(-4px); }
-.back:hover { color: var(--red); }
-.toc { display: flex; gap: clamp(8px, 2vw, 20px); list-style: none; margin: 0; padding: 0; }
-.toc a { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
-.toc a:hover { color: var(--ink); }
-@media (max-width: 720px) { .toc { display: none; } }
-
-.label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.ulink { text-decoration: none; background-image: linear-gradient(var(--red), var(--red)), linear-gradient(var(--rule), var(--rule)); background-size: 0% 1px, 100% 1px; background-position: 0 100%, 0 100%; background-repeat: no-repeat; padding-bottom: 2px; transition: background-size .35s var(--ease), color .2s; }
-.ulink:hover { background-size: 100% 1px, 100% 1px; color: var(--red); }
-
-/* hero */
-.hero { position: relative; margin-top: 24px; background: var(--sheet); padding-block: 28px 30px; padding-inline: clamp(16px, 4vw, 44px); display: grid; gap: 18px; overflow: hidden; isolation: isolate; }
-.hero .block { position: absolute; right: 9%; top: 0; bottom: 0; width: clamp(40px, 10%, 110px); background: var(--red); z-index: -1; }
-.hero .ghost { position: absolute; left: -0.03em; bottom: -0.18em; font-family: var(--display); font-weight: 300; font-stretch: 150%; font-size: clamp(60px, 13vw, 170px); line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--ink); opacity: .22; white-space: nowrap; z-index: -1; user-select: none; }
-.reg { position: absolute; font-family: var(--mono); font-size: 14px; line-height: 1; color: var(--muted); }
-.reg.tl { top: 8px; left: 8px; } .reg.tr { top: 8px; right: 8px; }
-.tags { display: flex; gap: 8px; flex-wrap: wrap; }
-.tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--rule); color: var(--muted); background: var(--sheet); }
-h1 { margin: 0; font-family: var(--display); font-weight: 800; font-stretch: 86%; font-size: clamp(36px, 6.5vw, 76px); line-height: .95; letter-spacing: -.02em; text-transform: uppercase; text-wrap: balance; max-width: 14ch; }
-.lede { margin: 0; max-width: 60ch; font-size: clamp(17px, 1.8vw, 20px); line-height: 1.45; font-weight: 500; }
-.lede em { font-style: normal; color: var(--red); }
-
-/* facts strip */
-.facts { margin-top: 18px; background: var(--ink); color: var(--on-ink); border-radius: 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 6px clamp(16px, 3vw, 28px) 18px; }
-@media (min-width: 820px) { .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.fact { padding: 16px 12px 4px 0; border-top: 1px solid var(--on-ink-muted); display: grid; gap: 4px; align-content: start; }
-@media (min-width: 820px) { .fact { border-top: 0; border-left: 1px solid var(--on-ink-muted); padding: 12px 16px 2px; } .fact:first-child { border-left: 0; padding-left: 0; } }
-.fact .n { font-family: var(--display); font-weight: 800; font-stretch: 84%; font-size: clamp(30px, 4.6vw, 48px); line-height: 1; font-variant-numeric: tabular-nums; }
-.fact .n small { font-size: .45em; color: var(--on-ink-muted); font-weight: 600; font-stretch: 100%; }
-.fact .n .r { color: var(--red); font-weight: 400; }
-.fact p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--on-ink-muted); }
-
-/* sections */
-main { display: grid; gap: 72px; padding-block: 64px 48px; }
-section { scroll-margin-top: 64px; display: grid; gap: 18px; }
-.sh { display: flex; align-items: baseline; gap: 14px; border-top: 1px solid var(--ink); padding-top: 14px; }
-.sh .k { font-family: var(--mono); font-size: 12px; color: var(--red); }
-h2 { margin: 0; font-family: var(--display); font-weight: 700; font-stretch: 110%; font-size: clamp(24px, 3.2vw, 34px); line-height: 1.05; letter-spacing: -.01em; }
-.prose { max-width: 66ch; display: grid; gap: 14px; }
-.prose p { margin: 0; }
-.prose strong { font-weight: 600; }
-
-/* diagram */
-.diagram { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; overflow-x: auto; padding: 16px; }
-.diagram svg { display: block; min-width: 720px; width: 100%; height: auto; }
-.d-box { fill: var(--paper); stroke: var(--ink); stroke-width: 1.2; }
-.d-box.hot { fill: var(--red); stroke: var(--red); }
-.d-box.ink { fill: var(--ink); stroke: var(--ink); }
-.d-t { font-family: var(--mono); font-size: 11.5px; fill: var(--ink); }
-.d-t.s { font-size: 10px; fill: var(--muted); }
-.d-t.on-hot { fill: var(--on-red); }
-.d-t.on-ink { fill: var(--on-ink); }
-.d-lane { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; fill: var(--muted); }
-.d-line { stroke: var(--ink); stroke-width: 1.2; fill: none; }
-.d-line.dash { stroke-dasharray: 4 4; stroke: var(--muted); }
-.d-arrow { fill: var(--ink); }
-
-.components { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--rule); }
-@media (min-width: 760px) { .components { grid-template-columns: 1fr 1fr; column-gap: 36px; } }
-.components li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; padding-block: 11px; border-bottom: 1px solid var(--rule); font-size: 14.5px; }
-.components b { font-family: var(--mono); font-weight: 500; font-size: 12px; letter-spacing: .04em; padding-top: 2px; }
-.components span { color: var(--muted); }
-
-/* decisions */
-.decisions { display: grid; gap: 16px; }
-.decision { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; padding: 20px 22px; display: grid; gap: 12px; transition: transform .35s var(--ease), border-color .3s, box-shadow .35s var(--ease); }
-.decision:hover { transform: translateY(-4px); border-color: var(--ink); box-shadow: 0 22px 40px -28px rgba(0,0,0,.45); }
-.decision h3 { margin: 0; font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 21px; line-height: 1.15; text-wrap: balance; }
-.dgrid { display: grid; gap: 10px 22px; grid-template-columns: 1fr; }
-@media (min-width: 760px) { .dgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.dgrid div { display: grid; gap: 4px; align-content: start; font-size: 14.5px; min-width: 0; }
-.dgrid .label.chose { color: var(--good); }
-.dgrid .label.rejected { color: var(--red); }
-
-/* tables */
-.tw { overflow-x: auto; border-top: 1px solid var(--ink); }
-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
-th { text-align: left; font-family: var(--mono); font-weight: 500; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 10px 12px 8px 0; border-bottom: 1px solid var(--rule); }
-td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; vertical-align: top; }
-td.num, th.num { text-align: right; }
-tr.win td { font-weight: 600; }
-tr.win td:first-child { color: var(--red); }
-tbody tr { transition: background .2s; }
-tbody tr:hover { background: var(--sheet); }
-.cap { margin: 8px 0 0; font-size: 13px; color: var(--muted); max-width: 70ch; }
-.pill { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; }
-.pill.pass { color: var(--good); } .pill.fail { color: var(--red); }
-
-.evalgrid { display: grid; gap: 28px; }
-.evalgrid h3 { margin: 0 0 8px; font-family: var(--display); font-weight: 650; font-stretch: 100%; font-size: 18px; }
-
-.next { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--rule); max-width: 760px; }
-.next li { padding: 12px 0 12px 26px; border-bottom: 1px solid var(--rule); position: relative; }
-.next li::before { content: "+"; position: absolute; left: 4px; top: 11px; font-family: var(--mono); color: var(--red); }
-
-.links { display: flex; flex-wrap: wrap; gap: 12px 26px; font-family: var(--mono); font-size: 13px; }
-footer { padding-block: 0 36px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
-
-@media (prefers-reduced-motion: no-preference) {
-  .hero .block { animation: grow 1s var(--ease) both; transform-origin: 50% 100%; }
-  h1 { animation: rise .8s .1s var(--ease) both; }
-  @supports (animation-timeline: view()) {
-    .reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% cover 25%; }
-  }
-}
-@keyframes grow { from { transform: scaleY(0); } }
-@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
-@keyframes reveal { from { opacity: .35; translate: 0 36px; } to { opacity: 1; translate: 0 0; } }
-@media (prefers-reduced-motion: reduce) { .decision { transition: none; } }
-
-/* calmer system, matching the homepage: sentence-case labels in the body face, one load moment only */
-.label, .tag, .back, .toc a, th, .pill, .dgrid .label { font-family: var(--body); text-transform: none; letter-spacing: 0; }
-.label { font-size: 13px; font-weight: 600; }
-.tag { font-size: 12.5px; }
-.back { font-size: 14px; }
-.toc a { font-size: 14px; font-weight: 500; }
-th { font-size: 12.5px; font-weight: 600; }
-.pill { font-size: 12px; }
-.sh .k, .hero .ghost, .reg { display: none; }
-.reveal { animation: none !important; }
-.lede em { color: inherit; font-weight: 650; }
-.next li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--red); top: 21px; left: 6px; }
-
-/* let wide tables and diagrams scroll inside their boxes instead of widening the page on phones */
-section > *, .evalgrid > * { min-width: 0; }
-/* roadmap: evidence-backed build stages, native <details> so it works without JavaScript */
-.road-intro { margin: 0; max-width: 66ch; color: var(--muted); }
-.road { list-style: none; margin: 0; padding: 0 0 0 28px; position: relative; display: grid; gap: 10px; max-width: 860px; }
-.road::before { content: ""; position: absolute; left: 6px; top: 18px; bottom: 18px; width: 2px; background: var(--rule); }
-.stage { position: relative; }
-.stage::before { content: ""; position: absolute; left: -28px; top: 18px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); border: 2px solid var(--red); box-sizing: border-box; }
-.stage details { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; transition: border-color .2s; }
-.stage details[open] { border-color: var(--ink); }
-.stage summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 2px 16px; padding: 14px 18px; align-items: baseline; }
-.stage summary::-webkit-details-marker { display: none; }
-.stage summary:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 12px; }
-.stage time { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.stage .st { font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 18px; line-height: 1.25; }
-.stage .so { grid-column: 2; font-size: 14.5px; color: var(--muted); }
-.stage .tg { grid-column: 3; grid-row: 1; font-size: 20px; line-height: 1; color: var(--muted); transition: transform .25s var(--ease), color .2s; }
-.stage details[open] .tg { transform: rotate(45deg); color: var(--red); }
-.stage summary:hover .st { color: var(--red); }
-.sgrid { margin: 0; padding: 2px 18px 14px; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 760px) { .sgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 22px; padding-left: 118px; } }
-.sgrid div { display: grid; gap: 4px; align-content: start; font-size: 14.5px; min-width: 0; }
-.sgrid dt { font-size: 13px; font-weight: 600; color: var(--muted); }
-.sgrid dt.problem { color: var(--red); }
-.sgrid dt.change, .sgrid dt.result { color: var(--good); }
-.sgrid dd { margin: 0; }
-.ev { margin: 0; padding: 0 18px 16px; font-size: 13.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; }
-@media (min-width: 760px) { .ev { padding-left: 118px; } }
-.ev a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
-.ev a:hover { color: var(--red); border-color: var(--red); }
-.stage.now::before { background: var(--red); }
-.now-row { padding: 12px 18px; border: 1px dashed var(--rule); border-radius: 14px; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; }
-.now-row .st { font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 18px; }
-.now-row a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); font-size: 14.5px; }
-.now-row a:hover { color: var(--red); border-color: var(--red); }
-@media (max-width: 600px) {
-  .stage summary { grid-template-columns: minmax(0, 1fr) auto; }
-  .stage time, .stage .st, .stage .so { grid-column: 1; }
-  .stage .tg { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
-}
-@media (prefers-reduced-motion: reduce) { .stage .tg, .stage details { transition: none; } }
-</style>
-<link rel="stylesheet" href="try.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="pw.css">
 <link rel="stylesheet" href="cmdk.css">
+<script>document.documentElement.classList.add('js');</script>
 </head>
-<body>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
 
-<nav class="nav" aria-label="Case study">
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" aria-hidden="true"><span>CASE STUDY · AI CODE REVIEW AGENT   ●   LANGGRAPH   ●   22 TESTS IN CI   ●   HMAC-VERIFIED WEBHOOKS   ●   CODE ON GITHUB   ●   </span><span>CASE STUDY · AI CODE REVIEW AGENT   ●   LANGGRAPH   ●   22 TESTS IN CI   ●   HMAC-VERIFIED WEBHOOKS   ●   CODE ON GITHUB   ●   </span><span>CASE STUDY · AI CODE REVIEW AGENT   ●   LANGGRAPH   ●   22 TESTS IN CI   ●   HMAC-VERIFIED WEBHOOKS   ●   CODE ON GITHUB   ●   </span><span>CASE STUDY · AI CODE REVIEW AGENT   ●   LANGGRAPH   ●   22 TESTS IN CI   ●   HMAC-VERIFIED WEBHOOKS   ●   CODE ON GITHUB   ●   </span></div>
+</div>
+
+<header class="top">
   <div class="wrap">
-    <a class="back" href="./"><span>←</span> Sudharsan V S</a>
-    <ul class="toc">
-      <li><a href="#problem">Problem</a></li>
-      <li><a href="#architecture">Architecture</a></li>
-      <li><a href="#try">Try it</a></li>
-      <li><a href="#decisions">Decisions</a></li>
-      <li><a href="#evaluation">Evaluation</a></li>
-      <li><a href="#roadmap">Roadmap</a></li>
-      <li><a href="#failures">Failures</a></li>
-    </ul>
-    <button class="cmdk-btn" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span>Search</span><kbd>Ctrl K</kbd></button>
+    <a class="brand" href="./"><span class="back" aria-hidden="true">←</span><b>Sudharsan</b><small>v s</small><span class="sr-only">, back to the portfolio</span></a>
+    <nav class="nav case-nav only-wide" aria-label="On this page">
+      <a href="#problem">Problem</a><a href="#architecture">Architecture</a><a class="strong" href="#try">Try it</a><a href="#decisions">Decisions</a><a href="#evaluation">Evaluation</a><a href="#roadmap">How it was built</a><a href="#failures">Failures</a>
+    </nav>
+    <div class="acts">
+      <button class="search" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span class="search-l">search</span><kbd>Ctrl K</kbd></button>
+      <a class="pill-btn o only-wide" href="rbac.html">Next: Permission RAG →</a>
+    </div>
   </div>
+</header>
+
+<main id="main" class="wrap">
+
+<section class="c-hero" aria-labelledby="h1">
+  <div class="c-hero-main">
+    <p class="c-kick">~/work/code-review · personal build · agents</p>
+    <h1 id="h1">AI Code Review <span class="mk">Agent</span></h1>
+    <p class="c-lede">An LLM pull-request reviewer that <em>doesn't let the model have the last word</em>: every finding must quote a changed line or it's dropped, and the verdict is computed in code.</p>
+  </div>
+  <dl class="spec">
+    <div><dt>stack</dt><dd>LangGraph, FastAPI, GitHub API, Claude API, MongoDB</dd></div>
+    <div><dt>tests</dt><dd>22 automated tests in CI</dd></div>
+    <div><dt>evaluation</dt><dd>Behaviour tests; review quality not yet measured</dd></div>
+    <div><dt>code</dt><dd><a href="https://github.com/Sudharsan2816/Code_review_agent" target="_blank" rel="noopener">Public on GitHub ↗</a></dd></div>
+  </dl>
+</section>
+
+<div class="facts" role="list" aria-label="Headline numbers">
+  <div class="fact" role="listitem"><p class="n">6<small> nodes</small></p><p>LangGraph state machine; approval is a branch, not a flag</p></div>
+  <div class="fact" role="listitem"><p class="n">0</p><p>findings kept without an exact changed line as evidence</p></div>
+  <div class="fact" role="listitem"><p class="n">401</p><p>for any webhook without a valid HMAC-SHA256 signature</p></div>
+  <div class="fact" role="listitem"><p class="n">22</p><p>tests in CI, covering grounding, the graph, security and duplicate deliveries</p></div>
+</div>
+
+<section id="problem" class="sec" aria-labelledby="h-problem">
+  <div class="sh"><span class="sh-n">01</span><h2 id="h-problem">Problem</h2><span class="sh-cmd">$ cat PROBLEM.md</span></div>
+  <div class="prob">
+    <p>Code review is a queue: pull requests wait for a busy senior engineer, and the first pass is often mechanical. An automated first reviewer could shorten that wait, but only if engineers trust it. The fastest way to lose that trust is a confident comment about code that isn't in the change, or a "request changes" verdict built on a misread README.</p>
+    <p>So the hard part is not getting a model to write a review. It's making sure nothing the model invents reaches the pull request, and that a human can stop any review before it posts.</p>
+  </div>
+</section>
+
+<section id="architecture" class="sec" aria-labelledby="h-arch">
+  <div class="sh"><span class="sh-n">02</span><h2 id="h-arch">Architecture</h2><span class="sh-cmd">pick a node</span></div>
+  <div class="board arch" data-arch data-start="5">
+    <p class="k">request path · 8 nodes</p>
+    <div class="arch-path js-only" role="group" aria-label="Request path"><button class="anode" type="button" aria-pressed="false"><span>01</span><b>Webhook route</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>02</span><b>Background task</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>03</span><b>fetch_diff</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>04</span><b>llm_review</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>05</span><b>parse_response</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>06</span><b>build_review</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>07</span><b>persist_review</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>08</span><b>Approval branch</b></button></div>
+    <div class="arch-d js-only" aria-live="polite"><p class="a"></p><p class="b"></p></div>
+    <dl class="arch-all no-js">
+      <div data-step="node 1 of 8 · request path"><dt>Webhook route</dt><dd>Verifies the HMAC signature before parsing; with no secret configured it rejects everything.</dd></div>
+      <div data-step="node 2 of 8 · request path"><dt>Background task</dt><dd>Returns to GitHub at once and runs the review afterwards, since a review can take far longer than GitHub waits.</dd></div>
+      <div data-step="node 3 of 8 · request path"><dt>fetch_diff</dt><dd>Pulls PR metadata and the unified diff; anything past 80,000 characters is cut with a visible marker.</dd></div>
+      <div data-step="node 4 of 8 · request path"><dt>llm_review</dt><dd>Claude, OpenAI or NVIDIA behind one interface; Claude caches the long system prompt. One 180-second bound per call.</dd></div>
+      <div data-step="node 5 of 8 · request path"><dt>parse_response</dt><dd>Extracts the JSON object; anything else raises, so a malformed answer never becomes a comment.</dd></div>
+      <div data-step="node 6 of 8 · request path"><dt>build_review</dt><dd>Keeps only findings that quote a changed line, then sets verdict, summary and score floors in code.</dd></div>
+      <div data-step="node 7 of 8 · request path"><dt>persist_review</dt><dd>Saves every review to MongoDB before the posting decision, so a held review is never lost.</dd></div>
+      <div data-step="node 8 of 8 · request path"><dt>Approval branch</dt><dd>Posts when auto-posting is allowed; otherwise ends and waits for <code>/review/approve</code>.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section id="try" class="sec" aria-labelledby="h-try">
+  <div class="sh"><span class="sh-n">03</span><h2 id="h-try">Put model replies through the grounding step</h2><span class="sh-cmd" style="">RECORDED RUN · CI FIXTURES</span></div>
+  <p class="try-intro">The model’s reply is the one part of a review the code doesn’t control, so it is checked before anything is posted. Pick a case, read the change and what the model claimed, then <b>run the grounding step</b> to see which claims survive. These are the four model replies the CI tests use, run through the repo’s own grounding code (commit bc9bcb4) on 6 November 2026 and saved. No model is called from this page.</p>
+  <div class="js-only" data-replay="review" data-src="review-run" hidden>
+    <div class="swipe rv-tabs" role="group" aria-label="Test cases"></div>
+    <div class="rv">
+      <div class="rv-l"></div>
+      <div class="rv-r dark" aria-live="polite"></div>
+    </div>
+    <div class="card gate">
+      <div class="gate-l">
+        <h3>Then the approval gate</h3>
+        <button class="sw" type="button" role="switch" aria-checked="false"><span class="tr" aria-hidden="true"></span><span class="t">REQUIRE_HUMAN_APPROVAL = false</span><span class="sr-only"> (hold every review for a person)</span></button>
+        <p class="gate-res" aria-live="polite"></p>
+        <p class="cap">The two recorded runs of the full LangGraph pipeline use the CI test’s stand-in model and GitHub client; the steps are the graph’s own log line from each run.</p>
+      </div>
+      <ol class="trail" aria-label="Graph steps from the run log"></ol>
+    </div>
+  </div>
+  <p class="cap no-js">Turn on JavaScript to run the replay. The same cases are described under Evaluation.</p>
+  <p class="rp-src"><a href="https://github.com/Sudharsan2816/Code_review_agent/blob/bc9bcb4/tests/test_grounding.py" rel="noopener" target="_blank">The test fixtures ↗</a><a href="https://github.com/Sudharsan2816/Code_review_agent/blob/bc9bcb4/app/services/review_grounding.py" rel="noopener" target="_blank">The grounding code ↗</a></p>
+<script id="review-run" type="application/json">{"why":{"wrong-file":"app/api/routes/login.py is not in this pull request, so the finding has no changed line to quote and is dropped (test_grounding_drops_findings_for_files_outside_the_pr_diff).","docs-as-evidence":"A README line cannot be evidence for a claim about application code, so the security finding and the fix that quotes the same line are both dropped (test_readme_cannot_be_used_as_evidence_for_application_code_claims).","real-issue":"The quoted line matches a changed line in app/auth.py, so the finding stays with its line number taken from the diff, and a high-severity finding blocks the merge (test_high_severity_finding_requires_changes_only_when_evidence_matches).","low-doc":"The badge line is in the diff, so the note stays; at low severity it is a comment, not a reason to block (test_low_severity_documentation_finding_is_grounded_but_does_not_block)."},"commit":"bc9bcb4","run_on":"2026-11-06","source":"Code_review_agent tests/test_grounding.py and tests/test_review_graph.py fixtures, run through app/services/review_grounding.py and ReviewService.run_review","scenarios":[{"id":"wrong-file","title":"A finding about a file the PR never touched","diff":{"file":"README.md","patch":"@@ -1,2 +1,3 @@\n # Example\n+![Python](https://img.shields.io/badge/python-3.12-blue)\n-Old setup text\n+New setup text\n"},"model_output":{"bugs":[],"security":[{"file":"app/api/routes/login.py","line":10,"evidence":"options={}","description":"JWT expiry is not validated","severity":"critical"}],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":8,"security":8,"performance":8},"final_verdict":"APPROVE","summary":"No evidence-grounded issues were found in the changed lines.","dropped_items":1}},{"id":"docs-as-evidence","title":"A README line used as evidence for an application bug","diff":{"file":"README.md","patch":"@@ -1,2 +1,3 @@\n # Example\n+![Python](https://img.shields.io/badge/python-3.12-blue)\n-Old setup text\n+New setup text\n"},"model_output":{"bugs":[],"security":[{"file":"README.md","line":999,"evidence":"New setup text","description":"The login endpoint accepts expired JWT tokens.","severity":"critical"}],"performance":[],"code_quality":[],"suggested_fixes":[{"file":"README.md","issue":"JWT expiry validation","original":"New setup text","improved":"Change the application token decoder.","explanation":"Prevents unauthorized application access."}],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":8,"security":8,"performance":8},"final_verdict":"APPROVE","summary":"No evidence-grounded issues were found in the changed lines.","dropped_items":2}},{"id":"real-issue","title":"A real high-severity issue with the wrong line number","diff":{"file":"app/auth.py","patch":"@@ -1,2 +1,3 @@\n def authenticate(token):\n+    return decode(token, options={})\n"},"model_output":{"bugs":[],"security":[{"file":"app/auth.py","line":999,"evidence":"return decode(token, options={})","description":"Token expiry validation is disabled.","severity":"high"}],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[{"file":"app/auth.py","line":2,"evidence":"return decode(token, options={})","description":"Token expiry validation is disabled.","severity":"high"}],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":8,"security":5,"performance":8},"final_verdict":"REQUEST_CHANGES","summary":"Found 1 evidence-grounded issue(s), including 1 high/critical issue(s) that should be resolved before merge.","dropped_items":0}},{"id":"low-doc","title":"A small documentation note","diff":{"file":"README.md","patch":"@@ -1,2 +1,3 @@\n # Example\n+![Python](https://img.shields.io/badge/python-3.12-blue)\n-Old setup text\n+New setup text\n"},"model_output":{"bugs":[],"security":[],"performance":[],"code_quality":[{"file":"README.md","line":null,"evidence":"![Python](https://img.shields.io/badge/python-3.12-blue)","description":"The badge should state the supported Python range.","severity":"low"}],"suggested_fixes":[],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[],"performance":[],"code_quality":[{"file":"README.md","line":2,"evidence":"![Python](https://img.shields.io/badge/python-3.12-blue)","description":"The badge should state the supported Python range.","severity":"low"}],"suggested_fixes":[],"scores":{"quality":6,"security":8,"performance":8},"final_verdict":"COMMENT","summary":"Found 1 evidence-grounded low/medium issue(s); none are severe enough to block the merge.","dropped_items":0}}],"approval_gate":[{"require_human_approval":false,"posted_to_github":true,"github_posts":1,"saved":1,"approvals":["auto"],"log":"Review graph steps: fetched diff for PR #7 → llm review generated → llm response parsed → review grounded against the diff → review persisted id=review-1 → review comment posted to GitHub","steps":["fetched diff for PR #7","llm review generated","llm response parsed","review grounded against the diff","review persisted id=review-1","review comment posted to GitHub"]},{"require_human_approval":true,"posted_to_github":false,"github_posts":0,"saved":1,"approvals":[],"log":"Review graph steps: fetched diff for PR #7 → llm review generated → llm response parsed → review grounded against the diff → review persisted id=review-1","steps":["fetched diff for PR #7","llm review generated","llm response parsed","review grounded against the diff","review persisted id=review-1"]}]}</script>
+</section>
+
+<section id="decisions" class="sec" aria-labelledby="h-dec">
+  <div class="sh"><span class="sh-n">04</span><h2 id="h-dec">Decisions and trade-offs</h2><span class="sh-cmd">$ git log --grep=decision</span></div>
+  <details class="dec" name="dec" open>
+    <summary><span class="dec-n">01</span><h3 class="dec-t">Ground every finding in the diff, and take the verdict away from the model</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>Each finding must name a file in the PR and quote one of its added or deleted lines (at least 8 characters). Survivors decide the verdict: none means approve, any high or critical means request changes.</div><div><span class="lbl">Rejected</span>Relying on prompt instructions alone and trusting the model's own verdict and summary. The prompt still asks for evidence, but nothing depends on the model obeying it.</div><div class="trade"><span class="lbl">Trade-off</span>Real issues whose evidence spans several lines, or sits in unchanged context, are dropped. The system prefers a missed comment to an invented one.</div></div>
+  </details>
+  <details class="dec" name="dec">
+    <summary><span class="dec-n">02</span><h3 class="dec-t">Documentation can&#x27;t testify about application code</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>Findings on READMEs and repo metadata are allowed only as low or medium code-quality notes about that file, matched against a list of documentation terms.</div><div><span class="lbl">Rejected</span>Treating all changed files equally. A README that describes a security risk would otherwise produce a "critical security" finding against code nobody changed.</div><div class="trade"><span class="lbl">Trade-off</span>A genuinely dangerous config change in a metadata file is capped at medium and can't block the merge on its own.</div></div>
+  </details>
+  <details class="dec" name="dec">
+    <summary><span class="dec-n">03</span><h3 class="dec-t">Approval as a branch in the graph, after the review is saved</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>A conditional edge after <code>persist_review</code> routes to posting or to a held end state, so the gate is visible in the pipeline's shape and tested as a path.</div><div><span class="lbl">Rejected</span>A flag checked inside one long function, which is how the service worked before the graph was wired in, and posting first with a delete on rejection.</div><div class="trade"><span class="lbl">Trade-off</span>The gate defaults to off so demos post straight away. A team using it for real should switch it on.</div></div>
+  </details>
+  <details class="dec" name="dec">
+    <summary><span class="dec-n">04</span><h3 class="dec-t">Acknowledge fast, review in the background, fail once</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>Return to GitHub immediately and run the graph as a background task, with one 180-second bound per LLM call and SDK retries turned off.</div><div><span class="lbl">Rejected</span>Reviewing inside the webhook request, which outlasts GitHub's delivery timeout, and SDK retries that could stack several long waits on one review.</div><div class="trade"><span class="lbl">Trade-off</span>Background tasks live in the server process: a restart loses an in-flight review, and transient errors aren't retried. A durable queue is the fix.</div></div>
+  </details>
+</section>
+
+<section id="evaluation" class="sec" aria-labelledby="h-eval">
+  <div class="sh"><span class="sh-n">05</span><h2 id="h-eval">Evaluation and results</h2><span class="sh-cmd">$ cat docs/*EVALUATION*.md</span></div>
+  <div class="eval-note"><p><strong>Review quality is not yet measured.</strong> There is no labelled set of pull requests yet, so there is no precision, recall or false-positive rate to report. What is tested is the behaviour around the model: what it is allowed to claim, and what happens to a review afterwards.</p></div>
+  <div class="eval-grid">
+    <div class="card span"><h3>Behaviour under test</h3><div class="tw" tabindex="0" role="region" aria-label="Behaviour under test"><table>
+<thead><tr><th>Behaviour under test</th><th>Tests</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Findings about files outside the PR are dropped</td><td class="num">1</td><td><span class="pill pass">pass</span></td></tr>
+<tr><td>High-severity findings block only when evidence matches a changed line</td><td class="num">1</td><td><span class="pill pass">pass</span></td></tr>
+<tr><td>READMEs can't be evidence for app-code claims; doc notes don't block</td><td class="num">2</td><td><span class="pill pass">pass</span></td></tr>
+<tr><td>Suggested fixes must quote a changed line; prompt demands evidence</td><td class="num">2</td><td><span class="pill pass">pass</span></td></tr>
+<tr><td>Graph posts, holds for approval, or skips posting on request</td><td class="num">3</td><td><span class="pill pass">pass</span></td></tr>
+<tr><td>Missing signature rejected; missing secret rejects all; valid signature accepted; API token enforced</td><td class="num">4</td><td><span class="pill pass">pass</span></td></tr>
+<tr><td>Provider timeout enforced; NVIDIA client wiring; markdown rendering</td><td class="num">3</td><td><span class="pill pass">pass</span></td></tr>
+<tr><td>A commit delivered twice or reopened gets one review; a new push is reviewed; a failed review can be retried; reviews still run if the claim store is down; claims are unique and expire</td><td class="num">6</td><td><span class="pill pass">pass</span></td></tr>
+</tbody>
+</table></div><p class="cap">22 tests, run on every push in GitHub Actions. All use stubs for GitHub, the LLM and MongoDB; none call a real model.</p></div>
+  </div>
+</section>
+
+<section id="roadmap" class="sec" aria-labelledby="h-road">
+  <div class="sh"><span class="sh-n">06</span><h2 id="h-road">How it was built</h2><span class="sh-cmd">$ git log --oneline</span></div>
+  <p class="road-intro">Built with AI coding agents (Codex and Claude Code). The stages below are what I decided, tested and fixed, each linked to the commit or report that shows it. Open a stage for the details.</p>
+  <ol class="road">
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-05-05">May 2026</time><span class="st"><b>First version in one commit</b><span>Webhooks in, LLM review, results in MongoDB.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>A FastAPI service that takes GitHub pull-request webhooks, has an LLM review the diff and stores the result in MongoDB, with a LangGraph graph defined. It landed as one commit: 25 files, 1,464 lines.</dd></div><div><dt class="still-open">Still open</dt><dd>No tests.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/1038232e3142c21ce56c30698de3da480e8e5383" rel="noopener" target="_blank">1038232</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-06-09">Jun 2026</time><span class="st"><b>First tests and CI</b><span>Review output rendering tested on every push.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>Tests for how reviews are rendered as markdown, and CI on every push.</dd></div><div><dt class="still-open">Still open</dt><dd>Nothing checked whether a finding was true.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/8866b1bc884b89879739463f986edd7db2a02b66" rel="noopener" target="_blank">8866b1b</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-08-03">Aug 2026</time><span class="st"><b>Hardened for a public deploy</b><span>Signed webhooks, token auth, container, deploy config.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>A security module for webhook signature checks and API-token auth, a Docker image and a Render deploy config.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/c3e844e123f306e8035ab362258d1aa2382357bb" rel="noopener" target="_blank">c3e844e</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-08-06">Aug 2026</time><span class="st"><b>Findings must quote the diff</b><span>Ungrounded findings dropped; provider calls time-boxed.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Findings weren't tied to the lines the pull request changed.</dd></div><div><dt class="change">Change</dt><dd>A finding that doesn't quote a changed line is dropped, documentation can't be cited as evidence about application code, and every provider call has a time limit.</dd></div><div><dt class="still-open">Still open</dt><dd>Multi-line evidence isn't grounded yet, so real issues spanning several changed lines can be dropped.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/b65970e37735c89b84cd51dd24b1792d82eac3be" rel="noopener" target="_blank">b65970e</a><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/93ad41e46031187a410b391edc7dd116a49fcc30" rel="noopener" target="_blank">93ad41e</a><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/767c9f263977d302f34296fd599c9d1a3175c7d3" rel="noopener" target="_blank">767c9f2</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-10-15">Oct 2026</time><span class="st"><b>Every review runs through the graph</b><span>The LangGraph state machine is now the real execution path.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>The LangGraph module couldn't even load (it imported a helper that no longer existed), so every review ran through a plain sequential method.</dd></div><div><dt class="change">Change</dt><dd>Reviews now execute the compiled graph. The approval gate is a branch after the review is saved, and grounding and timeouts carry over. Signed webhooks and token auth became required, with tests in CI.</dd></div><div><dt class="still-open">Still open</dt><dd>A redelivered webhook for the same commit can still trigger a second review.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/4" rel="noopener" target="_blank">PR #4</a><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/3" rel="noopener" target="_blank">PR #3</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-11-10">Nov 2026</time><span class="st"><b>One review per commit</b><span>Redelivered and repeated webhooks no longer start a second review.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>GitHub redelivers webhooks, and opened or reopened events can arrive for a commit that was already reviewed. Each one started a full review and could post a second comment.</dd></div><div><dt class="change">Change</dt><dd>The webhook claims repository, PR and head commit as a MongoDB <code>_id</code> before starting, so the database decides races and later deliveries return “duplicate”. A failed review releases its claim so a redelivery can retry; if the claim store is down, the review runs anyway.</dd></div><div><dt class="still-open">Still open</dt><dd>Reviews run as in-process background tasks, so a server restart mid-review still loses the work.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/5" rel="noopener" target="_blank">PR #5</a></p>
+    </details></li>
+    <li><div class="now-row"><b>Open now</b><a href="#next">Limitations and what I&#x27;d do next</a></div></li>
+  </ol>
+</section>
+
+<section id="failures" class="sec" aria-labelledby="h-fail">
+  <div class="sh"><span class="sh-n">07</span><h2 id="h-fail">Failure modes and guardrails</h2><span class="sh-cmd">if → then</span></div>
+  <div class="fms">
+    <div class="fm"><p class="fm-if">if model invents an issue in unchanged code or another file</p><p class="fm-then">No changed line matches its evidence, so the finding is dropped and logged.</p></div>
+    <div class="fm"><p class="fm-if">if model claims &quot;approve&quot; or &quot;request changes&quot; on its own</p><p class="fm-then">Ignored. The verdict is recomputed from the findings that survived grounding.</p></div>
+    <div class="fm"><p class="fm-if">if model returns prose instead of JSON</p><p class="fm-then">Parsing raises; the background task logs the failure and nothing is posted.</p></div>
+    <div class="fm"><p class="fm-if">if provider hangs</p><p class="fm-then">The call is cut at 180 seconds with no retries; the review fails without posting.</p></div>
+    <div class="fm"><p class="fm-if">if forged or unsigned webhook</p><p class="fm-then">401 before the payload is parsed. With no secret configured, every webhook is rejected.</p></div>
+    <div class="fm"><p class="fm-if">if very large diff</p><p class="fm-then">Cut at 80,000 characters with a marker; findings can only cite lines that were actually sent.</p></div>
+    <div class="fm"><p class="fm-if">if posting to GitHub fails</p><p class="fm-then">The review is already saved in MongoDB, so it can be approved and posted again.</p></div>
+    <div class="fm"><p class="fm-if">if gitHub delivers the same event twice</p><p class="fm-then">The first delivery claims the repository, PR and head commit; later ones are acknowledged as duplicates. A failed review releases its claim so a redelivery can retry.</p></div>
+    <div class="fm gap"><p class="fm-if">if server restarts mid-review</p><p class="fm-then"><strong>Not handled.</strong> In-flight background work is lost. Known gap.</p></div>
+  </div>
+</section>
+
+<section id="next" class="lim" aria-labelledby="h-next">
+  <div class="card lim-l">
+    <h2 id="h-next">Limitations, and what I’d do next</h2>
+    <ul>
+      <li>Build a labelled set of pull requests with seeded bugs and measure precision, recall and the share of model findings that grounding drops.</li>
+      <li>Move reviews from in-process background tasks to a durable queue with retries, the way I run task orchestration in production.</li>
+      <li>Ground multi-line evidence, so real issues that span several changed lines aren't dropped.</li>
+      <li>Add rate limiting on the API routes, and deploy a demo against a sandbox repository.</li>
+    </ul>
+  </div>
+  <div id="links" class="evid dark">
+    <h2>Evidence</h2>
+    <a href="https://github.com/Sudharsan2816/Code_review_agent/tree/main" target="_blank" rel="noopener">Code <span aria-hidden="true">↗</span></a>
+    <a href="https://github.com/Sudharsan2816/Code_review_agent/blob/main/app/agents/review_agent.py" target="_blank" rel="noopener">LangGraph pipeline <span aria-hidden="true">↗</span></a>
+    <a href="https://github.com/Sudharsan2816/Code_review_agent/blob/main/app/services/review_grounding.py" target="_blank" rel="noopener">Grounding logic <span aria-hidden="true">↗</span></a>
+    <a href="https://github.com/Sudharsan2816/Code_review_agent/pull/4" target="_blank" rel="noopener">PR #4: wiring the graph <span aria-hidden="true">↗</span></a>
+  </div>
+</section>
+
+<a class="next-case" href="rbac.html"><span><span>next case study</span><b>Permission-Aware RAG</b></span><span aria-hidden="true">→</span></a>
+
+</main>
+
+<footer id="contact" class="foot" aria-labelledby="h-contact">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-l">
+        <h2 id="h-contact">See a bug or a better way to build this? <em>Tell me.</em></h2>
+        <p class="foot-p">GitHub issues are public and open with this project’s name already in the title. Use email for anything private.</p>
+      </div>
+      <div class="foot-links">
+        <a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=bug_report.yml&amp;title=%5BBug%5D%20AI%20Code%20Review%20Agent%3A%20" target="_blank" rel="noopener">Report a bug <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=suggestion.yml&amp;title=%5BSuggestion%5D%20AI%20Code%20Review%20Agent%3A%20" target="_blank" rel="noopener">Suggest an improvement <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=scaling_idea.yml&amp;title=%5BScaling%5D%20AI%20Code%20Review%20Agent%3A%20" target="_blank" rel="noopener">Propose a scaling idea <span aria-hidden="true">↗</span></a>
+        <a class="mail" href="mailto:vssudhan2003@gmail.com?subject=About%20AI%20Code%20Review%20Agent">vssudhan2003@gmail.com <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <p class="foot-bot">
+      <a href="./">← Back to the portfolio</a>
+      <span><span class="sq-g" aria-hidden="true">●</span> for AI agents: <a href="llms.txt">/llms.txt</a></span>
+      <span class="r">© 2026 Sudharsan V S · Chennai</span>
+    </p>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Case study shortcuts">
+  <a class="row" href="./">← Home</a>
+  <a class="row" href="#try"><span class="g" aria-hidden="true">▶</span>Try it</a>
+  <a class="row y" href="rbac.html">Next →</a>
 </nav>
 
-<div class="wrap">
-  <header class="hero">
-    <span class="reg tl" aria-hidden="true">+</span><span class="reg tr" aria-hidden="true">+</span>
-    <span class="block" aria-hidden="true"></span>
-    <span class="ghost" aria-hidden="true">Review</span>
-    <div class="tags"><span class="tag">Personal build</span><span class="tag">Agents</span><span class="tag">Case study</span></div>
-    <h1>AI Code Review Agent</h1>
-    <p class="lede">An LLM pull-request reviewer that <em>doesn't let the model have the last word</em>: every finding must quote a changed line or it's dropped, and the verdict is computed in code.</p>
-  </header>
-
-  <div class="facts" role="list">
-    <div class="fact" role="listitem"><div class="n">6<small> nodes</small></div><p>LangGraph state machine; approval is a branch, not a flag</p></div>
-    <div class="fact" role="listitem"><div class="n">0</div><p>findings kept without an exact changed line as evidence</p></div>
-    <div class="fact" role="listitem"><div class="n">401</div><p>for any webhook without a valid HMAC-SHA256 signature</p></div>
-    <div class="fact" role="listitem"><div class="n">22</div><p>tests in CI, covering grounding, the graph, security and duplicate deliveries</p></div>
-  </div>
-
-  <main>
-    <section id="problem" class="reveal" aria-labelledby="h-problem">
-      <div class="sh"><span class="k">01</span><h2 id="h-problem">Problem</h2></div>
-      <div class="prose">
-        <p>Code review is a queue: pull requests wait for a busy senior engineer, and the first pass is often mechanical. An automated first reviewer could shorten that wait, but only if engineers trust it. The fastest way to lose that trust is a confident comment about code that isn't in the change, or a "request changes" verdict built on a misread README.</p>
-        <p>So the hard part is not getting a model to write a review. It's making sure nothing the model invents reaches the pull request, and that a human can stop any review before it posts.</p>
-      </div>
-    </section>
-
-    <section id="architecture" class="reveal" aria-labelledby="h-arch">
-      <div class="sh"><span class="k">02</span><h2 id="h-arch">Architecture</h2></div>
-      <div class="diagram" role="img" aria-label="A GitHub webhook is HMAC-verified and acknowledged, then a background task runs a LangGraph state machine: fetch diff, LLM review, parse JSON, ground findings and recompute the verdict, persist to MongoDB, then either post the comment to GitHub or hold it for human approval.">
-        <svg viewBox="0 0 980 300" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow" d="M0,0 L10,5 L0,10 z"/></marker>
-          </defs>
-          <text class="d-lane" x="10" y="22">ENTRY</text>
-          <rect class="d-box" x="10" y="34" width="170" height="56" rx="8"/><text class="d-t" x="22" y="58">GitHub webhook</text><text class="d-t s" x="22" y="76">HMAC-SHA256 or 401</text>
-          <rect class="d-box" x="210" y="34" width="170" height="56" rx="8"/><text class="d-t" x="222" y="58">Acknowledge</text><text class="d-t s" x="222" y="76">review in background</text>
-          <rect class="d-box" x="410" y="34" width="170" height="56" rx="8"/><text class="d-t" x="422" y="58">Manual API</text><text class="d-t s" x="422" y="76">token required</text>
-          <path class="d-line" d="M180 62 H208" marker-end="url(#ah)"/>
-
-          <text class="d-lane" x="10" y="140">LANGGRAPH STATEGRAPH</text>
-          <rect class="d-box" x="10" y="152" width="120" height="56" rx="8"/><text class="d-t" x="22" y="176">fetch_diff</text><text class="d-t s" x="22" y="194">≤ 80k chars</text>
-          <rect class="d-box" x="150" y="152" width="120" height="56" rx="8"/><text class="d-t" x="162" y="176">llm_review</text><text class="d-t s" x="162" y="194">180 s, 0 retries</text>
-          <rect class="d-box" x="290" y="152" width="130" height="56" rx="8"/><text class="d-t" x="302" y="176">parse_response</text><text class="d-t s" x="302" y="194">JSON only</text>
-          <rect class="d-box hot" x="440" y="152" width="140" height="56" rx="8"/><text class="d-t on-hot" x="452" y="176">build_review</text><text class="d-t on-hot" x="452" y="194">ground + verdict</text>
-          <rect class="d-box ink" x="600" y="152" width="130" height="56" rx="8"/><text class="d-t on-ink" x="612" y="176">persist_review</text><text class="d-t on-ink" x="612" y="194" style="opacity:.75">MongoDB</text>
-          <rect class="d-box" x="770" y="120" width="200" height="50" rx="8"/><text class="d-t" x="782" y="142">post_comment</text><text class="d-t s" x="782" y="159">auto-post allowed</text>
-          <rect class="d-box" x="770" y="196" width="200" height="50" rx="8"/><text class="d-t" x="782" y="218">END · held</text><text class="d-t s" x="782" y="235">approval required</text>
-          <path class="d-line" d="M130 180 H148" marker-end="url(#ah)"/>
-          <path class="d-line" d="M270 180 H288" marker-end="url(#ah)"/>
-          <path class="d-line" d="M420 180 H438" marker-end="url(#ah)"/>
-          <path class="d-line" d="M580 180 H598" marker-end="url(#ah)"/>
-          <path class="d-line" d="M730 172 L768 148" marker-end="url(#ah)"/>
-          <path class="d-line" d="M730 188 L768 214" marker-end="url(#ah)"/>
-          <path class="d-line dash" d="M295 90 V120 H70 V150" marker-end="url(#ah)"/>
-          <path class="d-line dash" d="M495 90 V120 H75" />
-          <path class="d-line dash" d="M870 246 V278 H500" marker-end="url(#ah)"/>
-          <text class="d-t s" x="512" y="272">POST /review/approve posts it later</text>
-        </svg>
-      </div>
-      <ul class="components">
-        <li><b>Webhook route</b><span>Verifies the HMAC signature before parsing; with no secret configured it rejects everything.</span></li>
-        <li><b>Background task</b><span>Returns to GitHub at once and runs the review afterwards, since a review can take far longer than GitHub waits.</span></li>
-        <li><b>fetch_diff</b><span>Pulls PR metadata and the unified diff; anything past 80,000 characters is cut with a visible marker.</span></li>
-        <li><b>llm_review</b><span>Claude, OpenAI or NVIDIA behind one interface; Claude caches the long system prompt. One 180-second bound per call.</span></li>
-        <li><b>parse_response</b><span>Extracts the JSON object; anything else raises, so a malformed answer never becomes a comment.</span></li>
-        <li><b>build_review</b><span>Keeps only findings that quote a changed line, then sets verdict, summary and score floors in code.</span></li>
-        <li><b>persist_review</b><span>Saves every review to MongoDB before the posting decision, so a held review is never lost.</span></li>
-        <li><b>Approval branch</b><span>Posts when auto-posting is allowed; otherwise ends and waits for <code>/review/approve</code>.</span></li>
-      </ul>
-    </section>
-
-    <section id="try" class="reveal" aria-labelledby="h-try">
-      <div class="sh"><h2 id="h-try">Try it: put model replies through the grounding step</h2></div>
-      <p class="try-intro">The model’s reply is the one part of a review the code doesn’t control, so it is checked before anything is posted. Pick a case, read the change and what the model claimed, then <b>run the grounding step</b> to see which claims survive. These are the four model replies the CI tests use, run through the repo’s own grounding code (commit bc9bcb4) on 6 November 2026 and saved. No model is called from this page.</p>
-      <div class="rp" data-replay="review" data-src="review-run" hidden>
-        <div class="rp-top"><div class="rp-tabs" role="group" aria-label="Test cases"></div></div>
-        <div class="rp-main"></div>
-        <div class="rp-main gate">
-          <h3>Then the approval gate</h3>
-          <button class="rp-sw" type="button" role="switch" aria-checked="false"><span class="tr" aria-hidden="true"></span>Hold every review for a person (REQUIRE_HUMAN_APPROVAL)</button>
-          <ol class="trail" aria-label="Graph steps from the run log"></ol>
-          <p class="gate-res" style="margin:0"></p>
-          <p class="cap" style="margin:0">The two recorded runs of the full LangGraph pipeline use the CI test’s stand-in model and GitHub client; the steps are the graph’s own log line from each run.</p>
-        </div>
-      </div>
-      <p class="rp-fallback cap">Turn on JavaScript to run the replay. The same cases are described under Evaluation.</p>
-      <p class="rp-src"><a href="https://github.com/Sudharsan2816/Code_review_agent/blob/bc9bcb4/tests/test_grounding.py" target="_blank" rel="noopener">The test fixtures ↗</a><a href="https://github.com/Sudharsan2816/Code_review_agent/blob/bc9bcb4/app/services/review_grounding.py" target="_blank" rel="noopener">The grounding code ↗</a></p>
-      <script type="application/json" id="review-run">{"why":{"wrong-file":"app/api/routes/login.py is not in this pull request, so the finding has no changed line to quote and is dropped (test_grounding_drops_findings_for_files_outside_the_pr_diff).","docs-as-evidence":"A README line cannot be evidence for a claim about application code, so the security finding and the fix that quotes the same line are both dropped (test_readme_cannot_be_used_as_evidence_for_application_code_claims).","real-issue":"The quoted line matches a changed line in app/auth.py, so the finding stays with its line number taken from the diff, and a high-severity finding blocks the merge (test_high_severity_finding_requires_changes_only_when_evidence_matches).","low-doc":"The badge line is in the diff, so the note stays; at low severity it is a comment, not a reason to block (test_low_severity_documentation_finding_is_grounded_but_does_not_block)."},"commit":"bc9bcb4","run_on":"2026-11-06","source":"Code_review_agent tests/test_grounding.py and tests/test_review_graph.py fixtures, run through app/services/review_grounding.py and ReviewService.run_review","scenarios":[{"id":"wrong-file","title":"A finding about a file the PR never touched","diff":{"file":"README.md","patch":"@@ -1,2 +1,3 @@\n # Example\n+![Python](https://img.shields.io/badge/python-3.12-blue)\n-Old setup text\n+New setup text\n"},"model_output":{"bugs":[],"security":[{"file":"app/api/routes/login.py","line":10,"evidence":"options={}","description":"JWT expiry is not validated","severity":"critical"}],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":8,"security":8,"performance":8},"final_verdict":"APPROVE","summary":"No evidence-grounded issues were found in the changed lines.","dropped_items":1}},{"id":"docs-as-evidence","title":"A README line used as evidence for an application bug","diff":{"file":"README.md","patch":"@@ -1,2 +1,3 @@\n # Example\n+![Python](https://img.shields.io/badge/python-3.12-blue)\n-Old setup text\n+New setup text\n"},"model_output":{"bugs":[],"security":[{"file":"README.md","line":999,"evidence":"New setup text","description":"The login endpoint accepts expired JWT tokens.","severity":"critical"}],"performance":[],"code_quality":[],"suggested_fixes":[{"file":"README.md","issue":"JWT expiry validation","original":"New setup text","improved":"Change the application token decoder.","explanation":"Prevents unauthorized application access."}],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":8,"security":8,"performance":8},"final_verdict":"APPROVE","summary":"No evidence-grounded issues were found in the changed lines.","dropped_items":2}},{"id":"real-issue","title":"A real high-severity issue with the wrong line number","diff":{"file":"app/auth.py","patch":"@@ -1,2 +1,3 @@\n def authenticate(token):\n+    return decode(token, options={})\n"},"model_output":{"bugs":[],"security":[{"file":"app/auth.py","line":999,"evidence":"return decode(token, options={})","description":"Token expiry validation is disabled.","severity":"high"}],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[{"file":"app/auth.py","line":2,"evidence":"return decode(token, options={})","description":"Token expiry validation is disabled.","severity":"high"}],"performance":[],"code_quality":[],"suggested_fixes":[],"scores":{"quality":8,"security":5,"performance":8},"final_verdict":"REQUEST_CHANGES","summary":"Found 1 evidence-grounded issue(s), including 1 high/critical issue(s) that should be resolved before merge.","dropped_items":0}},{"id":"low-doc","title":"A small documentation note","diff":{"file":"README.md","patch":"@@ -1,2 +1,3 @@\n # Example\n+![Python](https://img.shields.io/badge/python-3.12-blue)\n-Old setup text\n+New setup text\n"},"model_output":{"bugs":[],"security":[],"performance":[],"code_quality":[{"file":"README.md","line":null,"evidence":"![Python](https://img.shields.io/badge/python-3.12-blue)","description":"The badge should state the supported Python range.","severity":"low"}],"suggested_fixes":[],"scores":{"quality":6,"security":5,"performance":7},"final_verdict":"REQUEST_CHANGES","summary":"Model-generated summary must not control the final result."},"grounded":{"bugs":[],"security":[],"performance":[],"code_quality":[{"file":"README.md","line":2,"evidence":"![Python](https://img.shields.io/badge/python-3.12-blue)","description":"The badge should state the supported Python range.","severity":"low"}],"suggested_fixes":[],"scores":{"quality":6,"security":8,"performance":8},"final_verdict":"COMMENT","summary":"Found 1 evidence-grounded low/medium issue(s); none are severe enough to block the merge.","dropped_items":0}}],"approval_gate":[{"require_human_approval":false,"posted_to_github":true,"github_posts":1,"saved":1,"approvals":["auto"],"log":"Review graph steps: fetched diff for PR #7 → llm review generated → llm response parsed → review grounded against the diff → review persisted id=review-1 → review comment posted to GitHub","steps":["fetched diff for PR #7","llm review generated","llm response parsed","review grounded against the diff","review persisted id=review-1","review comment posted to GitHub"]},{"require_human_approval":true,"posted_to_github":false,"github_posts":0,"saved":1,"approvals":[],"log":"Review graph steps: fetched diff for PR #7 → llm review generated → llm response parsed → review grounded against the diff → review persisted id=review-1","steps":["fetched diff for PR #7","llm review generated","llm response parsed","review grounded against the diff","review persisted id=review-1"]}]}</script>
-    </section>
-
-    <section id="decisions" class="reveal" aria-labelledby="h-dec">
-      <div class="sh"><span class="k">03</span><h2 id="h-dec">Key decisions and trade-offs</h2></div>
-      <div class="decisions">
-        <article class="decision">
-          <h3>Ground every finding in the diff, and take the verdict away from the model</h3>
-          <div class="dgrid">
-            <div><span class="label chose">Chose</span>Each finding must name a file in the PR and quote one of its added or deleted lines (at least 8 characters). Survivors decide the verdict: none means approve, any high or critical means request changes.</div>
-            <div><span class="label rejected">Rejected</span>Relying on prompt instructions alone and trusting the model's own verdict and summary. The prompt still asks for evidence, but nothing depends on the model obeying it.</div>
-            <div><span class="label">Trade-off</span>Real issues whose evidence spans several lines, or sits in unchanged context, are dropped. The system prefers a missed comment to an invented one.</div>
-          </div>
-        </article>
-        <article class="decision">
-          <h3>Documentation can't testify about application code</h3>
-          <div class="dgrid">
-            <div><span class="label chose">Chose</span>Findings on READMEs and repo metadata are allowed only as low or medium code-quality notes about that file, matched against a list of documentation terms.</div>
-            <div><span class="label rejected">Rejected</span>Treating all changed files equally. A README that describes a security risk would otherwise produce a "critical security" finding against code nobody changed.</div>
-            <div><span class="label">Trade-off</span>A genuinely dangerous config change in a metadata file is capped at medium and can't block the merge on its own.</div>
-          </div>
-        </article>
-        <article class="decision">
-          <h3>Approval as a branch in the graph, after the review is saved</h3>
-          <div class="dgrid">
-            <div><span class="label chose">Chose</span>A conditional edge after <code>persist_review</code> routes to posting or to a held end state, so the gate is visible in the pipeline's shape and tested as a path.</div>
-            <div><span class="label rejected">Rejected</span>A flag checked inside one long function, which is how the service worked before the graph was wired in, and posting first with a delete on rejection.</div>
-            <div><span class="label">Trade-off</span>The gate defaults to off so demos post straight away. A team using it for real should switch it on.</div>
-          </div>
-        </article>
-        <article class="decision">
-          <h3>Acknowledge fast, review in the background, fail once</h3>
-          <div class="dgrid">
-            <div><span class="label chose">Chose</span>Return to GitHub immediately and run the graph as a background task, with one 180-second bound per LLM call and SDK retries turned off.</div>
-            <div><span class="label rejected">Rejected</span>Reviewing inside the webhook request, which outlasts GitHub's delivery timeout, and SDK retries that could stack several long waits on one review.</div>
-            <div><span class="label">Trade-off</span>Background tasks live in the server process: a restart loses an in-flight review, and transient errors aren't retried. A durable queue is the fix.</div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section id="evaluation" class="reveal" aria-labelledby="h-eval">
-      <div class="sh"><span class="k">04</span><h2 id="h-eval">Evaluation and results</h2></div>
-      <div class="prose">
-        <p><strong>Review quality is not yet measured.</strong> There is no labelled set of pull requests yet, so there is no precision, recall or false-positive rate to report. What is tested is the behaviour around the model: what it is allowed to claim, and what happens to a review afterwards.</p>
-      </div>
-      <div class="tw">
-        <table>
-          <thead><tr><th>Behaviour under test</th><th>Tests</th><th>Result</th></tr></thead>
-          <tbody>
-            <tr><td>Findings about files outside the PR are dropped</td><td class="num">1</td><td><span class="pill pass">pass</span></td></tr>
-            <tr><td>High-severity findings block only when evidence matches a changed line</td><td class="num">1</td><td><span class="pill pass">pass</span></td></tr>
-            <tr><td>READMEs can't be evidence for app-code claims; doc notes don't block</td><td class="num">2</td><td><span class="pill pass">pass</span></td></tr>
-            <tr><td>Suggested fixes must quote a changed line; prompt demands evidence</td><td class="num">2</td><td><span class="pill pass">pass</span></td></tr>
-            <tr><td>Graph posts, holds for approval, or skips posting on request</td><td class="num">3</td><td><span class="pill pass">pass</span></td></tr>
-            <tr><td>Missing signature rejected; missing secret rejects all; valid signature accepted; API token enforced</td><td class="num">4</td><td><span class="pill pass">pass</span></td></tr>
-            <tr><td>Provider timeout enforced; NVIDIA client wiring; markdown rendering</td><td class="num">3</td><td><span class="pill pass">pass</span></td></tr>
-            <tr><td>A commit delivered twice or reopened gets one review; a new push is reviewed; a failed review can be retried; reviews still run if the claim store is down; claims are unique and expire</td><td class="num">6</td><td><span class="pill pass">pass</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="cap">22 tests, run on every push in GitHub Actions. All use stubs for GitHub, the LLM and MongoDB; none call a real model.</p>
-    </section>
-
-    <section id="roadmap" class="reveal" aria-labelledby="h-road">
-      <div class="sh"><span class="k">05</span><h2 id="h-road">How it was built</h2></div>
-      <p class="road-intro">Built with AI coding agents (Codex and Claude Code). The stages below are what I decided, tested and fixed, each linked to the commit or report that shows it. Open a stage for the details.</p>
-      <ol class="road">
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-05-05">May 2026</time><span class="st">First version in one commit</span><span class="so">Webhooks in, LLM review, results in MongoDB.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="change">Change</dt><dd>A FastAPI service that takes GitHub pull-request webhooks, has an LLM review the diff and stores the result in MongoDB, with a LangGraph graph defined. It landed as one commit: 25 files, 1,464 lines.</dd></div><div><dt class="still-open">Still open</dt><dd>No tests.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/1038232e3142c21ce56c30698de3da480e8e5383" target="_blank" rel="noopener">1038232</a></p>
-          </details>
-        </li>
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-06-09">Jun 2026</time><span class="st">First tests and CI</span><span class="so">Review output rendering tested on every push.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="change">Change</dt><dd>Tests for how reviews are rendered as markdown, and CI on every push.</dd></div><div><dt class="still-open">Still open</dt><dd>Nothing checked whether a finding was true.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/8866b1bc884b89879739463f986edd7db2a02b66" target="_blank" rel="noopener">8866b1b</a></p>
-          </details>
-        </li>
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-08-03">Aug 2026</time><span class="st">Hardened for a public deploy</span><span class="so">Signed webhooks, token auth, container, deploy config.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="change">Change</dt><dd>A security module for webhook signature checks and API-token auth, a Docker image and a Render deploy config.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/c3e844e123f306e8035ab362258d1aa2382357bb" target="_blank" rel="noopener">c3e844e</a></p>
-          </details>
-        </li>
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-08-06">Aug 2026</time><span class="st">Findings must quote the diff</span><span class="so">Ungrounded findings dropped; provider calls time-boxed.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Findings weren't tied to the lines the pull request changed.</dd></div><div><dt class="change">Change</dt><dd>A finding that doesn't quote a changed line is dropped, documentation can't be cited as evidence about application code, and every provider call has a time limit.</dd></div><div><dt class="still-open">Still open</dt><dd>Multi-line evidence isn't grounded yet, so real issues spanning several changed lines can be dropped.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/b65970e37735c89b84cd51dd24b1792d82eac3be" target="_blank" rel="noopener">b65970e</a><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/93ad41e46031187a410b391edc7dd116a49fcc30" target="_blank" rel="noopener">93ad41e</a><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/767c9f263977d302f34296fd599c9d1a3175c7d3" target="_blank" rel="noopener">767c9f2</a></p>
-          </details>
-        </li>
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-10-15">Oct 2026</time><span class="st">Every review runs through the graph</span><span class="so">The LangGraph state machine is now the real execution path.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>The LangGraph module couldn't even load (it imported a helper that no longer existed), so every review ran through a plain sequential method.</dd></div><div><dt class="change">Change</dt><dd>Reviews now execute the compiled graph. The approval gate is a branch after the review is saved, and grounding and timeouts carry over. Signed webhooks and token auth became required, with tests in CI.</dd></div><div><dt class="still-open">Still open</dt><dd>A redelivered webhook for the same commit can still trigger a second review.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/4" target="_blank" rel="noopener">PR #4</a><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/3" target="_blank" rel="noopener">PR #3</a></p>
-          </details>
-        </li>
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-11-10">Nov 2026</time><span class="st">One review per commit</span><span class="so">Redelivered and repeated webhooks no longer start a second review.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>GitHub redelivers webhooks, and opened or reopened events can arrive for a commit that was already reviewed. Each one started a full review and could post a second comment.</dd></div><div><dt class="change">Change</dt><dd>The webhook claims repository, PR and head commit as a MongoDB <code>_id</code> before starting, so the database decides races and later deliveries return &ldquo;duplicate&rdquo;. A failed review releases its claim so a redelivery can retry; if the claim store is down, the review runs anyway.</dd></div><div><dt class="still-open">Still open</dt><dd>Reviews run as in-process background tasks, so a server restart mid-review still loses the work.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/5" target="_blank" rel="noopener">PR #5</a></p>
-          </details>
-        </li>
-        <li class="stage now"><div class="now-row"><span class="st">Open now</span><a href="#next">Limitations and what I'd do next</a></div></li>
-      </ol>
-    </section>
-
-    <section id="failures" class="reveal" aria-labelledby="h-fail">
-      <div class="sh"><span class="k">06</span><h2 id="h-fail">Failure modes and guardrails</h2></div>
-      <div class="tw">
-        <table class="stack">
-          <thead><tr><th>What goes wrong</th><th>What the system does</th></tr></thead>
-          <tbody>
-            <tr><td>Model invents an issue in unchanged code or another file</td><td>No changed line matches its evidence, so the finding is dropped and logged.</td></tr>
-            <tr><td>Model claims "approve" or "request changes" on its own</td><td>Ignored. The verdict is recomputed from the findings that survived grounding.</td></tr>
-            <tr><td>Model returns prose instead of JSON</td><td>Parsing raises; the background task logs the failure and nothing is posted.</td></tr>
-            <tr><td>Provider hangs</td><td>The call is cut at 180 seconds with no retries; the review fails without posting.</td></tr>
-            <tr><td>Forged or unsigned webhook</td><td>401 before the payload is parsed. With no secret configured, every webhook is rejected.</td></tr>
-            <tr><td>Very large diff</td><td>Cut at 80,000 characters with a marker; findings can only cite lines that were actually sent.</td></tr>
-            <tr><td>Posting to GitHub fails</td><td>The review is already saved in MongoDB, so it can be approved and posted again.</td></tr>
-            <tr><td>GitHub delivers the same event twice</td><td>The first delivery claims the repository, PR and head commit; later ones are acknowledged as duplicates. A failed review releases its claim so a redelivery can retry.</td></tr>
-            <tr><td>Server restarts mid-review</td><td><strong>Not handled.</strong> In-flight background work is lost. Known gap.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="next" class="reveal" aria-labelledby="h-next">
-      <div class="sh"><span class="k">07</span><h2 id="h-next">Limitations and what I'd do next</h2></div>
-      <ul class="next">
-        <li>Build a labelled set of pull requests with seeded bugs and measure precision, recall and the share of model findings that grounding drops.</li>
-        <li>Move reviews from in-process background tasks to a durable queue with retries, the way I run task orchestration in production.</li>
-        <li>Ground multi-line evidence, so real issues that span several changed lines aren't dropped.</li>
-        <li>Add rate limiting on the API routes, and deploy a demo against a sandbox repository.</li>
-      </ul>
-    </section>
-
-    <section id="links" class="reveal" aria-labelledby="h-links">
-      <div class="sh"><span class="k">08</span><h2 id="h-links">Links</h2></div>
-      <div class="links">
-        <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/tree/main" target="_blank" rel="noopener">Code ↗</a>
-        <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/blob/main/app/agents/review_agent.py" target="_blank" rel="noopener">LangGraph pipeline ↗</a>
-        <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/blob/main/app/services/review_grounding.py" target="_blank" rel="noopener">Grounding logic ↗</a>
-        <a class="ulink" href="https://github.com/Sudharsan2816/Code_review_agent/pull/4" target="_blank" rel="noopener">PR #4: wiring the graph ↗</a>
-      
-        <a class="ulink" href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=bug_report.yml&title=%5BBug%5D%20AI%20Code%20Review%20Agent%3A%20" target="_blank" rel="noopener">Report a bug ↗</a>
-        <a class="ulink" href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=suggestion.yml&title=%5BSuggestion%5D%20AI%20Code%20Review%20Agent%3A%20" target="_blank" rel="noopener">Suggest an improvement ↗</a>
-        <a class="ulink" href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=scaling_idea.yml&title=%5BScaling%5D%20AI%20Code%20Review%20Agent%3A%20" target="_blank" rel="noopener">Propose a scaling idea ↗</a>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <span>© 2026 Sudharsan V S</span>
-    <a class="ulink" href="./">Back to portfolio</a>
-  </footer>
-</div>
+<script src="pw.js" defer></script>
 <script src="try.js" defer></script>
 <script src="cmdk.js" defer></script>
 </body>

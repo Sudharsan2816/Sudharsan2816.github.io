@@ -1,28 +1,20 @@
-/* Command palette (cmdk.js). Uses whichever page's tokens are present; --raised on the homepage, --sheet on case studies. */
-.cmdk-btn { font: inherit; font-size: 14px; font-weight: 500; color: var(--muted); background: transparent; border: 1px solid var(--rule); border-radius: 999px; padding: 4px 6px 4px 12px; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; transition: border-color .2s, color .2s; }
-.cmdk-btn:hover { border-color: var(--ink); color: var(--ink); }
-.cmdk-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
-.cmdk-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
-.cmdk-btn kbd, .cmdk kbd { font-family: var(--body); font-size: 11.5px; font-weight: 600; padding: 1px 6px; border-radius: 6px; border: 1px solid var(--rule); background: var(--paper); color: var(--muted); }
-@media (pointer: coarse) { .cmdk-btn kbd { display: none; } .cmdk-btn { min-height: 40px; padding-right: 12px; } }
-
-.cmdk { width: min(640px, calc(100vw - 24px)); max-width: calc(100vw - 24px); max-height: min(560px, calc(100dvh - 48px)); margin: 12vh auto auto; padding: 0; border: 1px solid var(--ink); border-radius: 16px; background: var(--raised, var(--sheet)); color: var(--ink); box-shadow: 0 30px 80px -30px rgba(0, 0, 0, .55); overflow: hidden; }
-.cmdk::backdrop { background: rgba(20, 20, 20, .38); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+/* Command palette (cmdk.js), in the Paper & Wires palette from pw.css. */
+.cmdk { width: min(640px, calc(100vw - 24px)); max-width: calc(100vw - 24px); max-height: min(560px, calc(100dvh - 48px)); margin: 12vh auto auto; padding: 0; border: 1px solid var(--ink); border-radius: 16px; background: var(--card); color: var(--ink); box-shadow: 0 30px 80px -30px rgba(23, 21, 15, .55); overflow: hidden; font-family: var(--sans); }
+.cmdk::backdrop { background: rgba(20, 19, 16, .42); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
 .cmdk-box { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; max-height: inherit; }
 .cmdk-in { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--rule); }
-.cmdk-in svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
+.cmdk-in svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--graphite); stroke-width: 2; stroke-linecap: round; }
 .cmdk-in input { flex: 1; width: 100%; min-width: 0; text-overflow: ellipsis; font: inherit; font-size: 17px; color: var(--ink); background: transparent; border: 0; outline: none; padding: 6px 0; }
-.cmdk-in input::placeholder { color: var(--muted); }
-.cmdk-x { font: inherit; font-size: 12px; font-weight: 600; color: var(--muted); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 3px 8px; cursor: pointer; }
+.cmdk-in input::placeholder { color: var(--graphite); }
+.cmdk-x { font: 600 12px var(--mono); color: var(--graphite); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 4px 8px; cursor: pointer; }
 .cmdk ul { list-style: none; margin: 0; padding: 6px; overflow-y: auto; overscroll-behavior: contain; }
-.cmdk-group { font-size: 12.5px; font-weight: 600; color: var(--muted); padding: 10px 10px 4px; }
+.cmdk-group { font: 11.5px var(--mono); color: var(--graphite); padding: 10px 10px 4px; }
 .cmdk-item { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px; border-radius: 10px; cursor: pointer; font-size: 15px; }
-.cmdk-item .cmdk-g { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.cmdk-item .cmdk-g { font: 12px var(--mono); color: var(--graphite); white-space: nowrap; }
 .cmdk-item[aria-selected="true"] { background: var(--ink); color: var(--paper); }
-.cmdk-item[aria-selected="true"] .cmdk-g { color: inherit; opacity: .75; }
-.cmdk-foot { margin: 0; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 10px 14px; border-top: 1px solid var(--rule); font-size: 12.5px; color: var(--muted); }
-@media (pointer: coarse) { .cmdk-keys { display: none; } .cmdk-item { padding-block: 12px; } }
-@media (prefers-reduced-motion: no-preference) {
-  .cmdk[open] { animation: cmdk-in .18s cubic-bezier(.2, .75, .2, 1); }
-}
+.cmdk-item[aria-selected="true"] .cmdk-g { color: var(--marker); }
+.cmdk-foot { margin: 0; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 10px 14px; border-top: 1px solid var(--rule); font: 12px var(--mono); color: var(--graphite); }
+.cmdk kbd { font: 600 11px var(--mono); padding: 1px 6px; border-radius: 5px; border: 1px solid var(--rule); background: var(--paper); color: var(--graphite); }
+@media (pointer: coarse) { .cmdk-keys { display: none; } .cmdk-item { padding-block: 13px; } }
+@media (prefers-reduced-motion: no-preference) { .cmdk[open] { animation: cmdk-in .18s cubic-bezier(.2, .7, .2, 1); } }
 @keyframes cmdk-in { from { opacity: 0; transform: translateY(-8px) scale(.985); } }

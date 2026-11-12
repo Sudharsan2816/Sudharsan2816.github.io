@@ -3,550 +3,284 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="claude:viewport-fit-sides" content="cover">
-<title>Market Research Copilot</title>
-<meta name="description" content="A document-grounded research assistant. Fixed-size chunks beat semantic chunking: complete-hit@3 of 100% vs 90.6% on 32 labelled questions. Replay the live test.">
-<meta property="og:title" content="Market Research Copilot · Sudharsan V S">
-<meta property="og:description" content="A document-grounded research assistant. Fixed-size chunks beat semantic chunking: complete-hit@3 of 100% vs 90.6% on 32 labelled questions. Replay the live test.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://sudharsan2816.github.io/copilot.html">
-<meta property="og:image" content="https://sudharsan2816.github.io/og/copilot.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Market Research Copilot case study">
-<meta name="twitter:card" content="summary_large_image">
+<title>Market Research Copilot · Sudharsan V S</title>
+<meta content="A document-grounded research assistant. Fixed-size chunks beat semantic chunking: complete-hit@3 of 100% vs 90.6% on 32 labelled questions. Replay the live test." name="description"/>
+<meta content="Market Research Copilot · Sudharsan V S" property="og:title"/>
+<meta content="A document-grounded research assistant. Fixed-size chunks beat semantic chunking: complete-hit@3 of 100% vs 90.6% on 32 labelled questions. Replay the live test." property="og:description"/>
+<meta content="article" property="og:type"/>
+<meta content="https://sudharsan2816.github.io/copilot.html" property="og:url"/>
+<meta content="https://sudharsan2816.github.io/og/copilot.png" property="og:image"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="630" property="og:image:height"/>
+<meta content="Market Research Copilot case study" property="og:image:alt"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta name="theme-color" content="#F2EDE4">
+<link rel="canonical" href="https://sudharsan2816.github.io/copilot.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<style>
-/* Layout: case-study sheet in the homepage's system; facts strip, then the eight standard sections down one reading column. */
-:root {
-  --paper: #e7e5e1; --sheet: #efeeea; --ink: #141414; --muted: #5b5853; --rule: #c7c3bc;
-  --red: #e0442c; --on-ink: #efeeea; --on-ink-muted: #a9a59e; --on-red: #141414;
-  --good: #2f7a4a; --nav-bg: rgba(231, 229, 225, 0.85);
-  --display: "Anybody", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
-  --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --ease: cubic-bezier(.2, .75, .2, 1);
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #171615; --sheet: #1f1e1c; --ink: #ecebe6; --muted: #a29e97; --rule: #3a3835;
-    --red: #f0563c; --on-ink: #171615; --on-ink-muted: #5f5b55; --on-red: #141414;
-    --good: #5fbf83; --nav-bg: rgba(23, 22, 21, 0.85); color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #171615; --sheet: #1f1e1c; --ink: #ecebe6; --muted: #a29e97; --rule: #3a3835;
-  --red: #f0563c; --on-ink: #171615; --on-ink-muted: #5f5b55; --on-red: #141414;
-  --good: #5fbf83; --nav-bg: rgba(23, 22, 21, 0.85); color-scheme: dark;
-}
-* { box-sizing: border-box; }
-:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
-@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 16.5px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-img { max-width: 100%; }
-::selection { background: var(--red); color: var(--on-red); }
-a { color: inherit; }
-a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 4px; }
-
-.wrap {
-  max-width: 1040px; margin: 0 auto;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--nav-bg); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); }
-.nav .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 10px; }
-.back { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; display: inline-flex; gap: 8px; align-items: center; }
-.back span { display: inline-block; transition: transform .25s var(--ease); }
-.back:hover span { transform: translateX(-4px); }
-.back:hover { color: var(--red); }
-.toc { display: flex; gap: clamp(8px, 2vw, 20px); list-style: none; margin: 0; padding: 0; }
-.toc a { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
-.toc a:hover { color: var(--ink); }
-@media (max-width: 720px) { .toc { display: none; } }
-
-.label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.ulink { text-decoration: none; background-image: linear-gradient(var(--red), var(--red)), linear-gradient(var(--rule), var(--rule)); background-size: 0% 1px, 100% 1px; background-position: 0 100%, 0 100%; background-repeat: no-repeat; padding-bottom: 2px; transition: background-size .35s var(--ease), color .2s; }
-.ulink:hover { background-size: 100% 1px, 100% 1px; color: var(--red); }
-
-/* hero */
-.hero { position: relative; margin-top: 24px; background: var(--sheet); padding-block: 28px 30px; padding-inline: clamp(16px, 4vw, 44px); display: grid; gap: 18px; overflow: hidden; isolation: isolate; }
-.hero .block { position: absolute; right: 9%; top: 0; bottom: 0; width: clamp(40px, 10%, 110px); background: var(--red); z-index: -1; }
-.hero .ghost { position: absolute; left: -0.03em; bottom: -0.18em; font-family: var(--display); font-weight: 300; font-stretch: 150%; font-size: clamp(60px, 13vw, 170px); line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--ink); opacity: .22; white-space: nowrap; z-index: -1; user-select: none; }
-.reg { position: absolute; font-family: var(--mono); font-size: 14px; line-height: 1; color: var(--muted); }
-.reg.tl { top: 8px; left: 8px; } .reg.tr { top: 8px; right: 8px; }
-.tags { display: flex; gap: 8px; flex-wrap: wrap; }
-.tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--rule); color: var(--muted); background: var(--sheet); }
-h1 { margin: 0; font-family: var(--display); font-weight: 800; font-stretch: 86%; font-size: clamp(36px, 6.5vw, 76px); line-height: .95; letter-spacing: -.02em; text-transform: uppercase; text-wrap: balance; max-width: 14ch; }
-.lede { margin: 0; max-width: 60ch; font-size: clamp(17px, 1.8vw, 20px); line-height: 1.45; font-weight: 500; }
-.lede em { font-style: normal; color: var(--red); }
-
-/* facts strip */
-.facts { margin-top: 18px; background: var(--ink); color: var(--on-ink); border-radius: 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 6px clamp(16px, 3vw, 28px) 18px; }
-@media (min-width: 820px) { .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.fact { padding: 16px 12px 4px 0; border-top: 1px solid var(--on-ink-muted); display: grid; gap: 4px; align-content: start; }
-@media (min-width: 820px) { .fact { border-top: 0; border-left: 1px solid var(--on-ink-muted); padding: 12px 16px 2px; } .fact:first-child { border-left: 0; padding-left: 0; } }
-.fact .n { font-family: var(--display); font-weight: 800; font-stretch: 84%; font-size: clamp(30px, 4.6vw, 48px); line-height: 1; font-variant-numeric: tabular-nums; }
-.fact .n small { font-size: .45em; color: var(--on-ink-muted); font-weight: 600; font-stretch: 100%; }
-.fact .n .r { color: var(--red); font-weight: 400; }
-.fact p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--on-ink-muted); }
-
-/* sections */
-main { display: grid; gap: 72px; padding-block: 64px 48px; }
-section { scroll-margin-top: 64px; display: grid; gap: 18px; }
-.sh { display: flex; align-items: baseline; gap: 14px; border-top: 1px solid var(--ink); padding-top: 14px; }
-.sh .k { font-family: var(--mono); font-size: 12px; color: var(--red); }
-h2 { margin: 0; font-family: var(--display); font-weight: 700; font-stretch: 110%; font-size: clamp(24px, 3.2vw, 34px); line-height: 1.05; letter-spacing: -.01em; }
-.prose { max-width: 66ch; display: grid; gap: 14px; }
-.prose p { margin: 0; }
-.prose strong { font-weight: 600; }
-
-/* diagram */
-.diagram { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; overflow-x: auto; padding: 16px; }
-.diagram svg { display: block; min-width: 720px; width: 100%; height: auto; }
-.d-box { fill: var(--paper); stroke: var(--ink); stroke-width: 1.2; }
-.d-box.hot { fill: var(--red); stroke: var(--red); }
-.d-box.ink { fill: var(--ink); stroke: var(--ink); }
-.d-t { font-family: var(--mono); font-size: 11.5px; fill: var(--ink); }
-.d-t.s { font-size: 10px; fill: var(--muted); }
-.d-t.on-hot { fill: var(--on-red); }
-.d-t.on-ink { fill: var(--on-ink); }
-.d-lane { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; fill: var(--muted); }
-.d-line { stroke: var(--ink); stroke-width: 1.2; fill: none; }
-.d-line.dash { stroke-dasharray: 4 4; stroke: var(--muted); }
-.d-arrow { fill: var(--ink); }
-
-.components { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--rule); }
-@media (min-width: 760px) { .components { grid-template-columns: 1fr 1fr; column-gap: 36px; } }
-.components li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; padding-block: 11px; border-bottom: 1px solid var(--rule); font-size: 14.5px; }
-.components b { font-family: var(--mono); font-weight: 500; font-size: 12px; letter-spacing: .04em; padding-top: 2px; }
-.components span { color: var(--muted); }
-
-/* decisions */
-.decisions { display: grid; gap: 16px; }
-.decision { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; padding: 20px 22px; display: grid; gap: 12px; transition: transform .35s var(--ease), border-color .3s, box-shadow .35s var(--ease); }
-.decision:hover { transform: translateY(-4px); border-color: var(--ink); box-shadow: 0 22px 40px -28px rgba(0,0,0,.45); }
-.decision h3 { margin: 0; font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 21px; line-height: 1.15; text-wrap: balance; }
-.dgrid { display: grid; gap: 10px 22px; grid-template-columns: 1fr; }
-@media (min-width: 760px) { .dgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.dgrid div { display: grid; gap: 4px; align-content: start; font-size: 14.5px; min-width: 0; }
-.dgrid .label.chose { color: var(--good); }
-.dgrid .label.rejected { color: var(--red); }
-
-/* tables */
-.tw { overflow-x: auto; border-top: 1px solid var(--ink); }
-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
-th { text-align: left; font-family: var(--mono); font-weight: 500; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 10px 12px 8px 0; border-bottom: 1px solid var(--rule); }
-td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; vertical-align: top; }
-td.num, th.num { text-align: right; }
-tr.win td { font-weight: 600; }
-tr.win td:first-child { color: var(--red); }
-tbody tr { transition: background .2s; }
-tbody tr:hover { background: var(--sheet); }
-.cap { margin: 8px 0 0; font-size: 13px; color: var(--muted); max-width: 70ch; }
-.pill { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; }
-.pill.pass { color: var(--good); } .pill.fail { color: var(--red); }
-
-.evalgrid { display: grid; gap: 28px; }
-.evalgrid h3 { margin: 0 0 8px; font-family: var(--display); font-weight: 650; font-stretch: 100%; font-size: 18px; }
-
-.next { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--rule); max-width: 760px; }
-.next li { padding: 12px 0 12px 26px; border-bottom: 1px solid var(--rule); position: relative; }
-.next li::before { content: "+"; position: absolute; left: 4px; top: 11px; font-family: var(--mono); color: var(--red); }
-
-.links { display: flex; flex-wrap: wrap; gap: 12px 26px; font-family: var(--mono); font-size: 13px; }
-footer { padding-block: 0 36px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
-
-@media (prefers-reduced-motion: no-preference) {
-  .hero .block { animation: grow 1s var(--ease) both; transform-origin: 50% 100%; }
-  h1 { animation: rise .8s .1s var(--ease) both; }
-  @supports (animation-timeline: view()) {
-    .reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% cover 25%; }
-  }
-}
-@keyframes grow { from { transform: scaleY(0); } }
-@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
-@keyframes reveal { from { opacity: .35; translate: 0 36px; } to { opacity: 1; translate: 0 0; } }
-@media (prefers-reduced-motion: reduce) { .decision { transition: none; } }
-
-/* calmer system, matching the homepage: sentence-case labels in the body face, one load moment only */
-.label, .tag, .back, .toc a, th, .pill, .dgrid .label { font-family: var(--body); text-transform: none; letter-spacing: 0; }
-.label { font-size: 13px; font-weight: 600; }
-.tag { font-size: 12.5px; }
-.back { font-size: 14px; }
-.toc a { font-size: 14px; font-weight: 500; }
-th { font-size: 12.5px; font-weight: 600; }
-.pill { font-size: 12px; }
-.sh .k, .hero .ghost, .reg { display: none; }
-.reveal { animation: none !important; }
-.lede em { color: inherit; font-weight: 650; }
-.next li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--red); top: 21px; left: 6px; }
-
-/* let wide tables and diagrams scroll inside their boxes instead of widening the page on phones */
-section > *, .evalgrid > * { min-width: 0; }
-/* roadmap: evidence-backed build stages, native <details> so it works without JavaScript */
-.road-intro { margin: 0; max-width: 66ch; color: var(--muted); }
-.road { list-style: none; margin: 0; padding: 0 0 0 28px; position: relative; display: grid; gap: 10px; max-width: 860px; }
-.road::before { content: ""; position: absolute; left: 6px; top: 18px; bottom: 18px; width: 2px; background: var(--rule); }
-.stage { position: relative; }
-.stage::before { content: ""; position: absolute; left: -28px; top: 18px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); border: 2px solid var(--red); box-sizing: border-box; }
-.stage details { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; transition: border-color .2s; }
-.stage details[open] { border-color: var(--ink); }
-.stage summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 2px 16px; padding: 14px 18px; align-items: baseline; }
-.stage summary::-webkit-details-marker { display: none; }
-.stage summary:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 12px; }
-.stage time { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.stage .st { font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 18px; line-height: 1.25; }
-.stage .so { grid-column: 2; font-size: 14.5px; color: var(--muted); }
-.stage .tg { grid-column: 3; grid-row: 1; font-size: 20px; line-height: 1; color: var(--muted); transition: transform .25s var(--ease), color .2s; }
-.stage details[open] .tg { transform: rotate(45deg); color: var(--red); }
-.stage summary:hover .st { color: var(--red); }
-.sgrid { margin: 0; padding: 2px 18px 14px; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 760px) { .sgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 22px; padding-left: 118px; } }
-.sgrid div { display: grid; gap: 4px; align-content: start; font-size: 14.5px; min-width: 0; }
-.sgrid dt { font-size: 13px; font-weight: 600; color: var(--muted); }
-.sgrid dt.problem { color: var(--red); }
-.sgrid dt.change, .sgrid dt.result { color: var(--good); }
-.sgrid dd { margin: 0; }
-.ev { margin: 0; padding: 0 18px 16px; font-size: 13.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; }
-@media (min-width: 760px) { .ev { padding-left: 118px; } }
-.ev a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
-.ev a:hover { color: var(--red); border-color: var(--red); }
-.stage.now::before { background: var(--red); }
-.now-row { padding: 12px 18px; border: 1px dashed var(--rule); border-radius: 14px; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; }
-.now-row .st { font-family: var(--display); font-weight: 700; font-stretch: 96%; font-size: 18px; }
-.now-row a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); font-size: 14.5px; }
-.now-row a:hover { color: var(--red); border-color: var(--red); }
-@media (max-width: 600px) {
-  .stage summary { grid-template-columns: minmax(0, 1fr) auto; }
-  .stage time, .stage .st, .stage .so { grid-column: 1; }
-  .stage .tg { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
-}
-@media (prefers-reduced-motion: reduce) { .stage .tg, .stage details { transition: none; } }
-</style>
-<link rel="stylesheet" href="try.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="pw.css">
 <link rel="stylesheet" href="cmdk.css">
+<script>document.documentElement.classList.add('js');</script>
 </head>
-<body>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
 
-<nav class="nav" aria-label="Case study">
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" aria-hidden="true"><span>CASE STUDY · MARKET RESEARCH COPILOT   ●   RAG   ●   96 TESTS IN CI   ●   32 LABELLED QUESTIONS   ●   CODE ON GITHUB   ●   </span><span>CASE STUDY · MARKET RESEARCH COPILOT   ●   RAG   ●   96 TESTS IN CI   ●   32 LABELLED QUESTIONS   ●   CODE ON GITHUB   ●   </span><span>CASE STUDY · MARKET RESEARCH COPILOT   ●   RAG   ●   96 TESTS IN CI   ●   32 LABELLED QUESTIONS   ●   CODE ON GITHUB   ●   </span><span>CASE STUDY · MARKET RESEARCH COPILOT   ●   RAG   ●   96 TESTS IN CI   ●   32 LABELLED QUESTIONS   ●   CODE ON GITHUB   ●   </span></div>
+</div>
+
+<header class="top">
   <div class="wrap">
-    <a class="back" href="./"><span>←</span> Sudharsan V S</a>
-    <ul class="toc">
-      <li><a href="#problem">Problem</a></li>
-      <li><a href="#architecture">Architecture</a></li>
-      <li><a href="#try">Try it</a></li>
-      <li><a href="#decisions">Decisions</a></li>
-      <li><a href="#evaluation">Evaluation</a></li>
-      <li><a href="#roadmap">Roadmap</a></li>
-      <li><a href="#failures">Failures</a></li>
-    </ul>
-    <button class="cmdk-btn" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span>Search</span><kbd>Ctrl K</kbd></button>
+    <a class="brand" href="./"><span class="back" aria-hidden="true">←</span><b>Sudharsan</b><small>v s</small><span class="sr-only">, back to the portfolio</span></a>
+    <nav class="nav case-nav only-wide" aria-label="On this page">
+      <a href="#problem">Problem</a><a href="#architecture">Architecture</a><a class="strong" href="#try">Try it</a><a href="#decisions">Decisions</a><a href="#evaluation">Evaluation</a><a href="#roadmap">How it was built</a><a href="#failures">Failures</a>
+    </nav>
+    <div class="acts">
+      <button class="search" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span class="search-l">search</span><kbd>Ctrl K</kbd></button>
+      <a class="pill-btn o only-wide" href="review.html">Next: Code Review →</a>
+    </div>
   </div>
+</header>
+
+<main id="main" class="wrap">
+
+<section class="c-hero" aria-labelledby="h1">
+  <div class="c-hero-main">
+    <p class="c-kick">~/work/copilot · personal build · rag</p>
+    <h1 id="h1">Market Research <span class="mk">Copilot</span></h1>
+    <p class="c-lede">A document-grounded research assistant where the most important decision was the least glamorous one: <em>fixed-size chunks beat semantic chunking</em>, and the benchmark shows why.</p>
+  </div>
+  <dl class="spec">
+    <div><dt>stack</dt><dd>FastAPI, FAISS, NVIDIA NIM, React, Docker</dd></div>
+    <div><dt>tests</dt><dd>96 automated tests in CI</dd></div>
+    <div><dt>evaluation</dt><dd>Chunking benchmark, size sweep, live chat test, regression suite</dd></div>
+    <div><dt>code</dt><dd><a href="https://github.com/Sudharsan2816/Projects/tree/main/ai-market-research-copilot" target="_blank" rel="noopener">Public on GitHub ↗</a></dd></div>
+  </dl>
+</section>
+
+<div class="facts" role="list" aria-label="Headline numbers">
+  <div class="fact" role="listitem"><p class="n">100<small>%</small> <span class="r">/</span> 90.6<small>%</small></p><p>complete-hit@3, fixed vs semantic chunking, 32 labelled questions</p></div>
+  <div class="fact" role="listitem"><p class="n">20<span class="r">→</span>6</p><p>FAISS candidates reranked by an NVIDIA NIM model</p></div>
+  <div class="fact" role="listitem"><p class="n">0.35</p><p>similarity floor below which it says &quot;not covered&quot;</p></div>
+  <div class="fact" role="listitem"><p class="n">9<small>/12</small> <span class="r">→</span> 10<small>/10</small></p><p>live chat test before and after fixing three failures</p></div>
+</div>
+
+<section id="problem" class="sec" aria-labelledby="h-problem">
+  <div class="sh"><span class="sh-n">01</span><h2 id="h-problem">Problem</h2><span class="sh-cmd">$ cat PROBLEM.md</span></div>
+  <div class="prob">
+    <p>Market-research reports are dense: one page can carry a company's founding year, its price points, its growth rate and a competitor comparison. An analyst who asks a general chatbot about them gets fluent answers drawn from the model's memory, and the numbers are often wrong or invented. The useful version answers only from the reports the analyst uploaded, shows which passages it used, and says plainly when the reports don't cover a question.</p>
+    <p>So the job of this system is retrieval quality and refusal discipline, more than generation. If the right passage isn't retrieved, the best model in the world still answers badly.</p>
+  </div>
+</section>
+
+<section id="architecture" class="sec" aria-labelledby="h-arch">
+  <div class="sh"><span class="sh-n">02</span><h2 id="h-arch">Architecture</h2><span class="sh-cmd">pick a node</span></div>
+  <div class="board arch" data-arch data-start="4">
+    <p class="k">request path · 7 nodes</p>
+    <div class="arch-path js-only" role="group" aria-label="Request path"><button class="anode" type="button" aria-pressed="false"><span>01</span><b>Parser</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>02</span><b>Chunker</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>03</span><b>Embeddings</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>04</span><b>FAISS</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>05</span><b>Relevance floor</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>06</span><b>Reranker</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>07</span><b>Generator</b></button></div>
+    <p class="k side js-only">around it</p>
+    <div class="arch-side js-only" role="group" aria-label="Supporting parts"><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>Follow-ups</b></button><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>Report workers</b></button><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>API</b></button></div>
+    <div class="arch-d js-only" aria-live="polite"><p class="a"></p><p class="b"></p></div>
+    <dl class="arch-all no-js">
+      <div data-step="node 1 of 7 · request path"><dt>Parser</dt><dd>Reads PDF, CSV, TXT and Markdown; CSVs become 50-row text chunks so tables stay retrievable.</dd></div>
+      <div data-step="node 2 of 7 · request path"><dt>Chunker</dt><dd>Fixed 305-word windows with 38 words of overlap, so facts at a boundary appear in both neighbours.</dd></div>
+      <div data-step="node 3 of 7 · request path"><dt>Embeddings</dt><dd>NVIDIA NIM <code>nv-embedqa-e5-v5</code>, L2-normalised so inner product equals cosine. Falls back to local MiniLM if the API fails.</dd></div>
+      <div data-step="node 4 of 7 · request path"><dt>FAISS</dt><dd>One flat inner-product index per session, so one user's documents never answer another user's question.</dd></div>
+      <div data-step="node 5 of 7 · request path"><dt>Relevance floor</dt><dd>Drops candidates under 0.35 cosine before reranking; if none survive, the answer is "not covered" with zero sources.</dd></div>
+      <div data-step="node 6 of 7 · request path"><dt>Reranker</dt><dd>NIM <code>nv-rerankqa-mistral-4b-v3</code> orders 20 candidates and keeps 6; if the endpoint is down, embedding order is kept.</dd></div>
+      <div data-step="node 7 of 7 · request path"><dt>Generator</dt><dd>NVIDIA Nemotron, prompted to answer only the current question from the supplied chunks, with citations.</dd></div>
+      <div data-step="supporting part"><dt>Follow-ups</dt><dd>Pronouns and close typos are resolved against report entities; an optional Gemini call condenses the turn. Only the standalone query is embedded, never raw history.</dd></div>
+      <div data-step="supporting part"><dt>Report workers</dt><dd>Long market reports run in server-owned jobs with progress stages and restart recovery, capped at 10 active jobs.</dd></div>
+      <div data-step="supporting part"><dt>API</dt><dd>FastAPI with optional API-key auth, rate limiting, sanitised uploads and request IDs on every log line.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section id="try" class="sec" aria-labelledby="h-try">
+  <div class="sh"><span class="sh-n">03</span><h2 id="h-try">Replay the live test</h2><span class="sh-cmd" style="">RECORDED RUN · 9 AUG 2026</span></div>
+  <p class="try-intro">On 9 August 2026 I asked the running Copilot 12 questions about a sample market report, fixed the three it failed, and retested. Pick a question to replay what came back. <b>Nothing here calls a model:</b> each answer is shown word for word from the committed run log, with the time it took.</p>
+  <div class="cop js-only" data-replay="copilot" data-src="copilot-run" hidden>
+    <div class="cop-side" role="group" aria-label="Questions from the live test"></div>
+    <div class="cop-main" aria-live="polite"></div>
+  </div>
+  <p class="cap no-js">Turn on JavaScript to replay the run. The same results are in the live chat test table under Evaluation.</p>
+  <p class="rp-src"><span>FAIL = failed the first run · slow = passed, flagged slow in the run log</span><a href="https://github.com/Sudharsan2816/Projects/blob/eca020b/ai-market-research-copilot/evals/chatbot_live_test_results_2026-08-09.json" rel="noopener" target="_blank">First-run log ↗</a><a href="https://github.com/Sudharsan2816/Projects/blob/eca020b/ai-market-research-copilot/evals/chatbot_live_retest_results_2026-08-09.json" rel="noopener" target="_blank">Retest log ↗</a></p>
+<script id="copilot-run" type="application/json">{"date":"2026-08-09","doc":"market_research_test_sample.pdf","provider":"nvidia","first":{"total":12,"passed":9,"failed":3,"pass_rate":0.75,"median_duration_ms":4693,"mean_duration_ms":15687,"max_duration_ms":82300},"retest":{"graded_cases":10,"passed":10,"failed":0,"pass_rate":1.0,"median_duration_ms":4536,"mean_duration_ms":10065,"max_duration_ms":49933},"probe":[{"category":"broad_summary_provider_latency","question":"Summarize the uploaded document","duration_ms":120172,"result":"client_timeout","notes":"No answer was returned. A focused post-fix query verified the corrected ₹6,000 source figure; upstream NVIDIA latency remains variable."}],"cases":[{"id":"TC-01","cat":"Company profile","q":"Tell me about KrishiKube","setup":null,"expected":"Grounded KrishiKube profile","answer":"**Direct Answer**\n\n* **KrishiKube** is a Chennai-based brand, founded in 2022 by Deepak Sundaram and Nandhini Rao, holding **15%** of the organised-retail share in the Indian consumer vertical-farming appliance market.\n* It is the **fastest-growing** among the majors, with **79% year-on-year growth**, and is known for its **KrishiKube Mini** at ₹8,990, which opened the sub-₹10,000 tier.\n* **Key Strength**: In-house manufacturing in Sriperumbudur, giving it a **22% unit-cost advantage** over SproutNest. **Key Weakness**: Under-developed app and firmware complaints, leading to a **4.1-star average rating**.\n\n**Source**: Section 3.3, [market_research_test_sample.pdf, Page 2]","note":null,"mode":"documents","sources":3,"ms":14438,"result":"pass","why":null,"retest":{"id":"PF-04","observed":"Correct share, growth, founders, price, cost advantage, weakness, and projection","result":"pass","ms":11413,"mode":"documents","sources":3}},{"id":"TC-02","cat":"Direct fact","q":"Who founded SproutNest?","setup":null,"expected":"Aravind Menon, 2021","answer":"**Direct Answer**\n* **SproutNest** was founded in **2021** by **Aravind Menon**.\n* **Headquarters**: Bengaluru\n* **Source**: Section 3.1, [market_research_test_sample.pdf, Page 1]","note":null,"mode":"documents","sources":2,"ms":4207,"result":"pass","why":null,"retest":{"id":"PF-06","observed":"Aravind Menon in 2021","result":"pass","ms":4145,"mode":"documents","sources":2}},{"id":"TC-03","cat":"Exact price","q":"What is the price of SproutNest Halo X2?","setup":null,"expected":"₹18,499","answer":"**Direct Answer**\nThe price of SproutNest Halo X2 is **₹18,499**.\n* **Tier**: Mid-premium\n* **Source**: Section 4, [market_research_test_sample.pdf, Page 3]","note":null,"mode":"documents","sources":2,"ms":4625,"result":"pass","why":null,"retest":{"id":"PF-07","observed":"₹18,499, mid-premium, 24-month warranty","result":"pass","ms":7143,"mode":"documents","sources":2}},{"id":"TC-04","cat":"Who's who","q":"Who is the lead analyst?","setup":null,"expected":"Priyanka Devanathan","answer":"**Direct Answer**\nThe lead analyst for the report **HGR-VF-2026-Q2-0417** is **Priyanka Devanathan**.\n* **Source**: Report Header, [market_research_test_sample.pdf, Page 1]","note":null,"mode":"documents","sources":2,"ms":4053,"result":"pass","why":null,"retest":null},{"id":"TC-05","cat":"Comparison","q":"Which metro is growing the fastest?","setup":null,"expected":"Chennai, 61% year-on-year unit growth","answer":"**Direct Answer**\nThe fastest-growing metro in the Indian consumer vertical-farming appliance market is **Chennai**, with **61% year-on-year unit growth**.\n* **Source**: Executive Summary, [market_research_test_sample.pdf, Page 1]","note":null,"mode":"documents","sources":2,"ms":4891,"result":"pass","why":null,"retest":null},{"id":"TC-06","cat":"Whole-report summary","q":"What are the most important findings in the report?","setup":null,"expected":"Grounded multi-section report summary","answer":null,"note":"The response accurately summarized market size and growth, competitive shares, pricing, opportunity, threat, return-rate risk, geography, and customer segments from all three indexed chunks.","mode":"documents","sources":3,"ms":82300,"result":"pass_with_latency_warning","why":null,"retest":null},{"id":"TC-07","cat":"Figure not in the report","q":"What is SproutNest's net profit margin?","setup":null,"expected":"Safe not-covered response without substituting gross margin","answer":"**Direct Answer**\nNot covered in the uploaded documents.\n\n* The report provides SproutNest's revenue source breakdown (41% from subscription seed-pod business with a 58% gross margin) but does not disclose net profit margin.","note":null,"mode":"report_irrelevant","sources":0,"ms":49299,"result":"pass_with_latency_warning","why":null,"retest":{"id":"PF-09","observed":"Not covered; correctly distinguished the available 58% gross margin","result":"pass","ms":3976,"mode":"report_irrelevant","sources":0}},{"id":"TC-08","cat":"Off-topic","q":"What is the capital of France?","setup":null,"expected":"Report-irrelevant response without answering","answer":"I checked the uploaded report first, but it does not contain information relevant to this question. Try asking about a topic, entity, or figure covered in the report.","note":null,"mode":"report_irrelevant","sources":0,"ms":420,"result":"pass","why":null,"retest":{"id":"PF-01","observed":"Verified report-irrelevant response; no answer invented","result":"pass","ms":2464,"mode":"report_irrelevant","sources":0}},{"id":"TC-09","cat":"Off-topic, straight after another","q":"What is Tesla's 2026 market share?","setup":"What is the capital of France?","expected":"Safe not-covered response for the current question only","answer":null,"note":"The response safely said Tesla's market share was not covered, but it also repeated and answered the preceding France question as not covered before addressing Tesla.","mode":"report_irrelevant","sources":0,"ms":18461,"result":"fail","why":"It answered the earlier France question again before saying Tesla wasn't covered: the previous turn leaked into the answer.","retest":{"id":"PF-02","observed":"Not covered; did not repeat or answer the France question","result":"pass","ms":12999,"mode":"report_irrelevant","sources":0}},{"id":"TC-10","cat":"Weaknesses","q":"What are KrishiKube's weaknesses?","setup":null,"expected":"Under-developed app, firmware complaints, 4.1-star rating","answer":"**Direct Answer**\n\n* **KrishiKube's Weaknesses**: An under-developed app and a 4.1-star average rating, specifically dragged down by firmware complaints.\n* **Source**: Section 3.3 (KrishiKube), [market_research_test_sample.pdf, Page 2]","note":null,"mode":"documents","sources":1,"ms":4761,"result":"pass","why":null,"retest":null},{"id":"TC-11","cat":"Misspelled name","q":"Tell me about Krishikub","setup":null,"expected":"Recover likely KrishiKube intent","answer":"I checked the uploaded report first, but it does not contain information relevant to this question. Try asking about a topic, entity, or figure covered in the report.","note":null,"mode":"report_irrelevant","sources":0,"ms":360,"result":"fail","why":"It didn't recognise the misspelled company and said the report didn't cover it.","retest":{"id":"PF-03","observed":"Resolved to the report-backed KrishiKube spelling; correct profile","result":"pass_with_latency_warning","ms":49933,"mode":"documents","sources":3}},{"id":"TC-12","cat":"Follow-up using “its”","q":"What are its weaknesses?","setup":"Tell me about KrishiKube","expected":"Resolve its to KrishiKube and answer from the report","answer":"I checked the uploaded report first, but it does not contain information relevant to this question. Try asking about a topic, entity, or figure covered in the report.","note":null,"mode":"report_irrelevant","sources":0,"ms":425,"result":"fail","why":"It didn't work out that “its” meant KrishiKube, so it found nothing to answer from.","retest":{"id":"PF-05","observed":"Resolved 'its' to KrishiKube; returned app, firmware, and 4.1-star evidence","result":"pass","ms":3254,"mode":"documents","sources":1}}],"extra":[{"id":"PF-08","cat":"Company not in the report","q":"Tell me about Farmlantic","setup":null,"expected":null,"answer":null,"note":null,"mode":null,"sources":null,"ms":null,"result":null,"why":null,"retest":{"id":"PF-08","observed":"Unknown name was not fuzzy-mapped to a report entity","result":"pass","ms":401,"mode":"report_irrelevant","sources":0}},{"id":"PF-10","cat":"Price read from the PDF","q":"What price point does the report identify as an opportunity?","setup":null,"expected":null,"answer":null,"note":null,"mode":null,"sources":null,"ms":null,"result":null,"why":null,"retest":{"id":"PF-10","observed":"Correctly returned sub-₹6,000 and the 44% price-barrier evidence","result":"pass","ms":4926,"mode":"documents","sources":3}}],"src":["https://github.com/Sudharsan2816/Projects/blob/eca020b/ai-market-research-copilot/evals/chatbot_live_test_results_2026-08-09.json","https://github.com/Sudharsan2816/Projects/blob/eca020b/ai-market-research-copilot/evals/chatbot_live_retest_results_2026-08-09.json"]}</script>
+</section>
+
+<section id="decisions" class="sec" aria-labelledby="h-dec">
+  <div class="sh"><span class="sh-n">04</span><h2 id="h-dec">Decisions and trade-offs</h2><span class="sh-cmd">$ git log --grep=decision</span></div>
+  <details class="dec" name="dec" open>
+    <summary><span class="dec-n">01</span><h3 class="dec-t">Fixed-size chunks over semantic chunking</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>Fixed windows. On 32 labelled questions, complete-hit@3 was 100% against 90.6% for semantic chunking, and evidence recall@3 100% against 93.75%.</div><div><span class="lbl">Rejected</span>Semantic chunking. It split related facts that sat on one dense page, and doubled the chunk count, so narrow chunks competed for the same top-3 slots.</div><div class="trade"><span class="lbl">Trade-off</span>Semantic chunks cut retrieved context by 44.5%, which would lower prompt cost. Missing evidence costs more than extra tokens for a research tool.</div></div>
+  </details>
+  <details class="dec" name="dec">
+    <summary><span class="dec-n">02</span><h3 class="dec-t">305 words, picked by a sweep, not a round number</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>305/38. It kept hit@3 and hit@6 at 100% and gave the best top-1 result: 71.9% hit@1 and 0.885 MRR, against 62.5% and 0.839 at 800/100.</div><div><span class="lbl">Rejected</span>285/36, the smallest size with perfect hit@3, because its hit@1 and MRR were lower. Below 280 words, some evidence fell out of the top three.</div><div class="trade"><span class="lbl">Trade-off</span>About 87 more context words at top 3 than 285/36, accepted for better first-result accuracy.</div></div>
+  </details>
+  <details class="dec" name="dec">
+    <summary><span class="dec-n">03</span><h3 class="dec-t">Filter, then rerank, except for comparisons</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>FAISS fetches 20, a 0.35 floor removes weak matches, then NIM reranks to 6. Comparative questions skip the floor and diversify sources first.</div><div><span class="lbl">Rejected</span>Flooring every query. A "Nimbus vs Corvex" question needs evidence from both reports, and the floor can discard one side before the reranker sees it.</div><div class="trade"><span class="lbl">Trade-off</span>Comparisons can pass weaker candidates to the generator. The reranker's lift over embedding order has not been measured separately yet.</div></div>
+  </details>
+  <details class="dec" name="dec">
+    <summary><span class="dec-n">04</span><h3 class="dec-t">Embed the question, never the conversation</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>Resolve "its" and near-miss names against entities in the reports, then embed one standalone question.</div><div><span class="lbl">Rejected</span>Embedding raw history. In the live test, earlier turns leaked into answers: a Tesla question came back repeating the previous France question.</div><div class="trade"><span class="lbl">Trade-off</span>Entity matching is deliberately strict, so a misspelling far from any report entity stays unresolved instead of guessing.</div></div>
+  </details>
+</section>
+
+<section id="evaluation" class="sec" aria-labelledby="h-eval">
+  <div class="sh"><span class="sh-n">05</span><h2 id="h-eval">Evaluation and results</h2><span class="sh-cmd">$ cat docs/*EVALUATION*.md</span></div>
+  <div class="eval-grid">
+    <div class="card"><h3>Chunking benchmark, fixed vs semantic</h3><div class="tw" tabindex="0" role="region" aria-label="Chunking benchmark, fixed vs semantic"><table>
+<thead><tr><th>Metric</th><th class="num">Fixed</th><th class="num">Semantic</th></tr></thead>
+<tbody>
+<tr class="win"><td>Complete hit@3</td><td class="num">100.00%</td><td class="num">90.62%</td></tr>
+<tr><td>Evidence recall@3</td><td class="num">100.00%</td><td class="num">93.75%</td></tr>
+<tr><td>Complete hit@1</td><td class="num">62.50%</td><td class="num">59.38%</td></tr>
+<tr><td>Mean reciprocal rank</td><td class="num">0.8385</td><td class="num">0.8065</td></tr>
+<tr><td>Hit at production cutoff (6)</td><td class="num">100.00%</td><td class="num">96.88%</td></tr>
+<tr><td>Retrieved context at 3</td><td class="num">714.9 words</td><td class="num">396.8 words</td></tr>
+</tbody>
+</table></div><p class="cap">Method: 32 labelled questions over three uploaded reports (6 parsed pages). A case passes only if the top chunks together contain every labelled fact. Same embedding model (MiniLM) for both; reranking and generation excluded to isolate chunking. Fixed side measured at 800/100 before the size sweep.</p></div>
+    <div class="card"><h3>Chunk-size sweep (selected rows)</h3><div class="bars" role="img" aria-label="Hit at 1 by chunk size in words: 200, 59.4%; 280, 62.5%; 285, 65.6%; 305, 71.9% (chosen); 325, 65.6%; 800, 62.5%. Below 285 words, hit at 3 drops under 100%."><div><b>59.4%</b><i class="drop" style="height:131px"></i></div><div><b>62.5%</b><i class="drop" style="height:138px"></i></div><div><b>65.6%</b><i class="" style="height:144px"></i></div><div><b>71.9%</b><i class="pick" style="height:158px"></i></div><div><b>65.6%</b><i class="" style="height:144px"></i></div><div><b>62.5%</b><i class="" style="height:138px"></i></div></div><div class="bars-x" aria-hidden="true"><span>200</span><span>280</span><span>285</span><span>305</span><span>325</span><span>800</span></div><p class="legend"><span><i style="background:var(--marker);box-shadow:inset 0 0 0 1px #C9A82A"></i>chosen, 305/38</span><span><i style="background:var(--ink)"></i>hit@3 stays 100%</span><span><i style="background:#C9C2B4"></i>hit@3 drops</span></p><div class="tw" tabindex="0" role="region" aria-label="Chunk-size sweep (selected rows)"><table class="wide">
+<thead><tr><th>Size / overlap</th><th class="num">Hit@1</th><th class="num">Hit@3</th><th class="num">MRR</th><th class="num">Words@3</th></tr></thead>
+<tbody>
+<tr><td>800 / 100</td><td class="num">62.50%</td><td class="num">100.00%</td><td class="num">0.8385</td><td class="num">714.9</td></tr>
+<tr><td>325 / 41</td><td class="num">65.62%</td><td class="num">100.00%</td><td class="num">0.8490</td><td class="num">660.3</td></tr>
+<tr class="win"><td>305 / 38</td><td class="num">71.88%</td><td class="num">100.00%</td><td class="num">0.8854</td><td class="num">619.8</td></tr>
+<tr><td>285 / 36</td><td class="num">65.62%</td><td class="num">100.00%</td><td class="num">0.8490</td><td class="num">533.1</td></tr>
+<tr><td>280 / 35</td><td class="num">62.50%</td><td class="num">96.88%</td><td class="num">0.8307</td><td class="num">532.2</td></tr>
+<tr><td>200 / 25</td><td class="num">59.38%</td><td class="num">90.62%</td><td class="num">0.8240</td><td class="num">438.2</td></tr>
+</tbody>
+</table></div><p class="cap">Selection rule: keep hit@3 and hit@6 at 100%, then take the best hit@1 and MRR. Full 22-row sweep in the repo.</p></div>
+    <div class="card"><h3>Live chat test, before and after fixes</h3><div class="tw" tabindex="0" role="region" aria-label="Live chat test, before and after fixes"><table>
+<thead><tr><th>Case</th><th>First run</th><th>Retest</th></tr></thead>
+<tbody>
+<tr><td>Direct facts, prices, roles, comparisons (7)</td><td><span class="pill pass">7/7 pass</span></td><td><span class="pill pass">pass</span></td></tr>
+<tr><td>Unrelated question ("capital of France")</td><td><span class="pill pass">refused</span></td><td>—</td></tr>
+<tr><td>Missing metric (net margin not in report)</td><td><span class="pill pass">not covered</span></td><td><span class="pill pass">not covered</span></td></tr>
+<tr><td>Tesla question after France question</td><td><span class="pill fail">leaked history</span></td><td><span class="pill pass">pass</span></td></tr>
+<tr><td>Misspelled company ("Krishikub")</td><td><span class="pill fail">missed</span></td><td><span class="pill pass">resolved</span></td></tr>
+<tr><td>Pronoun follow-up ("its weaknesses")</td><td><span class="pill fail">missed</span></td><td><span class="pill pass">resolved</span></td></tr>
+<tr><td>Unknown company ("Farmlantic")</td><td>—</td><td><span class="pill pass">stayed rejected</span></td></tr>
+</tbody>
+</table></div><p class="cap">First run 9/12; focused retest 10/10. Median response 4.5 s; one 50 s provider outlier, and a broad-summary probe timed out at 120 s, recorded as a provider latency issue rather than a pass.</p></div>
+    <div class="card"><h3>Regression suite</h3><p>A committed six-case evaluation scores recall@3, hit@3, citation precision and recall, and a claim-token faithfulness check; all are 1.00 and gate CI. The faithfulness check is deterministic, not a model judge, and six fixture cases measure regressions, not general answer quality. 96 automated tests run in CI.</p></div>
+  </div>
+</section>
+
+<section id="roadmap" class="sec" aria-labelledby="h-road">
+  <div class="sh"><span class="sh-n">06</span><h2 id="h-road">How it was built</h2><span class="sh-cmd">$ git log --oneline</span></div>
+  <p class="road-intro">Built with AI coding agents (Codex and Claude Code). The stages below are what I decided, tested and fixed, each linked to the commit or report that shows it. Open a stage for the details.</p>
+  <ol class="road">
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-04">Apr 2026</time><span class="st"><b>First working version</b><span>FastAPI backend with upload, report and chat routes, in Docker.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>A FastAPI backend with routes for file upload, report generation and chat, a Streamlit front end and a Docker Compose setup. By 30 April a React research dashboard had replaced the Streamlit UI.</dd></div><div><dt class="still-open">Still open</dt><dd>No tests and no evaluation, so nothing told a right answer apart from a confident wrong one.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/c3414ff71d6930063e0e3204337d4c718d131449" rel="noopener" target="_blank">c3414ff</a><a href="https://github.com/Sudharsan2816/Projects/commit/018db4c9e6897972d977d128abde1041cb5c7bb3" rel="noopener" target="_blank">018db4c</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-06-09">Jun 2026</time><span class="st"><b>Made safe to publish</b><span>Key defaults out of the code, first tests in CI.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Default provider keys had been committed in the code.</dd></div><div><dt class="change">Change</dt><dd>Removed them and added smoke tests and CI.</dd></div><div><dt class="still-open">Still open</dt><dd>The tests proved the app starts, not that its answers are right.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/40d68f5a52741083ed4188e8e803cdb6360681e9" rel="noopener" target="_blank">40d68f5</a><a href="https://github.com/Sudharsan2816/Projects/commit/5b762e0e20277210549b186b295aad5d4f284e68" rel="noopener" target="_blank">5b762e0</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-08-09">Aug 2026</time><span class="st"><b>A live test caught 3 failures</b><span>9 of 12 passed; after fixes the retest passed 10 of 10.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>A live chat test passed 9 of 12. It missed a misspelled company name, didn't resolve “its” in a follow-up, and repeated an earlier question inside a refusal.</dd></div><div><dt class="change">Change</dt><dd>Answer only the current question, resolve pronouns from the previous turn, correct misspellings only against entities in the report, cap chat output, and fix a PDF currency-symbol glitch.</dd></div><div><dt class="still-open">Still open</dt><dd>Speed: median answer 4.7 s, slowest 82 s on the free provider tier.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHATBOT_LIVE_TEST_RESULTS_2026-08-09.md" rel="noopener" target="_blank">live test report</a><a href="https://github.com/Sudharsan2816/Projects/commit/dd63634f254190cb158ad6d6368d5f3d700360a6" rel="noopener" target="_blank">dd63634</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-08-23">Aug 2026</time><span class="st"><b>One index per session</b><span>Queries, resets and metadata held to their own session.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Each session had its own index, but nothing guaranteed that queries, resets and index metadata stayed inside their own session.</dd></div><div><dt class="change">Change</dt><dd>A query loads only the current session's index, a reset deletes only that session's data, and metadata from another session is rejected, each covered by a test. Hybrid retrieval and retrieval debug logging got tests too.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/93aa00d75f40aa5dc00df32a24a5b89aaa3c8059" rel="noopener" target="_blank">93aa00d</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-08-26">Aug 2026</time><span class="st"><b>Measured chunking instead of assuming</b><span>Fixed-size beat semantic: 100% vs 90.6% complete-hit@3.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Semantic chunking sounded better, but nobody had measured it on this data.</dd></div><div><dt class="change">Change</dt><dd>On 32 labelled questions, fixed-size chunks found all the needed evidence in the top 3 every time; semantic missed 3. Semantic would have cut retrieved context by 44.5%, but accuracy came first. A sweep then picked 305 words with a 38-word overlap.</dd></div><div><dt class="still-open">Still open</dt><dd>The benchmark corpus is 6 pages, too small to generalise from.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHUNKING_BENCHMARK_2026-08-25.md" rel="noopener" target="_blank">benchmark</a><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/FIXED_CHUNK_SIZE_SWEEP_2026-08-26.md" rel="noopener" target="_blank">sweep</a><a href="https://github.com/Sudharsan2816/Projects/commit/3ac32e00b923b69583410db8621bb6defc956f23" rel="noopener" target="_blank">3ac32e0</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-09-13">Sep 2026</time><span class="st"><b>Regression suite in CI</b><span>Recall, citations and a faithfulness check on every run.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>Restored CI, broadened the retrieval fixtures, and added a regression report for recall, citation precision and recall, and a faithfulness score.</dd></div><div><dt class="still-open">Still open</dt><dd>Faithfulness is a deterministic heuristic over 6 cases, not an independent model judge.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/RAG_EVALUATION.md" rel="noopener" target="_blank">evaluation report</a><a href="https://github.com/Sudharsan2816/Projects/commit/4c91cfed809ad94d051f6fe5dafdb0f28bbf8773" rel="noopener" target="_blank">4c91cfe</a><a href="https://github.com/Sudharsan2816/Projects/commit/27555af1c4ffd2d69fd57048345ee0bd38eac8bb" rel="noopener" target="_blank">27555af</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><time datetime="2026-09-14">Sep 2026</time><span class="st"><b>Deployment adapter</b><span>Serverless deploy, after three follow-up fixes.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>The first deploy needed three follow-up fixes: the app entrypoint, runtime dependencies and project metadata.</dd></div><div><dt class="change">Change</dt><dd>A Vercel adapter for the FastAPI app.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/f198d5b0464e4dc6b661f5de4ffc80eec87da9f5" rel="noopener" target="_blank">f198d5b</a><a href="https://github.com/Sudharsan2816/Projects/commit/3422bb9518ae31577bd409e3cdf5ac8f5b5de171" rel="noopener" target="_blank">3422bb9</a></p>
+    </details></li>
+    <li><div class="now-row"><b>Open now</b><a href="#next">Limitations and what I&#x27;d do next</a></div></li>
+  </ol>
+</section>
+
+<section id="failures" class="sec" aria-labelledby="h-fail">
+  <div class="sh"><span class="sh-n">07</span><h2 id="h-fail">Failure modes and guardrails</h2><span class="sh-cmd">if → then</span></div>
+  <div class="fms">
+    <div class="fm"><p class="fm-if">if question isn&#x27;t covered by the reports</p><p class="fm-then">Nothing clears the 0.35 floor, so it returns "Not covered in the uploaded documents." with zero sources. The LLM is not called without context.</p></div>
+    <div class="fm"><p class="fm-if">if a related but different fact exists (gross vs net margin)</p><p class="fm-then">Says the asked metric is not covered instead of substituting the nearby one.</p></div>
+    <div class="fm"><p class="fm-if">if reranker endpoint unavailable</p><p class="fm-then">Keeps FAISS embedding order and continues.</p></div>
+    <div class="fm"><p class="fm-if">if embedding API fails</p><p class="fm-then">Falls back to the local MiniLM model.</p></div>
+    <div class="fm"><p class="fm-if">if earlier turns contaminate the answer</p><p class="fm-then">Only the standalone current question is embedded, and the prompt answers only the final question block.</p></div>
+    <div class="fm"><p class="fm-if">if unknown or badly misspelled entity</p><p class="fm-then">Strict matching leaves it unresolved, so it is refused rather than mapped to the wrong company.</p></div>
+    <div class="fm"><p class="fm-if">if one user&#x27;s documents answering another&#x27;s question</p><p class="fm-then">Separate FAISS index per session; session IDs are validated against path traversal.</p></div>
+    <div class="fm"><p class="fm-if">if browser tab closed during a long report</p><p class="fm-then">Report jobs belong to the server, persist progress and recover after restarts.</p></div>
+  </div>
+</section>
+
+<section id="next" class="lim" aria-labelledby="h-next">
+  <div class="card lim-l">
+    <h2 id="h-next">Limitations, and what I’d do next</h2>
+    <ul>
+      <li>The chunking benchmark used a 6-page corpus. Re-run it on a larger labelled set before treating 305/38 as general.</li>
+      <li>Measure the reranker's lift on its own, with the same questions run with and without it.</li>
+      <li>Add an independent model judge and adversarial questions (prompt injection inside documents, near-duplicate entities) to the evaluation.</li>
+      <li>Allocate retrieval by a context-word budget as well as by chunk count, so smaller chunks don't lose slots.</li>
+      <li>Host a public demo; the NVIDIA free tier's latency spikes need a timeout and a visible retry first.</li>
+    </ul>
+  </div>
+  <div id="links" class="evid dark">
+    <h2>Evidence</h2>
+    <a href="https://github.com/Sudharsan2816/Projects/tree/main/ai-market-research-copilot" target="_blank" rel="noopener">Code <span aria-hidden="true">↗</span></a>
+    <a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHUNKING_BENCHMARK_2026-08-25.md" target="_blank" rel="noopener">Fixed vs semantic benchmark <span aria-hidden="true">↗</span></a>
+    <a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/FIXED_CHUNK_SIZE_SWEEP_2026-08-26.md" target="_blank" rel="noopener">Chunk-size sweep <span aria-hidden="true">↗</span></a>
+    <a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHATBOT_LIVE_TEST_RESULTS_2026-08-09.md" target="_blank" rel="noopener">Live chat test <span aria-hidden="true">↗</span></a>
+    <a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/RAG_EVALUATION.md" target="_blank" rel="noopener">RAG regression suite <span aria-hidden="true">↗</span></a>
+  </div>
+</section>
+
+<a class="next-case" href="review.html"><span><span>next case study</span><b>AI Code Review Agent</b></span><span aria-hidden="true">→</span></a>
+
+</main>
+
+<footer id="contact" class="foot" aria-labelledby="h-contact">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-l">
+        <h2 id="h-contact">See a bug or a better way to build this? <em>Tell me.</em></h2>
+        <p class="foot-p">GitHub issues are public and open with this project’s name already in the title. Use email for anything private.</p>
+      </div>
+      <div class="foot-links">
+        <a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=bug_report.yml&amp;title=%5BBug%5D%20Market%20Research%20Copilot%3A%20" target="_blank" rel="noopener">Report a bug <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=suggestion.yml&amp;title=%5BSuggestion%5D%20Market%20Research%20Copilot%3A%20" target="_blank" rel="noopener">Suggest an improvement <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=scaling_idea.yml&amp;title=%5BScaling%5D%20Market%20Research%20Copilot%3A%20" target="_blank" rel="noopener">Propose a scaling idea <span aria-hidden="true">↗</span></a>
+        <a class="mail" href="mailto:vssudhan2003@gmail.com?subject=About%20Market%20Research%20Copilot">vssudhan2003@gmail.com <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <p class="foot-bot">
+      <a href="./">← Back to the portfolio</a>
+      <span><span class="sq-g" aria-hidden="true">●</span> for AI agents: <a href="llms.txt">/llms.txt</a></span>
+      <span class="r">© 2026 Sudharsan V S · Chennai</span>
+    </p>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Case study shortcuts">
+  <a class="row" href="./">← Home</a>
+  <a class="row" href="#try"><span class="g" aria-hidden="true">▶</span>Try it</a>
+  <a class="row y" href="review.html">Next →</a>
 </nav>
 
-<div class="wrap">
-  <header class="hero">
-    <span class="reg tl" aria-hidden="true">+</span><span class="reg tr" aria-hidden="true">+</span>
-    <span class="block" aria-hidden="true"></span>
-    <span class="ghost" aria-hidden="true">Copilot</span>
-    <div class="tags"><span class="tag">Personal build</span><span class="tag">RAG</span><span class="tag">Case study</span></div>
-    <h1>Market Research Copilot</h1>
-    <p class="lede">A document-grounded research assistant where the most important decision was the least glamorous one: <em>fixed-size chunks beat semantic chunking</em>, and the benchmark shows why.</p>
-  </header>
-
-  <div class="facts" role="list">
-    <div class="fact" role="listitem"><div class="n">100<small>%</small> <span class="r">/</span> 90.6<small>%</small></div><p>complete-hit@3, fixed vs semantic chunking, 32 labelled questions</p></div>
-    <div class="fact" role="listitem"><div class="n">20<span class="r">→</span>6</div><p>FAISS candidates reranked by an NVIDIA NIM model</p></div>
-    <div class="fact" role="listitem"><div class="n">0.35</div><p>similarity floor below which it says "not covered"</p></div>
-    <div class="fact" role="listitem"><div class="n">9<small>/12</small> <span class="r">→</span> 10<small>/10</small></div><p>live chat test before and after fixing three failures</p></div>
-  </div>
-
-  <main>
-    <!-- 1. Problem -->
-    <section id="problem" class="reveal" aria-labelledby="h-problem">
-      <div class="sh"><span class="k">01</span><h2 id="h-problem">Problem</h2></div>
-      <div class="prose">
-        <p>Market-research reports are dense: one page can carry a company's founding year, its price points, its growth rate and a competitor comparison. An analyst who asks a general chatbot about them gets fluent answers drawn from the model's memory, and the numbers are often wrong or invented. The useful version answers only from the reports the analyst uploaded, shows which passages it used, and says plainly when the reports don't cover a question.</p>
-        <p>So the job of this system is retrieval quality and refusal discipline, more than generation. If the right passage isn't retrieved, the best model in the world still answers badly.</p>
-      </div>
-    </section>
-
-    <!-- 2. Architecture -->
-    <section id="architecture" class="reveal" aria-labelledby="h-arch">
-      <div class="sh"><span class="k">02</span><h2 id="h-arch">Architecture</h2></div>
-      <div class="diagram" role="img" aria-label="Ingestion path: upload, parse, 305-word chunker, NIM embeddings, per-session FAISS index. Question path: follow-up resolution, FAISS top 20, 0.35 relevance threshold, NIM rerank top 6, grounded LLM answer with citations, or a not-covered response.">
-        <svg viewBox="0 0 980 300" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow" d="M0,0 L10,5 L0,10 z"/></marker>
-          </defs>
-          <text class="d-lane" x="10" y="22">INGEST</text>
-          <rect class="d-box" x="10" y="34" width="130" height="56" rx="8"/><text class="d-t" x="22" y="58">Upload + parse</text><text class="d-t s" x="22" y="76">PDF · CSV · TXT · MD</text>
-          <rect class="d-box" x="170" y="34" width="150" height="56" rx="8"/><text class="d-t" x="182" y="58">Fixed chunker</text><text class="d-t s" x="182" y="76">305 words · 38 overlap</text>
-          <rect class="d-box" x="350" y="34" width="160" height="56" rx="8"/><text class="d-t" x="362" y="58">NIM embeddings</text><text class="d-t s" x="362" y="76">MiniLM fallback</text>
-          <rect class="d-box ink" x="540" y="34" width="180" height="56" rx="8"/><text class="d-t on-ink" x="552" y="58">FAISS index</text><text class="d-t on-ink" x="552" y="76" style="opacity:.75">one per session · cosine</text>
-          <path class="d-line" d="M140 62 H168" marker-end="url(#ah)"/>
-          <path class="d-line" d="M320 62 H348" marker-end="url(#ah)"/>
-          <path class="d-line" d="M510 62 H538" marker-end="url(#ah)"/>
-
-          <text class="d-lane" x="10" y="146">ASK</text>
-          <rect class="d-box" x="10" y="158" width="150" height="56" rx="8"/><text class="d-t" x="22" y="182">Question</text><text class="d-t s" x="22" y="200">resolve its / typos</text>
-          <rect class="d-box" x="190" y="158" width="130" height="56" rx="8"/><text class="d-t" x="202" y="182">FAISS top 20</text><text class="d-t s" x="202" y="200">standalone query only</text>
-          <rect class="d-box hot" x="350" y="158" width="150" height="56" rx="8"/><text class="d-t on-hot" x="362" y="182">Relevance floor</text><text class="d-t on-hot" x="362" y="200">cosine ≥ 0.35</text>
-          <rect class="d-box" x="530" y="158" width="150" height="56" rx="8"/><text class="d-t" x="542" y="182">NIM rerank → 6</text><text class="d-t s" x="542" y="200">else embedding order</text>
-          <rect class="d-box" x="710" y="158" width="160" height="56" rx="8"/><text class="d-t" x="722" y="182">Grounded answer</text><text class="d-t s" x="722" y="200">Nemotron · citations</text>
-          <path class="d-line" d="M160 186 H188" marker-end="url(#ah)"/>
-          <path class="d-line" d="M320 186 H348" marker-end="url(#ah)"/>
-          <path class="d-line" d="M500 186 H528" marker-end="url(#ah)"/>
-          <path class="d-line" d="M680 186 H708" marker-end="url(#ah)"/>
-          <path class="d-line dash" d="M630 90 V120 H255 V156" marker-end="url(#ah)"/>
-          <text class="d-t s" x="400" y="114">search</text>
-
-          <path class="d-line" d="M425 214 V262 H708" marker-end="url(#ah)"/>
-          <rect class="d-box" x="710" y="240" width="250" height="44" rx="8"/><text class="d-t" x="722" y="267">"Not covered in the uploaded documents."</text>
-          <text class="d-t s" x="436" y="254">nothing clears the floor</text>
-        </svg>
-      </div>
-      <ul class="components">
-        <li><b>Parser</b><span>Reads PDF, CSV, TXT and Markdown; CSVs become 50-row text chunks so tables stay retrievable.</span></li>
-        <li><b>Chunker</b><span>Fixed 305-word windows with 38 words of overlap, so facts at a boundary appear in both neighbours.</span></li>
-        <li><b>Embeddings</b><span>NVIDIA NIM <code>nv-embedqa-e5-v5</code>, L2-normalised so inner product equals cosine. Falls back to local MiniLM if the API fails.</span></li>
-        <li><b>FAISS</b><span>One flat inner-product index per session, so one user's documents never answer another user's question.</span></li>
-        <li><b>Follow-ups</b><span>Pronouns and close typos are resolved against report entities; an optional Gemini call condenses the turn. Only the standalone query is embedded, never raw history.</span></li>
-        <li><b>Relevance floor</b><span>Drops candidates under 0.35 cosine before reranking; if none survive, the answer is "not covered" with zero sources.</span></li>
-        <li><b>Reranker</b><span>NIM <code>nv-rerankqa-mistral-4b-v3</code> orders 20 candidates and keeps 6; if the endpoint is down, embedding order is kept.</span></li>
-        <li><b>Generator</b><span>NVIDIA Nemotron, prompted to answer only the current question from the supplied chunks, with citations.</span></li>
-        <li><b>Report workers</b><span>Long market reports run in server-owned jobs with progress stages and restart recovery, capped at 10 active jobs.</span></li>
-        <li><b>API</b><span>FastAPI with optional API-key auth, rate limiting, sanitised uploads and request IDs on every log line.</span></li>
-      </ul>
-    </section>
-
-    <section id="try" class="reveal" aria-labelledby="h-try">
-      <div class="sh"><h2 id="h-try">Try it: replay the live test</h2></div>
-      <p class="try-intro">On 9 August 2026 I asked the running Copilot 12 questions about a sample market report, fixed the three it failed, and retested. Pick a question to replay what came back. <b>Nothing here calls a model:</b> each answer is shown word for word from the committed run log, with the time it took.</p>
-      <div class="rp split" data-replay="copilot" data-src="copilot-run" hidden>
-        <div class="rp-side"></div>
-        <div class="rp-main" aria-live="polite"></div>
-      </div>
-      <p class="rp-fallback cap">Turn on JavaScript to replay the run. The same results are in the live chat test table under Evaluation.</p>
-      <p class="rp-src"><span>Red dots failed on the first run; hollow dots passed but were slow.</span><a href="https://github.com/Sudharsan2816/Projects/blob/eca020b/ai-market-research-copilot/evals/chatbot_live_test_results_2026-08-09.json" target="_blank" rel="noopener">First-run log ↗</a><a href="https://github.com/Sudharsan2816/Projects/blob/eca020b/ai-market-research-copilot/evals/chatbot_live_retest_results_2026-08-09.json" target="_blank" rel="noopener">Retest log ↗</a></p>
-      <script type="application/json" id="copilot-run">{"date":"2026-08-09","doc":"market_research_test_sample.pdf","provider":"nvidia","first":{"total":12,"passed":9,"failed":3,"pass_rate":0.75,"median_duration_ms":4693,"mean_duration_ms":15687,"max_duration_ms":82300},"retest":{"graded_cases":10,"passed":10,"failed":0,"pass_rate":1.0,"median_duration_ms":4536,"mean_duration_ms":10065,"max_duration_ms":49933},"probe":[{"category":"broad_summary_provider_latency","question":"Summarize the uploaded document","duration_ms":120172,"result":"client_timeout","notes":"No answer was returned. A focused post-fix query verified the corrected ₹6,000 source figure; upstream NVIDIA latency remains variable."}],"cases":[{"id":"TC-01","cat":"Company profile","q":"Tell me about KrishiKube","setup":null,"expected":"Grounded KrishiKube profile","answer":"**Direct Answer**\n\n* **KrishiKube** is a Chennai-based brand, founded in 2022 by Deepak Sundaram and Nandhini Rao, holding **15%** of the organised-retail share in the Indian consumer vertical-farming appliance market.\n* It is the **fastest-growing** among the majors, with **79% year-on-year growth**, and is known for its **KrishiKube Mini** at ₹8,990, which opened the sub-₹10,000 tier.\n* **Key Strength**: In-house manufacturing in Sriperumbudur, giving it a **22% unit-cost advantage** over SproutNest. **Key Weakness**: Under-developed app and firmware complaints, leading to a **4.1-star average rating**.\n\n**Source**: Section 3.3, [market_research_test_sample.pdf, Page 2]","note":null,"mode":"documents","sources":3,"ms":14438,"result":"pass","why":null,"retest":{"id":"PF-04","observed":"Correct share, growth, founders, price, cost advantage, weakness, and projection","result":"pass","ms":11413,"mode":"documents","sources":3}},{"id":"TC-02","cat":"Direct fact","q":"Who founded SproutNest?","setup":null,"expected":"Aravind Menon, 2021","answer":"**Direct Answer**\n* **SproutNest** was founded in **2021** by **Aravind Menon**.\n* **Headquarters**: Bengaluru\n* **Source**: Section 3.1, [market_research_test_sample.pdf, Page 1]","note":null,"mode":"documents","sources":2,"ms":4207,"result":"pass","why":null,"retest":{"id":"PF-06","observed":"Aravind Menon in 2021","result":"pass","ms":4145,"mode":"documents","sources":2}},{"id":"TC-03","cat":"Exact price","q":"What is the price of SproutNest Halo X2?","setup":null,"expected":"₹18,499","answer":"**Direct Answer**\nThe price of SproutNest Halo X2 is **₹18,499**.\n* **Tier**: Mid-premium\n* **Source**: Section 4, [market_research_test_sample.pdf, Page 3]","note":null,"mode":"documents","sources":2,"ms":4625,"result":"pass","why":null,"retest":{"id":"PF-07","observed":"₹18,499, mid-premium, 24-month warranty","result":"pass","ms":7143,"mode":"documents","sources":2}},{"id":"TC-04","cat":"Who's who","q":"Who is the lead analyst?","setup":null,"expected":"Priyanka Devanathan","answer":"**Direct Answer**\nThe lead analyst for the report **HGR-VF-2026-Q2-0417** is **Priyanka Devanathan**.\n* **Source**: Report Header, [market_research_test_sample.pdf, Page 1]","note":null,"mode":"documents","sources":2,"ms":4053,"result":"pass","why":null,"retest":null},{"id":"TC-05","cat":"Comparison","q":"Which metro is growing the fastest?","setup":null,"expected":"Chennai, 61% year-on-year unit growth","answer":"**Direct Answer**\nThe fastest-growing metro in the Indian consumer vertical-farming appliance market is **Chennai**, with **61% year-on-year unit growth**.\n* **Source**: Executive Summary, [market_research_test_sample.pdf, Page 1]","note":null,"mode":"documents","sources":2,"ms":4891,"result":"pass","why":null,"retest":null},{"id":"TC-06","cat":"Whole-report summary","q":"What are the most important findings in the report?","setup":null,"expected":"Grounded multi-section report summary","answer":null,"note":"The response accurately summarized market size and growth, competitive shares, pricing, opportunity, threat, return-rate risk, geography, and customer segments from all three indexed chunks.","mode":"documents","sources":3,"ms":82300,"result":"pass_with_latency_warning","why":null,"retest":null},{"id":"TC-07","cat":"Figure not in the report","q":"What is SproutNest's net profit margin?","setup":null,"expected":"Safe not-covered response without substituting gross margin","answer":"**Direct Answer**\nNot covered in the uploaded documents.\n\n* The report provides SproutNest's revenue source breakdown (41% from subscription seed-pod business with a 58% gross margin) but does not disclose net profit margin.","note":null,"mode":"report_irrelevant","sources":0,"ms":49299,"result":"pass_with_latency_warning","why":null,"retest":{"id":"PF-09","observed":"Not covered; correctly distinguished the available 58% gross margin","result":"pass","ms":3976,"mode":"report_irrelevant","sources":0}},{"id":"TC-08","cat":"Off-topic","q":"What is the capital of France?","setup":null,"expected":"Report-irrelevant response without answering","answer":"I checked the uploaded report first, but it does not contain information relevant to this question. Try asking about a topic, entity, or figure covered in the report.","note":null,"mode":"report_irrelevant","sources":0,"ms":420,"result":"pass","why":null,"retest":{"id":"PF-01","observed":"Verified report-irrelevant response; no answer invented","result":"pass","ms":2464,"mode":"report_irrelevant","sources":0}},{"id":"TC-09","cat":"Off-topic, straight after another","q":"What is Tesla's 2026 market share?","setup":"What is the capital of France?","expected":"Safe not-covered response for the current question only","answer":null,"note":"The response safely said Tesla's market share was not covered, but it also repeated and answered the preceding France question as not covered before addressing Tesla.","mode":"report_irrelevant","sources":0,"ms":18461,"result":"fail","why":"It answered the earlier France question again before saying Tesla wasn't covered: the previous turn leaked into the answer.","retest":{"id":"PF-02","observed":"Not covered; did not repeat or answer the France question","result":"pass","ms":12999,"mode":"report_irrelevant","sources":0}},{"id":"TC-10","cat":"Weaknesses","q":"What are KrishiKube's weaknesses?","setup":null,"expected":"Under-developed app, firmware complaints, 4.1-star rating","answer":"**Direct Answer**\n\n* **KrishiKube's Weaknesses**: An under-developed app and a 4.1-star average rating, specifically dragged down by firmware complaints.\n* **Source**: Section 3.3 (KrishiKube), [market_research_test_sample.pdf, Page 2]","note":null,"mode":"documents","sources":1,"ms":4761,"result":"pass","why":null,"retest":null},{"id":"TC-11","cat":"Misspelled name","q":"Tell me about Krishikub","setup":null,"expected":"Recover likely KrishiKube intent","answer":"I checked the uploaded report first, but it does not contain information relevant to this question. Try asking about a topic, entity, or figure covered in the report.","note":null,"mode":"report_irrelevant","sources":0,"ms":360,"result":"fail","why":"It didn't recognise the misspelled company and said the report didn't cover it.","retest":{"id":"PF-03","observed":"Resolved to the report-backed KrishiKube spelling; correct profile","result":"pass_with_latency_warning","ms":49933,"mode":"documents","sources":3}},{"id":"TC-12","cat":"Follow-up using “its”","q":"What are its weaknesses?","setup":"Tell me about KrishiKube","expected":"Resolve its to KrishiKube and answer from the report","answer":"I checked the uploaded report first, but it does not contain information relevant to this question. Try asking about a topic, entity, or figure covered in the report.","note":null,"mode":"report_irrelevant","sources":0,"ms":425,"result":"fail","why":"It didn't work out that “its” meant KrishiKube, so it found nothing to answer from.","retest":{"id":"PF-05","observed":"Resolved 'its' to KrishiKube; returned app, firmware, and 4.1-star evidence","result":"pass","ms":3254,"mode":"documents","sources":1}}],"extra":[{"id":"PF-08","cat":"Company not in the report","q":"Tell me about Farmlantic","setup":null,"expected":null,"answer":null,"note":null,"mode":null,"sources":null,"ms":null,"result":null,"why":null,"retest":{"id":"PF-08","observed":"Unknown name was not fuzzy-mapped to a report entity","result":"pass","ms":401,"mode":"report_irrelevant","sources":0}},{"id":"PF-10","cat":"Price read from the PDF","q":"What price point does the report identify as an opportunity?","setup":null,"expected":null,"answer":null,"note":null,"mode":null,"sources":null,"ms":null,"result":null,"why":null,"retest":{"id":"PF-10","observed":"Correctly returned sub-₹6,000 and the 44% price-barrier evidence","result":"pass","ms":4926,"mode":"documents","sources":3}}],"src":["https://github.com/Sudharsan2816/Projects/blob/eca020b/ai-market-research-copilot/evals/chatbot_live_test_results_2026-08-09.json","https://github.com/Sudharsan2816/Projects/blob/eca020b/ai-market-research-copilot/evals/chatbot_live_retest_results_2026-08-09.json"]}</script>
-    </section>
-
-    <!-- 3. Decisions -->
-    <section id="decisions" class="reveal" aria-labelledby="h-dec">
-      <div class="sh"><span class="k">03</span><h2 id="h-dec">Key decisions and trade-offs</h2></div>
-      <div class="decisions">
-        <article class="decision">
-          <h3>Fixed-size chunks over semantic chunking</h3>
-          <div class="dgrid">
-            <div><span class="label chose">Chose</span>Fixed windows. On 32 labelled questions, complete-hit@3 was 100% against 90.6% for semantic chunking, and evidence recall@3 100% against 93.75%.</div>
-            <div><span class="label rejected">Rejected</span>Semantic chunking. It split related facts that sat on one dense page, and doubled the chunk count, so narrow chunks competed for the same top-3 slots.</div>
-            <div><span class="label">Trade-off</span>Semantic chunks cut retrieved context by 44.5%, which would lower prompt cost. Missing evidence costs more than extra tokens for a research tool.</div>
-          </div>
-        </article>
-        <article class="decision">
-          <h3>305 words, picked by a sweep, not a round number</h3>
-          <div class="dgrid">
-            <div><span class="label chose">Chose</span>305/38. It kept hit@3 and hit@6 at 100% and gave the best top-1 result: 71.9% hit@1 and 0.885 MRR, against 62.5% and 0.839 at 800/100.</div>
-            <div><span class="label rejected">Rejected</span>285/36, the smallest size with perfect hit@3, because its hit@1 and MRR were lower. Below 280 words, some evidence fell out of the top three.</div>
-            <div><span class="label">Trade-off</span>About 87 more context words at top 3 than 285/36, accepted for better first-result accuracy.</div>
-          </div>
-        </article>
-        <article class="decision">
-          <h3>Filter, then rerank, except for comparisons</h3>
-          <div class="dgrid">
-            <div><span class="label chose">Chose</span>FAISS fetches 20, a 0.35 floor removes weak matches, then NIM reranks to 6. Comparative questions skip the floor and diversify sources first.</div>
-            <div><span class="label rejected">Rejected</span>Flooring every query. A "Nimbus vs Corvex" question needs evidence from both reports, and the floor can discard one side before the reranker sees it.</div>
-            <div><span class="label">Trade-off</span>Comparisons can pass weaker candidates to the generator. The reranker's lift over embedding order has not been measured separately yet.</div>
-          </div>
-        </article>
-        <article class="decision">
-          <h3>Embed the question, never the conversation</h3>
-          <div class="dgrid">
-            <div><span class="label chose">Chose</span>Resolve "its" and near-miss names against entities in the reports, then embed one standalone question.</div>
-            <div><span class="label rejected">Rejected</span>Embedding raw history. In the live test, earlier turns leaked into answers: a Tesla question came back repeating the previous France question.</div>
-            <div><span class="label">Trade-off</span>Entity matching is deliberately strict, so a misspelling far from any report entity stays unresolved instead of guessing.</div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- 4. Evaluation -->
-    <section id="evaluation" class="reveal" aria-labelledby="h-eval">
-      <div class="sh"><span class="k">04</span><h2 id="h-eval">Evaluation and results</h2></div>
-      <div class="evalgrid">
-        <div>
-          <h3>Chunking benchmark, fixed vs semantic</h3>
-          <div class="tw">
-            <table>
-              <thead><tr><th>Metric</th><th class="num">Fixed</th><th class="num">Semantic</th></tr></thead>
-              <tbody>
-                <tr class="win"><td>Complete hit@3</td><td class="num">100.00%</td><td class="num">90.62%</td></tr>
-                <tr><td>Evidence recall@3</td><td class="num">100.00%</td><td class="num">93.75%</td></tr>
-                <tr><td>Complete hit@1</td><td class="num">62.50%</td><td class="num">59.38%</td></tr>
-                <tr><td>Mean reciprocal rank</td><td class="num">0.8385</td><td class="num">0.8065</td></tr>
-                <tr><td>Hit at production cutoff (6)</td><td class="num">100.00%</td><td class="num">96.88%</td></tr>
-                <tr><td>Retrieved context at 3</td><td class="num">714.9 words</td><td class="num">396.8 words</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="cap">Method: 32 labelled questions over three uploaded reports (6 parsed pages). A case passes only if the top chunks together contain every labelled fact. Same embedding model (MiniLM) for both; reranking and generation excluded to isolate chunking. Fixed side measured at 800/100 before the size sweep.</p>
-        </div>
-        <div>
-          <h3>Chunk-size sweep (selected rows)</h3>
-          <div class="tw">
-            <table class="wide">
-              <thead><tr><th>Size / overlap</th><th class="num">Hit@1</th><th class="num">Hit@3</th><th class="num">MRR</th><th class="num">Words@3</th></tr></thead>
-              <tbody>
-                <tr><td>800 / 100</td><td class="num">62.50%</td><td class="num">100.00%</td><td class="num">0.8385</td><td class="num">714.9</td></tr>
-                <tr><td>325 / 41</td><td class="num">65.62%</td><td class="num">100.00%</td><td class="num">0.8490</td><td class="num">660.3</td></tr>
-                <tr class="win"><td>305 / 38</td><td class="num">71.88%</td><td class="num">100.00%</td><td class="num">0.8854</td><td class="num">619.8</td></tr>
-                <tr><td>285 / 36</td><td class="num">65.62%</td><td class="num">100.00%</td><td class="num">0.8490</td><td class="num">533.1</td></tr>
-                <tr><td>280 / 35</td><td class="num">62.50%</td><td class="num">96.88%</td><td class="num">0.8307</td><td class="num">532.2</td></tr>
-                <tr><td>200 / 25</td><td class="num">59.38%</td><td class="num">90.62%</td><td class="num">0.8240</td><td class="num">438.2</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="cap">Selection rule: keep hit@3 and hit@6 at 100%, then take the best hit@1 and MRR. Full 22-row sweep in the repo.</p>
-        </div>
-        <div>
-          <h3>Live chat test, before and after fixes</h3>
-          <div class="tw">
-            <table>
-              <thead><tr><th>Case</th><th>First run</th><th>Retest</th></tr></thead>
-              <tbody>
-                <tr><td>Direct facts, prices, roles, comparisons (7)</td><td><span class="pill pass">7/7 pass</span></td><td><span class="pill pass">pass</span></td></tr>
-                <tr><td>Unrelated question ("capital of France")</td><td><span class="pill pass">refused</span></td><td>—</td></tr>
-                <tr><td>Missing metric (net margin not in report)</td><td><span class="pill pass">not covered</span></td><td><span class="pill pass">not covered</span></td></tr>
-                <tr><td>Tesla question after France question</td><td><span class="pill fail">leaked history</span></td><td><span class="pill pass">pass</span></td></tr>
-                <tr><td>Misspelled company ("Krishikub")</td><td><span class="pill fail">missed</span></td><td><span class="pill pass">resolved</span></td></tr>
-                <tr><td>Pronoun follow-up ("its weaknesses")</td><td><span class="pill fail">missed</span></td><td><span class="pill pass">resolved</span></td></tr>
-                <tr><td>Unknown company ("Farmlantic")</td><td>—</td><td><span class="pill pass">stayed rejected</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="cap">First run 9/12; focused retest 10/10. Median response 4.5 s; one 50 s provider outlier, and a broad-summary probe timed out at 120 s, recorded as a provider latency issue rather than a pass.</p>
-        </div>
-        <div class="prose">
-          <h3>Regression suite</h3>
-          <p>A committed six-case evaluation scores recall@3, hit@3, citation precision and recall, and a claim-token faithfulness check; all are 1.00 and gate CI. The faithfulness check is deterministic, not a model judge, and six fixture cases measure regressions, not general answer quality. 96 automated tests run in CI.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="roadmap" class="reveal" aria-labelledby="h-road">
-      <div class="sh"><span class="k">05</span><h2 id="h-road">How it was built</h2></div>
-      <p class="road-intro">Built with AI coding agents (Codex and Claude Code). The stages below are what I decided, tested and fixed, each linked to the commit or report that shows it. Open a stage for the details.</p>
-      <ol class="road">
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-04">Apr 2026</time><span class="st">First working version</span><span class="so">FastAPI backend with upload, report and chat routes, in Docker.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="change">Change</dt><dd>A FastAPI backend with routes for file upload, report generation and chat, a Streamlit front end and a Docker Compose setup. By 30 April a React research dashboard had replaced the Streamlit UI.</dd></div><div><dt class="still-open">Still open</dt><dd>No tests and no evaluation, so nothing told a right answer apart from a confident wrong one.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/c3414ff71d6930063e0e3204337d4c718d131449" target="_blank" rel="noopener">c3414ff</a><a href="https://github.com/Sudharsan2816/Projects/commit/018db4c9e6897972d977d128abde1041cb5c7bb3" target="_blank" rel="noopener">018db4c</a></p>
-          </details>
-        </li>
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-06-09">Jun 2026</time><span class="st">Made safe to publish</span><span class="so">Key defaults out of the code, first tests in CI.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Default provider keys had been committed in the code.</dd></div><div><dt class="change">Change</dt><dd>Removed them and added smoke tests and CI.</dd></div><div><dt class="still-open">Still open</dt><dd>The tests proved the app starts, not that its answers are right.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/40d68f5a52741083ed4188e8e803cdb6360681e9" target="_blank" rel="noopener">40d68f5</a><a href="https://github.com/Sudharsan2816/Projects/commit/5b762e0e20277210549b186b295aad5d4f284e68" target="_blank" rel="noopener">5b762e0</a></p>
-          </details>
-        </li>
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-08-09">Aug 2026</time><span class="st">A live test caught 3 failures</span><span class="so">9 of 12 passed; after fixes the retest passed 10 of 10.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>A live chat test passed 9 of 12. It missed a misspelled company name, didn't resolve “its” in a follow-up, and repeated an earlier question inside a refusal.</dd></div><div><dt class="change">Change</dt><dd>Answer only the current question, resolve pronouns from the previous turn, correct misspellings only against entities in the report, cap chat output, and fix a PDF currency-symbol glitch.</dd></div><div><dt class="still-open">Still open</dt><dd>Speed: median answer 4.7 s, slowest 82 s on the free provider tier.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHATBOT_LIVE_TEST_RESULTS_2026-08-09.md" target="_blank" rel="noopener">live test report</a><a href="https://github.com/Sudharsan2816/Projects/commit/dd63634f254190cb158ad6d6368d5f3d700360a6" target="_blank" rel="noopener">dd63634</a></p>
-          </details>
-        </li>
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-08-23">Aug 2026</time><span class="st">One index per session</span><span class="so">Queries, resets and metadata held to their own session.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Each session had its own index, but nothing guaranteed that queries, resets and index metadata stayed inside their own session.</dd></div><div><dt class="change">Change</dt><dd>A query loads only the current session's index, a reset deletes only that session's data, and metadata from another session is rejected, each covered by a test. Hybrid retrieval and retrieval debug logging got tests too.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/93aa00d75f40aa5dc00df32a24a5b89aaa3c8059" target="_blank" rel="noopener">93aa00d</a></p>
-          </details>
-        </li>
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-08-26">Aug 2026</time><span class="st">Measured chunking instead of assuming</span><span class="so">Fixed-size beat semantic: 100% vs 90.6% complete-hit@3.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Semantic chunking sounded better, but nobody had measured it on this data.</dd></div><div><dt class="change">Change</dt><dd>On 32 labelled questions, fixed-size chunks found all the needed evidence in the top 3 every time; semantic missed 3. Semantic would have cut retrieved context by 44.5%, but accuracy came first. A sweep then picked 305 words with a 38-word overlap.</dd></div><div><dt class="still-open">Still open</dt><dd>The benchmark corpus is 6 pages, too small to generalise from.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHUNKING_BENCHMARK_2026-08-25.md" target="_blank" rel="noopener">benchmark</a><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/FIXED_CHUNK_SIZE_SWEEP_2026-08-26.md" target="_blank" rel="noopener">sweep</a><a href="https://github.com/Sudharsan2816/Projects/commit/3ac32e00b923b69583410db8621bb6defc956f23" target="_blank" rel="noopener">3ac32e0</a></p>
-          </details>
-        </li>
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-09-13">Sep 2026</time><span class="st">Regression suite in CI</span><span class="so">Recall, citations and a faithfulness check on every run.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="change">Change</dt><dd>Restored CI, broadened the retrieval fixtures, and added a regression report for recall, citation precision and recall, and a faithfulness score.</dd></div><div><dt class="still-open">Still open</dt><dd>Faithfulness is a deterministic heuristic over 6 cases, not an independent model judge.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/RAG_EVALUATION.md" target="_blank" rel="noopener">evaluation report</a><a href="https://github.com/Sudharsan2816/Projects/commit/4c91cfed809ad94d051f6fe5dafdb0f28bbf8773" target="_blank" rel="noopener">4c91cfe</a><a href="https://github.com/Sudharsan2816/Projects/commit/27555af1c4ffd2d69fd57048345ee0bd38eac8bb" target="_blank" rel="noopener">27555af</a></p>
-          </details>
-        </li>
-        <li class="stage">
-          <details>
-            <summary><time datetime="2026-09-14">Sep 2026</time><span class="st">Deployment adapter</span><span class="so">Serverless deploy, after three follow-up fixes.</span><span class="tg" aria-hidden="true">+</span></summary>
-            <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>The first deploy needed three follow-up fixes: the app entrypoint, runtime dependencies and project metadata.</dd></div><div><dt class="change">Change</dt><dd>A Vercel adapter for the FastAPI app.</dd></div></dl>
-            <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/f198d5b0464e4dc6b661f5de4ffc80eec87da9f5" target="_blank" rel="noopener">f198d5b</a><a href="https://github.com/Sudharsan2816/Projects/commit/3422bb9518ae31577bd409e3cdf5ac8f5b5de171" target="_blank" rel="noopener">3422bb9</a></p>
-          </details>
-        </li>
-        <li class="stage now"><div class="now-row"><span class="st">Open now</span><a href="#next">Limitations and what I'd do next</a></div></li>
-      </ol>
-    </section>
-
-    <!-- 5. Failures -->
-    <section id="failures" class="reveal" aria-labelledby="h-fail">
-      <div class="sh"><span class="k">06</span><h2 id="h-fail">Failure modes and guardrails</h2></div>
-      <div class="tw">
-        <table class="stack">
-          <thead><tr><th>What goes wrong</th><th>What the system does</th></tr></thead>
-          <tbody>
-            <tr><td>Question isn't covered by the reports</td><td>Nothing clears the 0.35 floor, so it returns "Not covered in the uploaded documents." with zero sources. The LLM is not called without context.</td></tr>
-            <tr><td>A related but different fact exists (gross vs net margin)</td><td>Says the asked metric is not covered instead of substituting the nearby one.</td></tr>
-            <tr><td>Reranker endpoint unavailable</td><td>Keeps FAISS embedding order and continues.</td></tr>
-            <tr><td>Embedding API fails</td><td>Falls back to the local MiniLM model.</td></tr>
-            <tr><td>Earlier turns contaminate the answer</td><td>Only the standalone current question is embedded, and the prompt answers only the final question block.</td></tr>
-            <tr><td>Unknown or badly misspelled entity</td><td>Strict matching leaves it unresolved, so it is refused rather than mapped to the wrong company.</td></tr>
-            <tr><td>One user's documents answering another's question</td><td>Separate FAISS index per session; session IDs are validated against path traversal.</td></tr>
-            <tr><td>Browser tab closed during a long report</td><td>Report jobs belong to the server, persist progress and recover after restarts.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 6. Next -->
-    <section id="next" class="reveal" aria-labelledby="h-next">
-      <div class="sh"><span class="k">07</span><h2 id="h-next">Limitations and what I'd do next</h2></div>
-      <ul class="next">
-        <li>The chunking benchmark used a 6-page corpus. Re-run it on a larger labelled set before treating 305/38 as general.</li>
-        <li>Measure the reranker's lift on its own, with the same questions run with and without it.</li>
-        <li>Add an independent model judge and adversarial questions (prompt injection inside documents, near-duplicate entities) to the evaluation.</li>
-        <li>Allocate retrieval by a context-word budget as well as by chunk count, so smaller chunks don't lose slots.</li>
-        <li>Host a public demo; the NVIDIA free tier's latency spikes need a timeout and a visible retry first.</li>
-      </ul>
-    </section>
-
-    <!-- 7. Links -->
-    <section id="links" class="reveal" aria-labelledby="h-links">
-      <div class="sh"><span class="k">08</span><h2 id="h-links">Links</h2></div>
-      <div class="links">
-        <a class="ulink" href="https://github.com/Sudharsan2816/Projects/tree/main/ai-market-research-copilot" target="_blank" rel="noopener">Code ↗</a>
-        <a class="ulink" href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHUNKING_BENCHMARK_2026-08-25.md" target="_blank" rel="noopener">Fixed vs semantic benchmark ↗</a>
-        <a class="ulink" href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/FIXED_CHUNK_SIZE_SWEEP_2026-08-26.md" target="_blank" rel="noopener">Chunk-size sweep ↗</a>
-        <a class="ulink" href="https://github.com/Sudharsan2816/Projects/blob/main/ai-market-research-copilot/docs/CHATBOT_LIVE_TEST_RESULTS_2026-08-09.md" target="_blank" rel="noopener">Live chat test ↗</a>
-      
-        <a class="ulink" href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=bug_report.yml&title=%5BBug%5D%20Market%20Research%20Copilot%3A%20" target="_blank" rel="noopener">Report a bug ↗</a>
-        <a class="ulink" href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=suggestion.yml&title=%5BSuggestion%5D%20Market%20Research%20Copilot%3A%20" target="_blank" rel="noopener">Suggest an improvement ↗</a>
-        <a class="ulink" href="https://github.com/Sudharsan2816/Sudharsan2816.github.io/issues/new?template=scaling_idea.yml&title=%5BScaling%5D%20Market%20Research%20Copilot%3A%20" target="_blank" rel="noopener">Propose a scaling idea ↗</a>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <span>© 2026 Sudharsan V S</span>
-    <a class="ulink" href="./">Back to portfolio</a>
-  </footer>
-</div>
+<script src="pw.js" defer></script>
 <script src="try.js" defer></script>
 <script src="cmdk.js" defer></script>
 </body>
