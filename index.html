@@ -37,7 +37,7 @@
   <div class="wrap">
     <a class="brand" href="#top"><b>Sudharsan</b><small>v s</small></a>
     <nav class="nav only-wide" aria-label="Sections">
-      <a href="#build">What I build</a><a href="#pipeline">Pipeline</a><a href="#work">Case studies</a><a href="#try">Try it</a><a href="#experience">Experience</a><a href="#writing">Writing</a>
+      <a href="#pipeline">Pipeline</a><a href="#build">What I build</a><a href="#work">Case studies</a><a href="#try">Try it</a><a href="#experience">Experience</a><a href="#writing">Writing</a>
     </nav>
     <div class="acts">
       <button class="search" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span class="search-l">search</span><kbd>Ctrl K</kbd></button>
@@ -55,7 +55,7 @@
     <p class="hero-sub">I build RAG pipelines and LLM agents, and the evals that prove they work.</p>
     <p class="hero-lede">Retrieval, agent orchestration and guardrails, on a backend that doesn’t drop or repeat work. In production at Edvoy, and in three public builds you can test from this page, each shipped with its tests and committed evaluations.</p>
     <div class="ctas">
-      <a class="btn" href="#build">See what I build ↓</a>
+      <a class="btn" href="#pipeline">Follow the pipeline ↓</a>
       <a class="btn o" href="#try">Try a demo</a>
     </div>
     <dl class="meta">
@@ -153,8 +153,47 @@
   </figure>
 </section>
 
+<section id="ask" class="sec" aria-labelledby="h-ask" data-ask>
+  <div class="sh"><span class="sh-n">01</span><h2 id="h-ask">Ask the portfolio</h2><span class="sh-cmd">$ help</span></div>
+  <div class="ask">
+    <div class="term">
+      <div class="term-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>sudharsan@portfolio — zsh</span><span class="term-ok">● no model · every line links to a page</span></div>
+      <div class="term-out" aria-live="polite">
+        <p class="term-note">A command line over this site. It looks things up; it doesn’t generate them.</p>
+        <p class="no-js">Commands need JavaScript. Everything they look up is on this page and the case studies below.</p>
+      </div>
+      <div class="term-cmds js-only" role="group" aria-label="Try a command"></div>
+      <form class="term-in js-only" autocomplete="off"><span aria-hidden="true">$</span><label class="sr-only" for="ask-in">Type a command</label><input id="ask-in" type="text" placeholder="type a command, or ‘help’" spellcheck="false" autocapitalize="off" enterkeyhint="go"></form>
+      <p class="trace-line only-narrow js-only"></p>
+    </div>
+    <div class="trace js-only">
+      <p class="trace-h">ROUTE TRACE</p>
+      <dl></dl>
+      <p class="trace-foot">Answers come from the pages on this site, in one keystroke. Nothing here can make up a fact, because nothing is generated.</p>
+    </div>
+  </div>
+</section>
+
+<section id="pipeline" class="sec" aria-labelledby="h-pipe" data-pipeline>
+  <div class="sh"><span class="sh-n">02</span><h2 id="h-pipe">The pipeline</h2><span class="sh-cmd">$ cat work/*.yaml | wire</span></div>
+  <p class="intro">Everything I’ve built, wired to the stage of an AI system it proves. Pick a system or a stage; its wires light up and the readme shows the evidence.</p>
+  <div class="board wb only-wide js-only" data-board></div>
+  <div class="only-narrow js-only" data-pm></div>
+  <ul class="pipe-fallback">
+    <li><b>AI workflow automation</b> (Edvoy, in production since Oct 2026): orchestration, retrieval and guardrails. Internal system, described at architecture level only.</li>
+    <li><b>Event-driven pipelines</b> (Edvoy): RabbitMQ, GCP Pub/Sub and ETL; ingestion and orchestration.</li>
+    <li><b><a href="copilot.html">Market Research Copilot</a></b>: ingestion, retrieval and evaluation; 96 tests in CI.</li>
+    <li><b><a href="review.html">AI Code Review Agent</a></b>: orchestration, guardrails and evaluation; 22 tests in CI.</li>
+    <li><b><a href="rbac.html">Permission-Aware RAG</a></b>: ingestion, retrieval, guardrails and evaluation; 29 tests in CI.</li>
+  </ul>
+  <details class="skills">
+    <summary><span>Skills, and where they’re proven</span><span class="sk-n">16 · production, personal builds, tooling</span><span class="sign" aria-hidden="true"></span></summary>
+    <div class="tw"><table><thead><tr><th>Skill</th><th>Proven in</th><th>Tier</th></tr></thead><tbody><tr><td>RabbitMQ, distributed task orchestration</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>n8n, Hermes, LangGraph agent workflows</td><td><a href="#experience">Edvoy automation platform</a>, <a href="review.html">Code Review Agent</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>RAG over email threads</td><td><a href="#experience">Edvoy automation platform</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Slack and Jira integrations</td><td><a href="#experience">Edvoy automation platform</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>GCP Pub/Sub, webhooks, event-driven design</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>ETL pipelines, data normalisation</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Idempotency, retries, failure recovery</td><td><a href="#experience">Edvoy</a>, <a href="review.html">Code Review Agent</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Python, async FastAPI</td><td><a href="#experience">Edvoy</a> and every build</td><td><span class="pill prod">Production</span></td></tr><tr><td>MongoDB, AWS EC2/S3, Docker</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Two-stage retrieval: FAISS + NIM reranking</td><td><a href="copilot.html">Market Research Copilot</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>Chunking benchmarks, retrieval eval (hit@k, MRR)</td><td><a href="copilot.html#evaluation">Market Research Copilot</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>NVIDIA NIM embeddings, SQLAlchemy</td><td><a href="copilot.html">Market Research Copilot</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>Role-filtered retrieval, JWT, audit logs</td><td><a href="rbac.html">Permission-Aware RAG</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>HMAC webhook verification, human approval gates</td><td><a href="review.html">Code Review Agent</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>GitHub API, Claude and OpenAI APIs</td><td><a href="review.html">Code Review Agent</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>Claude Code, Cursor, Codex, GitHub Copilot</td><td>Daily work</td><td><span class="pill tool">Tooling</span></td></tr></tbody></table></div>
+  </details>
+</section>
+
 <section id="build" class="sec" aria-labelledby="h-build">
-  <div class="sh"><span class="sh-n">01</span><h2 id="h-build">What I build</h2><span class="sh-cmd">$ cat capabilities.md</span></div>
+  <div class="sh"><span class="sh-n">03</span><h2 id="h-build">What I build</h2><span class="sh-cmd">$ cat capabilities.md</span></div>
   <p class="intro">The parts of an AI system I work on, each with the work that proves it. Production work is at Edvoy; the rest is public code you can read and run.</p>
   <ul class="cps">
     <li class="cp">
@@ -201,45 +240,6 @@
     </li>
   </ul>
   <p class="cp-tools"><span>daily tools</span> Claude Code · Cursor · Codex · GitHub Copilot</p>
-</section>
-
-<section id="ask" class="sec" aria-labelledby="h-ask" data-ask>
-  <div class="sh"><span class="sh-n">02</span><h2 id="h-ask">Ask the portfolio</h2><span class="sh-cmd">$ help</span></div>
-  <div class="ask">
-    <div class="term">
-      <div class="term-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>sudharsan@portfolio — zsh</span><span class="term-ok">● no model · every line links to a page</span></div>
-      <div class="term-out" aria-live="polite">
-        <p class="term-note">A command line over this site. It looks things up; it doesn’t generate them.</p>
-        <p class="no-js">Commands need JavaScript. Everything they look up is on this page and the case studies below.</p>
-      </div>
-      <div class="term-cmds js-only" role="group" aria-label="Try a command"></div>
-      <form class="term-in js-only" autocomplete="off"><span aria-hidden="true">$</span><label class="sr-only" for="ask-in">Type a command</label><input id="ask-in" type="text" placeholder="type a command, or ‘help’" spellcheck="false" autocapitalize="off" enterkeyhint="go"></form>
-      <p class="trace-line only-narrow js-only"></p>
-    </div>
-    <div class="trace js-only">
-      <p class="trace-h">ROUTE TRACE</p>
-      <dl></dl>
-      <p class="trace-foot">Answers come from the pages on this site, in one keystroke. Nothing here can make up a fact, because nothing is generated.</p>
-    </div>
-  </div>
-</section>
-
-<section id="pipeline" class="sec" aria-labelledby="h-pipe" data-pipeline>
-  <div class="sh"><span class="sh-n">03</span><h2 id="h-pipe">The pipeline</h2><span class="sh-cmd">$ cat work/*.yaml | wire</span></div>
-  <p class="intro">Everything I’ve built, wired to the stage of an AI system it proves. Pick a system or a stage; its wires light up and the readme shows the evidence.</p>
-  <div class="board wb only-wide js-only" data-board></div>
-  <div class="only-narrow js-only" data-pm></div>
-  <ul class="pipe-fallback">
-    <li><b>AI workflow automation</b> (Edvoy, in production since Oct 2026): orchestration, retrieval and guardrails. Internal system, described at architecture level only.</li>
-    <li><b>Event-driven pipelines</b> (Edvoy): RabbitMQ, GCP Pub/Sub and ETL; ingestion and orchestration.</li>
-    <li><b><a href="copilot.html">Market Research Copilot</a></b>: ingestion, retrieval and evaluation; 96 tests in CI.</li>
-    <li><b><a href="review.html">AI Code Review Agent</a></b>: orchestration, guardrails and evaluation; 22 tests in CI.</li>
-    <li><b><a href="rbac.html">Permission-Aware RAG</a></b>: ingestion, retrieval, guardrails and evaluation; 29 tests in CI.</li>
-  </ul>
-  <details class="skills">
-    <summary><span>Skills, and where they’re proven</span><span class="sk-n">16 · production, personal builds, tooling</span><span class="sign" aria-hidden="true"></span></summary>
-    <div class="tw"><table><thead><tr><th>Skill</th><th>Proven in</th><th>Tier</th></tr></thead><tbody><tr><td>RabbitMQ, distributed task orchestration</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>n8n, Hermes, LangGraph agent workflows</td><td><a href="#experience">Edvoy automation platform</a>, <a href="review.html">Code Review Agent</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>RAG over email threads</td><td><a href="#experience">Edvoy automation platform</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Slack and Jira integrations</td><td><a href="#experience">Edvoy automation platform</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>GCP Pub/Sub, webhooks, event-driven design</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>ETL pipelines, data normalisation</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Idempotency, retries, failure recovery</td><td><a href="#experience">Edvoy</a>, <a href="review.html">Code Review Agent</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Python, async FastAPI</td><td><a href="#experience">Edvoy</a> and every build</td><td><span class="pill prod">Production</span></td></tr><tr><td>MongoDB, AWS EC2/S3, Docker</td><td><a href="#experience">Edvoy</a></td><td><span class="pill prod">Production</span></td></tr><tr><td>Two-stage retrieval: FAISS + NIM reranking</td><td><a href="copilot.html">Market Research Copilot</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>Chunking benchmarks, retrieval eval (hit@k, MRR)</td><td><a href="copilot.html#evaluation">Market Research Copilot</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>NVIDIA NIM embeddings, SQLAlchemy</td><td><a href="copilot.html">Market Research Copilot</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>Role-filtered retrieval, JWT, audit logs</td><td><a href="rbac.html">Permission-Aware RAG</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>HMAC webhook verification, human approval gates</td><td><a href="review.html">Code Review Agent</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>GitHub API, Claude and OpenAI APIs</td><td><a href="review.html">Code Review Agent</a></td><td><span class="pill build">Personal build</span></td></tr><tr><td>Claude Code, Cursor, Codex, GitHub Copilot</td><td>Daily work</td><td><span class="pill tool">Tooling</span></td></tr></tbody></table></div>
-  </details>
 </section>
 
 <section id="work" class="sec" aria-labelledby="h-work" data-carousel>
