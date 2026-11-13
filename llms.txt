@@ -1,6 +1,6 @@
 # Sudharsan V S
 
-> AI engineer building RAG pipelines and LLM agents, and the evaluations that prove them. Data Engineer at Edvoy in Chennai, India, where he designed a production AI workflow system (RAG over email threads, n8n + Hermes + LangGraph, guardrails). Three public builds (RAG, an agent, and permission-aware RAG) have public code, 147 automated tests in CI between them, and committed evaluation reports.
+> AI engineer building RAG pipelines and LLM agents, and the evaluations that prove them. Data Engineer at Edvoy in Chennai, India, where he designed a production AI workflow system (RAG over email threads, n8n + Hermes + LangGraph, guardrails) and the initial architecture of an application automation that has made 3,400+ submissions. Three public builds (RAG, an agent, and permission-aware RAG) have public code, 147 automated tests in CI between them, and committed evaluation reports.
 
 This file is a plain-text summary of https://sudharsan2816.github.io/ for AI agents and tools. Every number below is on the site, with a link to where it comes from. A structured version: https://sudharsan2816.github.io/profile.json
 
@@ -16,10 +16,12 @@ This file is a plain-text summary of https://sudharsan2816.github.io/ for AI age
 ## Role
 
 - Data Engineer, Edvoy, Chennai (May 2026 to now; promoted from Junior Data Engineer, Nov 2024 to May 2026; Data Intern, Aug to Oct 2024)
-- Designed the architecture of an AI-assisted workflow automation system (n8n + Hermes) and built its workflow and pipeline; in production since October 2026: Jira-triggered, RAG over email threads, Slack alerts, and a decision directory with guardrails. Colleagues built some of its components.
-- Designed the architecture of the initial RabbitMQ-based application automation and built its pipeline; later containerised it as three services so one failure can't stop the rest, as part of its move to AWS.
-- Built modular ETL pipelines that normalise heterogeneous external data, and a real-time OTP event service on GCP Pub/Sub with acknowledgement, duplicate detection and timeout handling.
-- Production work at Edvoy is described at architecture level only; no internal metrics are published.
+
+## Production work at Edvoy (internal systems; case studies on the site, no public code)
+
+- [AI Workflow Automation](https://sudharsan2816.github.io/ai-workflow.html): in production since October 2026. A Jira poller starts it, RAG retrieves context from the email thread behind each ticket, and a decision directory and guardrails decide whether the system acts or Slack alerts the responsible person. LangGraph workflows extract requirements from university emails, documents and web pages. Built on n8n and Hermes. He designed the architecture and built the workflow and pipeline; colleagues built some components. No impact figures yet: not measured.
+- [Application Automation](https://sudharsan2816.github.io/app-automation.html): designed as Junior Data Engineer; prototype released March 2026; in production since May 2026. A RabbitMQ-based pipeline that submits applications on 70+ university portals. 3,400+ submissions in total since the first release; ~95% of runs succeed (successful / (successful + failed), user-stopped runs excluded); ~5 minutes of bot time per submission vs ~30 by hand. As Junior Data Engineer he designed the initial architecture, built the pipeline and its logic, wrote the university configurations, and split it into three containers. After his promotion he optimised it in production: moved it to AWS (his manager's idea), extended it to take new kinds of data without code changes, and brought a submission to about 5 minutes of bot time. The config-per-portal approach was the platform lead's.
+- [Pipelines and Events](https://sudharsan2816.github.io/data-pipelines.html): as Junior Data Engineer, 25+ ETL pipelines that normalise heterogeneous external data into one internal format (MongoDB), and an OTP event service on GCP Pub/Sub with webhooks, acknowledgement, duplicate detection and timeouts.
 
 ## Case studies (personal builds, public code)
 

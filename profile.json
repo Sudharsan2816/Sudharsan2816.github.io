@@ -1,7 +1,7 @@
 {
   "name": "Sudharsan V S",
   "headline": "AI engineer building RAG pipelines, LLM agents and their evaluations",
-  "current_title": "Data Engineer, Edvoy (designed its production AI workflow system)",
+  "current_title": "Data Engineer, Edvoy (designed its production AI workflow system and the initial architecture of its application automation)",
   "capabilities": {
     "rag_pipelines": [
       "chunking benchmarks",
@@ -75,8 +75,8 @@
       "end": null,
       "note": "promoted",
       "highlights": [
-        "Designed the architecture of an AI-assisted workflow automation system (n8n + Hermes) and built its workflow and pipeline; in production since October 2026: Jira-triggered, RAG over email threads, Slack alerts, and a decision directory with guardrails. Colleagues built some of its components.",
-        "Designed the architecture of the initial RabbitMQ-based application automation and built its pipeline and university-specific configurations; later containerised it as three services so one failure can't stop the rest, as part of its move to AWS."
+        "Designed the architecture of an AI-assisted workflow automation system (n8n + Hermes + LangGraph) and built its workflow and pipeline; in production since October 2026: Jira-triggered, RAG over email threads, Slack alerts, and a decision directory with guardrails. Colleagues built some of its components.",
+        "Optimised the application automation once it went into production in May 2026: moved it to AWS, which ended the bot stalls; extended the pipeline to take new kinds of data without code changes; and brought a submission to about 5 minutes of bot time, against about 30 by hand. 3,400+ submissions to 70+ portals; about 95% of runs succeed."
       ]
     },
     {
@@ -86,8 +86,9 @@
       "start": "2024-11",
       "end": "2026-05",
       "highlights": [
-        "Built modular ETL pipelines that normalise heterogeneous external data into standard internal formats.",
-        "Built a real-time OTP event service on GCP Pub/Sub with webhooks: acknowledgement, duplicate detection and timeout handling."
+        "Designed the architecture of the initial RabbitMQ-based application automation; built its pipeline and logic and the university-specific configurations, and split it into three containers so one failing feature can't take the whole system down. Prototype released March 2026.",
+        "Built 25+ modular ETL pipelines that normalise heterogeneous external data into one internal format.",
+        "Built a real-time OTP event service on GCP Pub/Sub with webhooks, acknowledgement, duplicate detection and timeout handling, so emailed login codes stopped blocking the earlier automation."
       ]
     },
     {
@@ -102,6 +103,62 @@
   "across_the_role": [
     "Async Python and FastAPI services with idempotency, retries, failure recovery and duplicate prevention.",
     "MongoDB (including centralised logging), AWS EC2 and S3, Docker and Docker Compose."
+  ],
+  "production_systems": [
+    {
+      "name": "AI Workflow Automation",
+      "kind": "production at Edvoy (internal; no public code)",
+      "case_study": "https://sudharsan2816.github.io/ai-workflow.html",
+      "since": "2026-10",
+      "stack": [
+        "n8n",
+        "Hermes",
+        "LangGraph",
+        "RAG",
+        "Jira",
+        "Slack"
+      ],
+      "my_part": "Designed the architecture; built the workflow and pipeline. Colleagues built some components.",
+      "results": [
+        "In production since October 2026",
+        "Impact not yet measured, so no figure is claimed"
+      ]
+    },
+    {
+      "name": "Application Automation",
+      "kind": "production at Edvoy (internal; no public code)",
+      "case_study": "https://sudharsan2816.github.io/app-automation.html",
+      "since": "2026-05",
+      "stack": [
+        "RabbitMQ",
+        "Docker",
+        "AWS"
+      ],
+      "my_part": "As Junior Data Engineer: designed the initial architecture, built the pipeline and its logic, wrote the university configurations, split it into three containers. After promotion: optimised it in production (AWS move, new kinds of data without code changes, ~5 minutes of bot time per submission). The config-per-portal approach was the platform lead's; the AWS move was his manager's idea.",
+      "results": [
+        "3,400+ submissions in total since the first release in March 2026 (not per day)",
+        "~95% of runs succeed: successful / (successful + failed), user-stopped runs excluded",
+        "~5 minutes of bot time per submission vs ~30 by hand (human pauses excluded)",
+        "70+ university portals"
+      ],
+      "released": "2026-03"
+    },
+    {
+      "name": "Pipelines and Events",
+      "kind": "production at Edvoy (internal; no public code)",
+      "case_study": "https://sudharsan2816.github.io/data-pipelines.html",
+      "since": "2024-11",
+      "stack": [
+        "GCP Pub/Sub",
+        "webhooks",
+        "MongoDB"
+      ],
+      "my_part": "All of it, as Junior Data Engineer.",
+      "results": [
+        "25+ ETL pipelines into one internal format",
+        "OTP event service with acknowledgement, duplicate detection and timeouts"
+      ]
+    }
   ],
   "projects": [
     {
@@ -243,5 +300,5 @@
       "url": "https://github.com/Sudharsan2816/Projects/blob/main/enterprise-rag/docs/RBAC_EVALUATION.md"
     }
   ],
-  "note": "Production work at Edvoy is described at architecture level only."
+  "note": "Production work at Edvoy is internal: the case studies describe the architecture, who built what, and the numbers; no code, data or screenshots are public."
 }
