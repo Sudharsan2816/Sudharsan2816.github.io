@@ -123,13 +123,16 @@
 
 <section id="roadmap" class="sec" aria-labelledby="h-road">
   <div class="sh"><span class="sh-n">05</span><h2 id="h-road">How it was built</h2><span class="sh-cmd">$ git log --oneline</span></div>
-  <p class="road-intro">Internal work, so there are no public commits to link. The stages are in the order they happened.</p>
+  <p class="road-intro">Internal work, so there are no public commits to link. These are the steps, from my side of the work.</p>
   <ol class="road">
     <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 1</b></span><span class="st"><b>RAG over the email thread</b><span>Retrieval came first: the context behind a ticket.</span></span></span></div></li>
     <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 2</b></span><span class="st"><b>Jira poller</b><span>New tickets start the pipeline.</span></span></span></div></li>
     <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 3</b></span><span class="st"><b>Slack alerts</b><span>The responsible person hears about the cases that need them.</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 4</b></span><span class="st"><b>Guardrails and decision directory</b><span>Written from the business rules and from how users responded to the prototype.</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><time datetime="2026-10"><b>Live</b><small>Oct 2026</small></time><span class="st"><b>In production</b><span>Running on real cases since October 2026.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 4</b></span><span class="st"><b>A prototype in front of users</b><span>I watched how the people who would use it responded.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 5</b></span><span class="st"><b>The decision directory</b><span>Which decision applies to each kind of case, written from the business rules and those responses.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 6</b></span><span class="st"><b>Guardrails</b><span>Checks before the system may act; a case that doesn’t clear them goes to a person.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 7</b></span><span class="st"><b>Into production</b><span>Running on real cases.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Also</b></span><span class="st"><b>LangGraph extraction</b><span>Workflows in the same system that pull requirements out of university emails, documents and web pages.</span></span></span></div></li>
     <li><div class="now-row"><b>Open now</b><a href="#next">What this page doesn’t show</a></div></li>
   </ol>
 </section>

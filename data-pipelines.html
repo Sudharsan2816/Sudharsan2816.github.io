@@ -129,11 +129,16 @@
 
 <section id="roadmap" class="sec" aria-labelledby="h-road">
   <div class="sh"><span class="sh-n">05</span><h2 id="h-road">How it was built</h2><span class="sh-cmd">$ git log --oneline</span></div>
-  <p class="road-intro">Internal work, so there are no public commits to link. The stages are in the order they happened.</p>
+  <p class="road-intro">Internal work, so there are no public commits to link. These are the steps, from my side of the work.</p>
   <ol class="road">
-    <li><div class="road-row"><span class="wrap-s"><time datetime="2024-11"><b>Nov 2024</b></time><span class="st"><b>Junior Data Engineer</b><span>Automation scripts and pipelines, written by hand.</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Ongoing</b></span><span class="st"><b>A pipeline per new kind of data</b><span>Cleaning and conversion into the internal format; 25+ in all.</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Then</b></span><span class="st"><b>The OTP watcher</b><span>Webhooks and Pub/Sub, so emailed login codes stopped blocking the automation.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 1</b></span><span class="st"><b>Automation by hand</b><span>Scripts and pipelines written by hand as a Junior Data Engineer, before AI coding tools were common.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 2</b></span><span class="st"><b>Extract from external systems</b><span>Data taken in whatever shape the source sends it.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 3</b></span><span class="st"><b>Cleaning logic for each kind of data</b><span>Every new kind of data got its own cleaning logic, so existing pipelines weren’t touched.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 4</b></span><span class="st"><b>One internal format</b><span>Everything normalised into the format the rest of the system reads, in MongoDB.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 5</b></span><span class="st"><b>Reliability built in</b><span>Retries, idempotency, failure recovery and duplicate prevention, with failures logged centrally in MongoDB.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 6</b></span><span class="st"><b>Containers and cloud</b><span>Docker and Docker Compose, deployed on AWS EC2 and S3.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 7</b></span><span class="st"><b>The OTP watcher</b><span>Webhooks and GCP Pub/Sub, so emailed login codes stopped blocking the automation.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 8</b></span><span class="st"><b>Acknowledge, de-duplicate, time out</b><span>Every OTP event acknowledged, duplicates dropped, and a timeout when no code arrives.</span></span></span></div></li>
     <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Next</b></span><span class="st"><b>The RabbitMQ application automation</b><span>The automation moved to a platform whose initial architecture I designed: <a href="app-automation.html">its case study →</a></span></span></span></div></li>
     <li><div class="now-row"><b>Open now</b><a href="#next">What this page doesn’t show</a></div></li>
   </ol>

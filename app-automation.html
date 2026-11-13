@@ -122,14 +122,18 @@
 
 <section id="roadmap" class="sec" aria-labelledby="h-road">
   <div class="sh"><span class="sh-n">05</span><h2 id="h-road">How it was built</h2><span class="sh-cmd">$ git log --oneline</span></div>
-  <p class="road-intro">Internal work, so there are no public commits to link. The stages are in the order they happened.</p>
+  <p class="road-intro">Internal work, so there are no public commits to link. These are the steps, from my side of the work.</p>
   <ol class="road">
-    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Before</b></span><span class="st"><b>Hand-written automation</b><span>Scripts, plus an OTP watcher for portals that email a login code (see Pipelines and events).</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Designed</b></span><span class="st"><b>The initial architecture</b><span>As Junior Data Engineer: the RabbitMQ-based pipeline, its logic, the university configurations, and three containers so one failing feature can’t stop the rest.</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><time datetime="2026-03"><b>Released</b><small>Mar 2026</small></time><span class="st"><b>Prototype released</b><span>Submissions are counted from here.</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><time datetime="2026-05"><b>Live</b><small>May 2026</small></time><span class="st"><b>In production</b><span>It went into production after my promotion to Data Engineer.</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Optimised</b></span><span class="st"><b>AWS, new kinds of data, speed</b><span>Moved it to AWS, which ended the bot stalls; let it take new kinds of data without code changes; brought a submission to about 5 minutes of bot time.</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><time datetime="2026-11"><b>Now</b><small>Nov 2026</small></time><span class="st"><b>3,400+ submissions</b><span>70+ portals; about 95% of runs succeed.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 1</b></span><span class="st"><b>Hand-written automation</b><span>Scripts, plus an OTP watcher for portals that email a login code (see Pipelines and events).</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 2</b></span><span class="st"><b>The initial architecture</b><span>As Junior Data Engineer: a RabbitMQ-based pipeline, and the logic every submission follows.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 3</b></span><span class="st"><b>University configurations</b><span>Each university’s steps and rules as a configuration on the shared pipeline; 70+ portals today.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 4</b></span><span class="st"><b>Three containers</b><span>Dockerised and split, so one failing feature can’t stop the rest.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 5</b></span><span class="st"><b>Prototype released</b><span>Submissions are counted from here.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 6</b></span><span class="st"><b>Into production</b><span>After my promotion to Data Engineer.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 7</b></span><span class="st"><b>Moved to AWS</b><span>Off local machines, which ended the native-host disconnects that stalled the bot. My manager’s idea; my work.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 8</b></span><span class="st"><b>New kinds of data</b><span>The pipeline takes them without code changes.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 9</b></span><span class="st"><b>Faster submissions</b><span>About 5 minutes of bot time per submission, against about 30 by hand.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Now</b></span><span class="st"><b>3,400+ submissions</b><span>70+ portals; about 95% of runs succeed.</span></span></span></div></li>
     <li><div class="now-row"><b>Open now</b><a href="#next">What this page doesn’t show</a></div></li>
   </ol>
 </section>
