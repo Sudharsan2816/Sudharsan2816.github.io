@@ -166,16 +166,56 @@
 
 <section id="roadmap" class="sec" aria-labelledby="h-road">
   <div class="sh"><span class="sh-n">06</span><h2 id="h-road">How it was built</h2><span class="sh-cmd">$ git log --oneline</span></div>
-  <p class="road-intro">Built with AI coding agents (Codex and Claude Code). The stages below are what I decided, tested and fixed, each linked to the commit or report that shows it. Open a stage for the details.</p>
+  <p class="road-intro">Built in <b>10 steps</b>: the parts of the system in the order a request meets them, then CI. Each step links to its code. Built alongside a full-time job, using AI coding tools as helpers along the way.</p>
   <ol class="road">
     <li><details>
-      <summary><span class="wrap-s"><time datetime="2026-08-01">Aug 2026</time><span class="st"><b>Built and evaluated in one pass</b><span>Role-filtered retrieval; 7 of 7 allow/deny cases pass.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
-      <dl class="sgrid"><div><dt class="change">Change</dt><dd>JWT login across six roles, retrievers filtered by role, redaction of sensitive values and an audit log, shipped in one commit alongside other portfolio work.</dd></div><div><dt class="result">Result</dt><dd>An authorisation evaluation the same day: 7 of 7 allow and deny cases pass.</dd></div><div><dt class="still-open">Still open</dt><dd>Injection screening is pattern-based, and permissions are checked after vector search, not inside it.</dd></div></dl>
-      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/12c69ae8ce824fe486175082cfb60df72f368363" rel="noopener" target="_blank">12c69ae</a><a href="https://github.com/Sudharsan2816/Projects/blob/main/enterprise-rag/docs/RBAC_EVALUATION.md" rel="noopener" target="_blank">evaluation report</a></p>
+      <summary><span class="wrap-s"><span class="when"><b>Step 1</b></span><span class="st"><b>Login and six roles</b><span>A JWT carries the user’s role into every request.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>Login issues a token carrying one of six roles. Outside local development, the app refuses to start without a real secret key.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/auth.py" rel="noopener" target="_blank">auth.py</a><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/config.py" rel="noopener" target="_blank">config.py</a><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/tests/test_config_security.py" rel="noopener" target="_blank">test_config_security.py</a></p>
     </details></li>
     <li><details>
-      <summary><span class="wrap-s"><time datetime="2026-10-15">Oct 2026</time><span class="st"><b>Tests run in CI</b><span>The 29 tests run from the repository root on every change to the project.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
-      <dl class="sgrid"><div><dt class="change">Change</dt><dd>CI runs the project's tests from the repository root.</dd></div></dl>
+      <summary><span class="wrap-s"><span class="when"><b>Step 2</b></span><span class="st"><b>Four kinds of source</b><span>PDFs, CSV incident reports, JSON logs and SQLite.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>A separate ingestor for each source type, plus seed data to test against, with every record tagged with the permission needed to read it.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/tree/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/ingestion" rel="noopener" target="_blank">ingestion/</a><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/seed_data.py" rel="noopener" target="_blank">seed_data.py</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 3</b></span><span class="st"><b>Injection screen</b><span>Suspicious questions stop before anything is retrieved.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>Regex rules for instruction overrides, secret extraction, permission bypass and jailbreak phrasing, run on whitespace-normalised text.</dd></div><div><dt class="still-open">Still open</dt><dd>Pattern-based, so a paraphrased attack can get through.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/security/prompt_injection.py" rel="noopener" target="_blank">prompt_injection.py</a><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/tests/test_prompt_injection.py" rel="noopener" target="_blank">test_prompt_injection.py</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 4</b></span><span class="st"><b>Intent routing</b><span>Picks the source, then the permissions a question needs.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>Keyword scoring picks a source type, then narrows the required permissions to the domain terms in the question.</dd></div><div><dt class="still-open">Still open</dt><dd>Keyword-based; a small classifier would handle phrasing it hasn’t seen.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/routing/query_router.py" rel="noopener" target="_blank">query_router.py</a><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/tests/test_routing.py" rel="noopener" target="_blank">test_routing.py</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 5</b></span><span class="st"><b>The permission decision</b><span>6 roles, 11 data permissions; denied before retrieval.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>A role-to-permission matrix. If the role holds none of the permissions a question needs, it gets a clear denial and nothing is retrieved.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/security/rbac.py" rel="noopener" target="_blank">rbac.py</a><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/tests/test_rbac.py" rel="noopener" target="_blank">test_rbac.py</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 6</b></span><span class="st"><b>Retrievers that carry the role</b><span>Restricted documents never reach the model.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>Every retriever (vector, CSV, JSON, SQL and hybrid) receives the role’s permission set. Vector results carry a permission tag and are filtered before use.</dd></div><div><dt class="still-open">Still open</dt><dd>The filter runs after vector search, so restricted neighbours can crowd out authorised results.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/tree/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/retrieval" rel="noopener" target="_blank">retrieval/</a><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/tests/test_retrieval.py" rel="noopener" target="_blank">test_retrieval.py</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 7</b></span><span class="st"><b>Redaction and generation</b><span>Sensitive values masked before the model sees them.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>SSN-shaped numbers, card numbers and salary bands are masked in retrieved text. Generation uses OpenAI at temperature 0 when a key is set; otherwise a local answer quotes the authorised context with sources.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/security/guardrails.py" rel="noopener" target="_blank">guardrails.py</a><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/llm/llm_client.py" rel="noopener" target="_blank">llm_client.py</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 8</b></span><span class="st"><b>Audit log and metrics</b><span>Every query recorded; only two roles can read it.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>Every query, its sources, outcome and flags go to an audit table. Only Admin and Compliance can read the log or the metrics.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/logging/audit_logger.py" rel="noopener" target="_blank">audit_logger.py</a><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/app/observability.py" rel="noopener" target="_blank">observability.py</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 9</b></span><span class="st"><b>An authorisation evaluation</b><span>7 committed allow and deny cases; 7 of 7 pass.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>Seven cases that say which role may and may not see what, run as a script and as a test.</dd></div><div><dt class="result">Result</dt><dd>7 of 7 pass.</dd></div><div><dt class="still-open">Still open</dt><dd>Retrieval and answer quality are not measured.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/blob/main/enterprise-rag/docs/RBAC_EVALUATION.md" rel="noopener" target="_blank">evaluation report</a><a href="https://github.com/Sudharsan2816/Projects/blob/12c69ae8ce824fe486175082cfb60df72f368363/enterprise-rag/evals/rbac_cases.json" rel="noopener" target="_blank">rbac_cases.json</a><a href="https://github.com/Sudharsan2816/Projects/commit/12c69ae8ce824fe486175082cfb60df72f368363" rel="noopener" target="_blank">12c69ae</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 10</b></span><span class="st"><b>Tests run in CI</b><span>The 29 tests run from the repository root on every change.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>CI runs the project’s 29 tests from the repository root.</dd></div></dl>
       <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Projects/commit/eca020b5fad80005dbd35370e1fa7a8beaee47c8" rel="noopener" target="_blank">eca020b</a></p>
     </details></li>
     <li><div class="now-row"><b>Open now</b><a href="#next">Limitations and what I&#x27;d do next</a></div></li>
