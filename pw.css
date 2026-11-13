@@ -620,6 +620,16 @@ tr.win td:first-child { box-shadow: inset 3px 0 0 var(--marker); padding-left: 8
 }
 @media (min-width: 640px) { .road summary > span.wrap-s { display: contents; } }
 
+/* a day with several steps */
+.road .steps { list-style: none; margin: 0 0 16px 14px; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 10px; }
+.road .steps > li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 0 8px; background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px; }
+.road .steps .n { font: 12px var(--mono); color: var(--graphite); padding-top: 4px; }
+.road .steps b { display: block; font-family: var(--serif); font-size: 17.5px; font-weight: 600; line-height: 1.3; }
+.road .steps p { margin: 4px 0 0; font-size: 14.5px; line-height: 1.5; color: var(--body-ink); }
+.road .steps p.op span { display: block; font: 600 11px var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--amber); }
+.road .steps .ev { margin: 8px 0 0; }
+@media (max-width: 639px) { .road .steps { margin-left: 0; } }
+
 /* failures */
 .fms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .fm { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; }
