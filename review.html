@@ -159,35 +159,65 @@
 
 <section id="roadmap" class="sec" aria-labelledby="h-road">
   <div class="sh"><span class="sh-n">06</span><h2 id="h-road">How it was built</h2><span class="sh-cmd">$ git log --oneline</span></div>
-  <p class="road-intro">I built it in <b>22 commits on 6 working days</b>, alongside a full-time job, using AI coding tools as helpers along the way. Each stage below is one of those days: what I decided, tested and fixed, linked to the commit that shows it. Open a stage for the details.</p>
+  <p class="road-intro">Built in <b>12 steps</b> and 22 commits, alongside a full-time job, using AI coding tools as helpers along the way. Each step is what I decided, tested and fixed, linked to the commit or pull request that shows it. Open a step for the details.</p>
   <ol class="road">
     <li><details>
-      <summary><span class="wrap-s"><time datetime="2026-05-05"><b>Day 1</b><small>5 May 2026</small></time><span class="st"><b>First version in one commit</b><span>Webhooks in, LLM review, results in MongoDB.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <summary><span class="wrap-s"><span class="when"><b>Step 1</b></span><span class="st"><b>First working version</b><span>Webhooks in, LLM review, results in MongoDB.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
       <dl class="sgrid"><div><dt class="change">Change</dt><dd>A FastAPI service that takes GitHub pull-request webhooks, has an LLM review the diff and stores the result in MongoDB, with a LangGraph graph defined. It landed as one commit: 25 files, 1,464 lines.</dd></div><div><dt class="still-open">Still open</dt><dd>No tests.</dd></div></dl>
       <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/1038232e3142c21ce56c30698de3da480e8e5383" rel="noopener" target="_blank">1038232</a></p>
     </details></li>
     <li><details>
-      <summary><span class="wrap-s"><time datetime="2026-06-09"><b>Day 2</b><small>9 Jun 2026</small></time><span class="st"><b>First tests and CI</b><span>Review output rendering tested on every push.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <summary><span class="wrap-s"><span class="when"><b>Step 2</b></span><span class="st"><b>Documentation for outside readers</b><span>A README that explains what it does and how to run it.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>Rewrote the README and the example configuration for people outside the project.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/1dc6f8940fc0a9648b32b51639684935d2efd074" rel="noopener" target="_blank">1dc6f89</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 3</b></span><span class="st"><b>First tests and CI</b><span>Review output rendering tested on every push.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
       <dl class="sgrid"><div><dt class="change">Change</dt><dd>Tests for how reviews are rendered as markdown, and CI on every push.</dd></div><div><dt class="still-open">Still open</dt><dd>Nothing checked whether a finding was true.</dd></div></dl>
       <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/8866b1bc884b89879739463f986edd7db2a02b66" rel="noopener" target="_blank">8866b1b</a></p>
     </details></li>
     <li><details>
-      <summary><span class="wrap-s"><time datetime="2026-08-03"><b>Day 3</b><small>3 Aug 2026</small></time><span class="st"><b>Hardened for a public deploy</b><span>Signed webhooks, token auth, container, deploy config.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
-      <dl class="sgrid"><div><dt class="change">Change</dt><dd>A security module for webhook signature checks and API-token auth, a Docker image and a Render deploy config.</dd></div></dl>
+      <summary><span class="wrap-s"><span class="when"><b>Step 4</b></span><span class="st"><b>Signed webhooks and token auth</b><span>Unsigned or wrongly signed deliveries are rejected.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Before it could go on a public host, the service had to reject requests that didn’t come from GitHub or an authorised caller.</dd></div><div><dt class="change">Change</dt><dd>API-token authentication, and GitHub webhook signatures that fail closed, with security tests for both.</dd></div></dl>
       <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/c3e844e123f306e8035ab362258d1aa2382357bb" rel="noopener" target="_blank">c3e844e</a></p>
     </details></li>
     <li><details>
-      <summary><span class="wrap-s"><time datetime="2026-08-06"><b>Day 4</b><small>6 Aug 2026</small></time><span class="st"><b>Findings must quote the diff</b><span>Ungrounded findings dropped; provider calls time-boxed.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
-      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Findings weren't tied to the lines the pull request changed.</dd></div><div><dt class="change">Change</dt><dd>A finding that doesn't quote a changed line is dropped, documentation can't be cited as evidence about application code, and every provider call has a time limit.</dd></div><div><dt class="still-open">Still open</dt><dd>Multi-line evidence isn't grounded yet, so real issues spanning several changed lines can be dropped.</dd></div></dl>
-      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/b65970e37735c89b84cd51dd24b1792d82eac3be" rel="noopener" target="_blank">b65970e</a><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/93ad41e46031187a410b391edc7dd116a49fcc30" rel="noopener" target="_blank">93ad41e</a><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/767c9f263977d302f34296fd599c9d1a3175c7d3" rel="noopener" target="_blank">767c9f2</a></p>
+      <summary><span class="wrap-s"><span class="when"><b>Step 5</b></span><span class="st"><b>Answer GitHub first, review in the background</b><span>Deliveries are acknowledged before the model runs.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>The webhook delivery is acknowledged straight away and the LLM review runs in the background, so GitHub isn’t kept waiting. Integrations are built when the app starts, not when it is imported.</dd></div><div><dt class="still-open">Still open</dt><dd>Background reviews run in-process, so a restart mid-review loses the work.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/c3e844e123f306e8035ab362258d1aa2382357bb" rel="noopener" target="_blank">c3e844e</a></p>
     </details></li>
     <li><details>
-      <summary><span class="wrap-s"><time datetime="2026-10-15"><b>Day 5</b><small>15 Oct 2026</small></time><span class="st"><b>Every review runs through the graph</b><span>The LangGraph state machine is now the real execution path.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
-      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>The LangGraph module couldn't even load (it imported a helper that no longer existed), so every review ran through a plain sequential method.</dd></div><div><dt class="change">Change</dt><dd>Reviews now execute the compiled graph. The approval gate is a branch after the review is saved, and grounding and timeouts carry over. Signed webhooks and token auth became required, with tests in CI.</dd></div><div><dt class="still-open">Still open</dt><dd>A redelivered webhook for the same commit can still trigger a second review.</dd></div></dl>
-      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/4" rel="noopener" target="_blank">PR #4</a><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/3" rel="noopener" target="_blank">PR #3</a></p>
+      <summary><span class="wrap-s"><span class="when"><b>Step 6</b></span><span class="st"><b>Container and deploy config</b><span>Docker image, Render and Railway manifests.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>A Docker image, Render and Railway deploy manifests, and NVIDIA NIM as a provider option; then the deploy branch was pinned and the source repository declared.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/c3e844e123f306e8035ab362258d1aa2382357bb" rel="noopener" target="_blank">c3e844e</a><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/14531eab696f8619e187fe0bd7f4a8c37e4ed76b" rel="noopener" target="_blank">14531ea</a><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/cb1d01b08246b56872020d449b9c303abed891bb" rel="noopener" target="_blank">cb1d01b</a></p>
     </details></li>
     <li><details>
-      <summary><span class="wrap-s"><time datetime="2026-11-10"><b>Day 6</b><small>10 Nov 2026</small></time><span class="st"><b>One review per commit</b><span>Redelivered and repeated webhooks no longer start a second review.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <summary><span class="wrap-s"><span class="when"><b>Step 7</b></span><span class="st"><b>Findings must quote the diff</b><span>A finding that doesn’t quote a changed line is dropped.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>Findings weren’t tied to the lines the pull request changed.</dd></div><div><dt class="change">Change</dt><dd>Every finding has to quote a line the pull request changed, or it is dropped before the verdict is computed.</dd></div><div><dt class="still-open">Still open</dt><dd>Multi-line evidence isn’t grounded yet, so real issues spanning several changed lines can be dropped.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/b65970e37735c89b84cd51dd24b1792d82eac3be" rel="noopener" target="_blank">b65970e</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 8</b></span><span class="st"><b>Documentation isn’t evidence about code</b><span>Docs can’t back a claim about application code.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>A finding about application code could cite a line from a documentation file as its evidence.</dd></div><div><dt class="change">Change</dt><dd>Documentation lines can no longer back a claim about code, with tests for the rule.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/93ad41e46031187a410b391edc7dd116a49fcc30" rel="noopener" target="_blank">93ad41e</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 9</b></span><span class="st"><b>A time limit on every model call</b><span>A slow provider can’t hang a review.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>Every call to Claude, OpenAI or NVIDIA has a time limit, set in config and covered by a test.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/767c9f263977d302f34296fd599c9d1a3175c7d3" rel="noopener" target="_blank">767c9f2</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 10</b></span><span class="st"><b>The hardening merged, tests in CI</b><span>Required signatures and token auth on main.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="change">Change</dt><dd>The hardened service merged to main, with signed webhooks and token auth required and the tests running in CI from the repository root.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/3" rel="noopener" target="_blank">PR #3</a><a href="https://github.com/Sudharsan2816/Code_review_agent/commit/684dc3229c354aa42d2b59db735b503fa2b3c2cf" rel="noopener" target="_blank">684dc32</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 11</b></span><span class="st"><b>Every review runs through the graph</b><span>The LangGraph state machine is now the real execution path.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
+      <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>The LangGraph module couldn’t even load (it imported a helper that no longer existed), so every review ran through a plain sequential method.</dd></div><div><dt class="change">Change</dt><dd>Reviews now execute the compiled graph. The approval gate is a branch after the review is saved, and grounding and timeouts carry over.</dd></div><div><dt class="still-open">Still open</dt><dd>A redelivered webhook for the same commit can still trigger a second review.</dd></div></dl>
+      <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/4" rel="noopener" target="_blank">PR #4</a></p>
+    </details></li>
+    <li><details>
+      <summary><span class="wrap-s"><span class="when"><b>Step 12</b></span><span class="st"><b>One review per commit</b><span>Redelivered and repeated webhooks no longer start a second review.</span></span></span><span class="sign" aria-hidden="true"></span></summary>
       <dl class="sgrid"><div><dt class="problem">Problem</dt><dd>GitHub redelivers webhooks, and opened or reopened events can arrive for a commit that was already reviewed. Each one started a full review and could post a second comment.</dd></div><div><dt class="change">Change</dt><dd>The webhook claims repository, PR and head commit as a MongoDB <code>_id</code> before starting, so the database decides races and later deliveries return “duplicate”. A failed review releases its claim so a redelivery can retry; if the claim store is down, the review runs anyway.</dd></div><div><dt class="still-open">Still open</dt><dd>Reviews run as in-process background tasks, so a server restart mid-review still loses the work.</dd></div></dl>
       <p class="ev"><span>Evidence:</span><a href="https://github.com/Sudharsan2816/Code_review_agent/pull/5" rel="noopener" target="_blank">PR #5</a></p>
     </details></li>
