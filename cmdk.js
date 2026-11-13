@@ -9,13 +9,18 @@
     ['Home', 'What I build: RAG, agents, evals, guardrails', 'index.html#build', 'skills capabilities stack rag llm agents evaluation genai ai engineer'],
     ['Home', 'Ask the portfolio (a command line)', 'index.html#ask', 'terminal console whoami commands'],
     ['Home', 'The pipeline: systems wired to stages', 'index.html#pipeline', 'projects map evidence skills stack'],
-    ['Home', 'Case studies', 'index.html#work', 'projects builds work'],
+    ['Home', 'In production at Edvoy', 'index.html#production', 'edvoy work production job day job numbers submissions'],
+    ['Home', 'Personal builds', 'index.html#work', 'projects builds work case studies'],
     ['Home', 'Test the work yourself', 'index.html#try', 'demo replay try'],
     ['Home', 'Currently', 'index.html#now', 'now latest news'],
     ['Home', 'What colleagues say', 'index.html#recs', 'recommendations references quotes'],
     ['Home', 'Experience at Edvoy', 'index.html#experience', 'job work history data engineer education certificates'],
     ['Home', 'Engineering notes', 'index.html#writing', 'blog writing reports notes'],
     ['Home', 'Contact and feedback', 'index.html#contact', 'bug suggestion contact email'],
+    ['Production', 'AI Workflow Automation (Edvoy)', 'ai-workflow.html', 'n8n hermes langgraph rag email jira slack guardrails decision directory llm agent production'],
+    ['Production', 'Application Automation (Edvoy)', 'app-automation.html', 'rabbitmq queue docker aws containers university portals 3400 submissions production'],
+    ['Production', 'Pipelines and Events (Edvoy)', 'data-pipelines.html', 'etl pub/sub gcp otp webhooks mongodb data engineering production'],
+    ['Production', 'Who built what at Edvoy', 'app-automation.html#own', 'ownership mine colleagues'],
     ['Case study', 'Market Research Copilot', 'copilot.html', 'rag faiss chunking reranking'],
     ['Case study', 'AI Code Review Agent', 'review.html', 'langgraph github webhook agent'],
     ['Case study', 'Permission-Aware RAG', 'rbac.html', 'rbac security roles jwt'],
@@ -50,7 +55,7 @@
   var dlg, input, list, status, active = 0, shown = [], lastFocus = null;
 
   function local(href) {
-    var m = /^([a-z]+\.html)(#.*)?$/.exec(href);
+    var m = /^([a-z-]+\.html)(#.*)?$/.exec(href);
     if (m && m[1] === here) return m[2] || '#';
     return href;
   }

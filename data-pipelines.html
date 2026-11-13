@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pipelines and Events · Sudharsan V S</title>
+<meta name="description" content="Data foundations built at Edvoy as a Junior Data Engineer: 25+ ETL pipelines into one internal format, and an OTP event service on GCP Pub/Sub with acknowledgement, duplicate detection and timeouts.">
+<meta property="og:title" content="Pipelines and Events · Sudharsan V S">
+<meta property="og:description" content="Data foundations built at Edvoy as a Junior Data Engineer: 25+ ETL pipelines into one internal format, and an OTP event service on GCP Pub/Sub with acknowledgement, duplicate detection and timeouts.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sudharsan2816.github.io/data-pipelines.html">
+<meta property="og:image" content="https://sudharsan2816.github.io/og/data-pipelines.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Pipelines and Events case study">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F2EDE4">
+<link rel="canonical" href="https://sudharsan2816.github.io/data-pipelines.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="pw.css">
+<link rel="stylesheet" href="cmdk.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" aria-hidden="true"><span>CASE STUDY · PIPELINES AND EVENTS   ●   PRODUCTION AT EDVOY   ●   25+ ETL PIPELINES   ●   GCP PUB/SUB EVENT SERVICE   ●   ACK · DEDUPE · TIMEOUT   ●   </span><span>CASE STUDY · PIPELINES AND EVENTS   ●   PRODUCTION AT EDVOY   ●   25+ ETL PIPELINES   ●   GCP PUB/SUB EVENT SERVICE   ●   ACK · DEDUPE · TIMEOUT   ●   </span><span>CASE STUDY · PIPELINES AND EVENTS   ●   PRODUCTION AT EDVOY   ●   25+ ETL PIPELINES   ●   GCP PUB/SUB EVENT SERVICE   ●   ACK · DEDUPE · TIMEOUT   ●   </span><span>CASE STUDY · PIPELINES AND EVENTS   ●   PRODUCTION AT EDVOY   ●   25+ ETL PIPELINES   ●   GCP PUB/SUB EVENT SERVICE   ●   ACK · DEDUPE · TIMEOUT   ●   </span></div>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./"><span class="back" aria-hidden="true">←</span><b>Sudharsan</b><small>v s</small><span class="sr-only">, back to the portfolio</span></a>
+    <nav class="nav case-nav only-wide" aria-label="On this page">
+      <a href="#problem">Problem</a><a href="#architecture">Architecture</a><a class="strong" href="#own">Who built what</a><a href="#decisions">Decisions</a><a href="#roadmap">How it was built</a><a href="#failures">Failures</a>
+    </nav>
+    <div class="acts">
+      <button class="search" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span class="search-l">search</span><kbd>Ctrl K</kbd></button>
+      <a class="pill-btn o only-wide" href="copilot.html">Next: Copilot →</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+<section class="c-hero" aria-labelledby="h1">
+  <div class="c-hero-main">
+    <p class="c-kick"><span class="prod-tag">PRODUCTION · EDVOY</span>~/edvoy/pipelines · production · nov 2024 → may 2026</p>
+    <h1 id="h1">Pipelines and <span class="mk">Events</span></h1>
+    <p class="c-lede">The data foundations I built as a Junior Data Engineer: <em>25+ ETL pipelines</em> that turn each new kind of external data into one internal format, and an event service that caught emailed login codes so automation didn’t stall.</p>
+  </div>
+  <dl class="spec">
+    <div><dt>my part</dt><dd>All of it, as Junior Data Engineer (Nov 2024 – May 2026)</dd></div>
+    <div><dt>stack</dt><dd>GCP Pub/Sub, webhooks, MongoDB, Docker, AWS</dd></div>
+    <div><dt>status</dt><dd>Built Nov 2024 – May 2026; the OTP watcher served the earlier automation</dd></div>
+    <div><dt>code</dt><dd>Internal to Edvoy. No code, data or screenshots are public.</dd></div>
+  </dl>
+</section>
+
+<div class="facts" role="list" aria-label="Headline numbers">
+  <div class="fact" role="listitem"><p class="n">25+</p><p>ETL pipelines, with cleaning logic for each new kind of data</p></div>
+  <div class="fact" role="listitem"><p class="n">1</p><p>internal format they all write to, in MongoDB</p></div>
+  <div class="fact" role="listitem"><p class="n">3</p><p>checks on every OTP event: acknowledgement, duplicates, timeout</p></div>
+  <div class="fact" role="listitem"><p class="n">By hand</p><p>written before AI coding tools were common</p></div>
+</div>
+
+<section id="problem" class="sec" aria-labelledby="h-problem">
+  <div class="sh"><span class="sh-n">01</span><h2 id="h-problem">Problem</h2><span class="sh-cmd">$ cat PROBLEM.md</span></div>
+  <div class="prob">
+    <p>External data arrived in many shapes, and every new kind needed cleaning before the rest of the system could use it. Separately, some university portals emailed a one-time code at login, which blocked end-to-end automation.</p>
+    <p>Both needed the same discipline: take messy, unpredictable input and turn it into something the next system can trust, without losing or repeating anything.</p>
+  </div>
+</section>
+
+<section id="architecture" class="sec" aria-labelledby="h-arch">
+  <div class="sh"><span class="sh-n">02</span><h2 id="h-arch">Architecture</h2><span class="sh-cmd">pick a node</span></div>
+  <div class="board arch" data-arch data-start="1">
+    <p class="k">etl path · 4 nodes</p>
+    <div class="arch-path js-only" role="group" aria-label="Etl path"><button class="anode" type="button" aria-pressed="false"><span>01</span><b>Extract</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>02</span><b>Clean</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>03</span><b>Normalise</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>04</span><b>Load</b></button></div>
+    <p class="k side js-only">around it</p>
+    <div class="arch-side js-only" role="group" aria-label="Supporting parts"><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>Reliability</b></button><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>Logging</b></button><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>Deploy</b></button></div>
+    <div class="arch-d js-only" aria-live="polite"><p class="a"></p><p class="b"></p></div>
+    <dl class="arch-all no-js">
+      <div data-step="node 1 of 4 · etl path"><dt>Extract</dt><dd>Data from external systems, in whatever shape it arrives.</dd></div>
+      <div data-step="node 2 of 4 · etl path"><dt>Clean</dt><dd>For each new kind of data, I wrote the logic that cleans it.</dd></div>
+      <div data-step="node 3 of 4 · etl path"><dt>Normalise</dt><dd>Converted into the one internal format the rest of the system reads.</dd></div>
+      <div data-step="node 4 of 4 · etl path"><dt>Load</dt><dd>Written to MongoDB.</dd></div>
+      <div data-step="supporting part"><dt>Reliability</dt><dd>Retries, idempotency, failure recovery and duplicate prevention, the same patterns across services.</dd></div>
+      <div data-step="supporting part"><dt>Logging</dt><dd>Centralised logging in MongoDB.</dd></div>
+      <div data-step="supporting part"><dt>Deploy</dt><dd>Docker and Docker Compose, on AWS EC2 and S3.</dd></div>
+    </dl>
+  </div>
+  <div class="board arch" data-arch data-start="3">
+    <p class="k">otp event path · 5 nodes</p>
+    <div class="arch-path js-only" role="group" aria-label="Otp event path"><button class="anode" type="button" aria-pressed="false"><span>01</span><b>OTP email</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>02</span><b>Webhook</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>03</span><b>Pub/Sub</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>04</span><b>OTP watcher</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>05</span><b>Automation</b></button></div>
+    <div class="arch-d js-only" aria-live="polite"><p class="a"></p><p class="b"></p></div>
+    <dl class="arch-all no-js">
+      <div data-step="node 1 of 5 · otp event path"><dt>OTP email</dt><dd>Some university portals email a one-time code at login.</dd></div>
+      <div data-step="node 2 of 5 · otp event path"><dt>Webhook</dt><dd>The incoming code arrives as a webhook event.</dd></div>
+      <div data-step="node 3 of 5 · otp event path"><dt>Pub/Sub</dt><dd>Events go through GCP Pub/Sub.</dd></div>
+      <div data-step="node 4 of 5 · otp event path"><dt>OTP watcher</dt><dd>Acknowledges each event, drops duplicates, and times out if no code arrives.</dd></div>
+      <div data-step="node 5 of 5 · otp event path"><dt>Automation</dt><dd>The automation run waiting at the login can carry on.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section id="own" class="sec" aria-labelledby="h-own">
+  <div class="sh"><span class="sh-n">03</span><h2 id="h-own">Who built what</h2><span class="sh-cmd">$ git blame --team</span></div>
+  <div class="own">
+    <div class="own-c mine"><h3>Mine</h3><ul><li>The 25+ ETL pipelines, and the cleaning logic for each new kind of data.</li><li>The OTP watcher on webhooks and GCP Pub/Sub, with acknowledgements, duplicate detection and timeouts.</li><li>The automation scripts of that period, written by hand.</li></ul></div>
+    <div class="own-c"><h3>For context</h3><ul><li>Today’s application platform hands one-time codes to a person; the watcher belonged to the earlier automation.</li><li>The RabbitMQ platform that followed is its own case study.</li></ul></div>
+    <figure class="own-q"><blockquote>“Sudharsan always asks ‘what if this fails?’ before he ships anything. Retries, duplicate handling, handing control back to a person when needed: he builds all of that in from the start.”</blockquote><figcaption>MANEESH KUMAR G · DATA ENGINEER, EDVOY · SAME TEAM</figcaption></figure>
+  </div>
+</section>
+
+<section id="decisions" class="sec" aria-labelledby="h-dec">
+  <div class="sh"><span class="sh-n">04</span><h2 id="h-dec">Decisions and trade-offs</h2><span class="sh-cmd">$ git log --grep=decision</span></div>
+  <details class="dec" name="dec" open>
+    <summary><span class="dec-n">01</span><h3 class="dec-t">A pipeline for each new kind of data</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>Modular pipelines: each new kind of data gets its own cleaning and conversion logic into the shared internal format.</div><div><span class="lbl">Why</span>A new source doesn’t touch the pipelines that already work.</div><div class="trade"><span class="lbl">Cost</span>More pipelines to look after: 25+ of them.</div></div>
+  </details>
+  <details class="dec" name="dec">
+    <summary><span class="dec-n">02</span><h3 class="dec-t">Codes as events, handled defensively</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>A watcher on webhooks and GCP Pub/Sub.</div><div><span class="lbl">Why</span>The code arrives as an event, so the automation can carry on without someone fetching it.</div><div class="trade"><span class="lbl">Cost</span>Events can arrive twice or not at all, so every one is acknowledged, de-duplicated and timed out.</div></div>
+  </details>
+</section>
+
+<section id="roadmap" class="sec" aria-labelledby="h-road">
+  <div class="sh"><span class="sh-n">05</span><h2 id="h-road">How it was built</h2><span class="sh-cmd">$ git log --oneline</span></div>
+  <p class="road-intro">Internal work, so there are no public commits to link. The stages are in the order they happened.</p>
+  <ol class="road">
+    <li><div class="road-row"><span class="wrap-s"><time datetime="2024-11"><b>Nov 2024</b></time><span class="st"><b>Junior Data Engineer</b><span>Automation scripts and pipelines, written by hand.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Ongoing</b></span><span class="st"><b>A pipeline per new kind of data</b><span>Cleaning and conversion into the internal format; 25+ in all.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Then</b></span><span class="st"><b>The OTP watcher</b><span>Webhooks and Pub/Sub, so emailed login codes stopped blocking the automation.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Next</b></span><span class="st"><b>The RabbitMQ application automation</b><span>The automation moved to a platform whose initial architecture I designed: <a href="app-automation.html">its case study →</a></span></span></span></div></li>
+    <li><div class="now-row"><b>Open now</b><a href="#next">What this page doesn’t show</a></div></li>
+  </ol>
+</section>
+
+<section id="failures" class="sec" aria-labelledby="h-fail">
+  <div class="sh"><span class="sh-n">06</span><h2 id="h-fail">Failure modes and guardrails</h2><span class="sh-cmd">if → then</span></div>
+  <div class="fms">
+    <div class="fm"><p class="fm-if">if the same OTP event arrives twice</p><p class="fm-then">Duplicate detection drops the second one.</p></div>
+    <div class="fm"><p class="fm-if">if no code arrives</p><p class="fm-then">A timeout ends the wait instead of leaving the run hanging.</p></div>
+    <div class="fm"><p class="fm-if">if processing fails before an event is acknowledged</p><p class="fm-then">It isn’t acknowledged, so Pub/Sub delivers it again.</p></div>
+    <div class="fm"><p class="fm-if">if a new kind of data appears</p><p class="fm-then">It gets its own cleaning logic; the existing pipelines aren’t touched.</p></div>
+    <div class="fm"><p class="fm-if">if a step fails</p><p class="fm-then">Retries and failure recovery, with failures logged centrally in MongoDB.</p></div>
+  </div>
+</section>
+
+<section id="next" class="lim" aria-labelledby="h-next">
+  <div class="card lim-l">
+    <h2 id="h-next">What this page doesn’t show</h2>
+    <ul>
+      <li>The OTP watcher was part of the earlier automation; today’s platform hands one-time codes to a person.</li>
+      <li>No throughput or error-rate figures are published for these pipelines.</li>
+      <li>It’s internal Edvoy work: no code, data or screenshots are public.</li>
+    </ul>
+  </div>
+  <div id="links" class="evid dark">
+    <h2>Where to check</h2>
+    <a href="https://www.linkedin.com/in/sudharsan-v-s-a851a3242/details/recommendations/" target="_blank" rel="noopener">Colleagues’ recommendations on LinkedIn <span aria-hidden="true">↗</span></a>
+    <a href="app-automation.html">What came next: Application automation <span aria-hidden="true">→</span></a>
+    <a href="copilot.html#architecture">Ingestion in public code: the Copilot’s parser <span aria-hidden="true">→</span></a>
+    <a href="review.html#failures">Duplicate deliveries in public code <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<a class="next-case" href="copilot.html"><span><span>next: personal builds</span><b>Market Research Copilot</b></span><span aria-hidden="true">→</span></a>
+
+</main>
+
+<footer id="contact" class="foot" aria-labelledby="h-contact">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-l">
+        <h2 id="h-contact">Questions about how this was built? <em>Ask me.</em></h2>
+        <p class="foot-p">This is internal Edvoy work, so there’s no code to open issues against. Email is the quickest way to ask about the design.</p>
+      </div>
+      <div class="foot-links">
+        <a href="https://www.linkedin.com/in/sudharsan-v-s-a851a3242" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/Sudharsan2816" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+        <a class="mail" href="mailto:vssudhan2003@gmail.com?subject=About%20Pipelines%20and%20Events">vssudhan2003@gmail.com <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <p class="foot-bot">
+      <a href="./">← Back to the portfolio</a>
+      <span><span class="sq-g" aria-hidden="true">●</span> for AI agents: <a href="llms.txt">/llms.txt</a></span>
+      <span class="r">© 2026 Sudharsan V S · Chennai</span>
+    </p>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Case study shortcuts">
+  <a class="row" href="./">← Home</a>
+  <a class="row" href="#own"><span class="g" aria-hidden="true">●</span>Who built what</a>
+  <a class="row y" href="copilot.html">Next →</a>
+</nav>
+
+<script src="pw.js" defer></script>
+<script src="cmdk.js" defer></script>
+</body>
+</html>

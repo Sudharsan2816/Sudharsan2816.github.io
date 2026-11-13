@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Workflow Automation · Sudharsan V S</title>
+<meta name="description" content="An LLM workflow in production at Edvoy since October 2026: RAG over email threads, a decision directory and guardrails that decide when it acts and when a person is alerted. n8n, Hermes and LangGraph.">
+<meta property="og:title" content="AI Workflow Automation · Sudharsan V S">
+<meta property="og:description" content="An LLM workflow in production at Edvoy since October 2026: RAG over email threads, a decision directory and guardrails that decide when it acts and when a person is alerted. n8n, Hermes and LangGraph.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sudharsan2816.github.io/ai-workflow.html">
+<meta property="og:image" content="https://sudharsan2816.github.io/og/ai-workflow.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AI Workflow Automation case study">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F2EDE4">
+<link rel="canonical" href="https://sudharsan2816.github.io/ai-workflow.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="pw.css">
+<link rel="stylesheet" href="cmdk.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" aria-hidden="true"><span>CASE STUDY · AI WORKFLOW AUTOMATION   ●   IN PRODUCTION AT EDVOY SINCE OCT 2026   ●   N8N · HERMES · LANGGRAPH · RAG   ●   JIRA IN, SLACK OUT   ●   </span><span>CASE STUDY · AI WORKFLOW AUTOMATION   ●   IN PRODUCTION AT EDVOY SINCE OCT 2026   ●   N8N · HERMES · LANGGRAPH · RAG   ●   JIRA IN, SLACK OUT   ●   </span><span>CASE STUDY · AI WORKFLOW AUTOMATION   ●   IN PRODUCTION AT EDVOY SINCE OCT 2026   ●   N8N · HERMES · LANGGRAPH · RAG   ●   JIRA IN, SLACK OUT   ●   </span><span>CASE STUDY · AI WORKFLOW AUTOMATION   ●   IN PRODUCTION AT EDVOY SINCE OCT 2026   ●   N8N · HERMES · LANGGRAPH · RAG   ●   JIRA IN, SLACK OUT   ●   </span></div>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./"><span class="back" aria-hidden="true">←</span><b>Sudharsan</b><small>v s</small><span class="sr-only">, back to the portfolio</span></a>
+    <nav class="nav case-nav only-wide" aria-label="On this page">
+      <a href="#problem">Problem</a><a href="#architecture">Architecture</a><a class="strong" href="#own">Who built what</a><a href="#decisions">Decisions</a><a href="#roadmap">How it was built</a><a href="#failures">Failures</a>
+    </nav>
+    <div class="acts">
+      <button class="search" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span class="search-l">search</span><kbd>Ctrl K</kbd></button>
+      <a class="pill-btn o only-wide" href="app-automation.html">Next: Automation →</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+<section class="c-hero" aria-labelledby="h1">
+  <div class="c-hero-main">
+    <p class="c-kick"><span class="prod-tag">PRODUCTION · EDVOY</span>~/edvoy/ai-workflow · production · since oct 2026</p>
+    <h1 id="h1">AI Workflow <span class="mk">Automation</span></h1>
+    <p class="c-lede">An LLM workflow in production at Edvoy. It reads the email thread behind each Jira ticket, works out what the case needs, and decides whether to act or bring in a person. The hard part wasn’t calling the model: it was <em>deciding when the system may act on its own</em>.</p>
+  </div>
+  <dl class="spec">
+    <div><dt>my part</dt><dd>Designed the architecture; built the workflow and pipeline</dd></div>
+    <div><dt>stack</dt><dd>n8n, Hermes, LangGraph, RAG, Jira, Slack</dd></div>
+    <div><dt>status</dt><dd>In production since October 2026</dd></div>
+    <div><dt>code</dt><dd>Internal to Edvoy. No code, data or screenshots are public.</dd></div>
+  </dl>
+</section>
+
+<div class="facts" role="list" aria-label="Headline numbers">
+  <div class="fact" role="listitem"><p class="n">Oct 2026</p><p>in production since</p></div>
+  <div class="fact" role="listitem"><p class="n">Jira<span class="r">→</span>Slack</p><p>a ticket comes in; a person is alerted only when the case needs one</p></div>
+  <div class="fact" role="listitem"><p class="n">4</p><p>stages, built in order: retrieval, trigger, alerts, guardrails</p></div>
+  <div class="fact" role="listitem"><p class="n">3</p><p>kinds of source its LangGraph workflows extract requirements from</p></div>
+</div>
+
+<section id="problem" class="sec" aria-labelledby="h-problem">
+  <div class="sh"><span class="sh-n">01</span><h2 id="h-problem">Problem</h2><span class="sh-cmd">$ cat PROBLEM.md</span></div>
+  <div class="prob">
+    <p>At Edvoy, an existing automation already turned relevant incoming emails into Jira tickets. A ticket on its own is thin: the context that decides what should happen sits in the email thread behind it. And cases vary, so the same kind of ticket can need different decisions.</p>
+    <p>The system had to decide those cases without asking a person every time, and still bring a person in when a case needed one. That boundary is the hard part of the system, more than the model calls.</p>
+  </div>
+</section>
+
+<section id="architecture" class="sec" aria-labelledby="h-arch">
+  <div class="sh"><span class="sh-n">02</span><h2 id="h-arch">Architecture</h2><span class="sh-cmd">pick a node</span></div>
+  <div class="board arch" data-arch data-start="3">
+    <p class="k">a case, end to end · 6 nodes</p>
+    <div class="arch-path js-only" role="group" aria-label="A case, end to end"><button class="anode" type="button" aria-pressed="false"><span>01</span><b>Jira poller</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>02</span><b>Thread retrieval</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>03</span><b>Agent step</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>04</span><b>Decision directory</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>05</span><b>Guardrails</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>06</span><b>Slack alert</b></button></div>
+    <p class="k side js-only">around it</p>
+    <div class="arch-side js-only" role="group" aria-label="Supporting parts"><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>n8n workflow</b></button><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>LangGraph extraction</b></button><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>Mail → Jira</b></button></div>
+    <div class="arch-d js-only" aria-live="polite"><p class="a"></p><p class="b"></p></div>
+    <dl class="arch-all no-js">
+      <div data-step="node 1 of 6 · a case, end to end"><dt>Jira poller</dt><dd>Picks up new tickets and starts the pipeline. The tickets come from an existing mail-to-Jira automation that I didn’t build.</dd></div>
+      <div data-step="node 2 of 6 · a case, end to end"><dt>Thread retrieval</dt><dd>RAG over the email thread behind the ticket, so a decision rests on the whole conversation, not just the latest message.</dd></div>
+      <div data-step="node 3 of 6 · a case, end to end"><dt>Agent step</dt><dd>Runs on Hermes, an agentic AI platform. The model works out what the case needs and suggests what should happen; it doesn’t get the final say.</dd></div>
+      <div data-step="node 4 of 6 · a case, end to end"><dt>Decision directory</dt><dd>Records which decision applies to each kind of case, so varied cases get the right outcome without pulling a person in every time. Written from the business rules and from how users responded to the prototype.</dd></div>
+      <div data-step="node 5 of 6 · a case, end to end"><dt>Guardrails</dt><dd>Together with the decision directory, they decide the outcome: the system acts, or the case goes to a person.</dd></div>
+      <div data-step="node 6 of 6 · a case, end to end"><dt>Slack alert</dt><dd>Alerts the person responsible, so people are pulled in only when a case needs them.</dd></div>
+      <div data-step="supporting part"><dt>n8n workflow</dt><dd>Orchestrates the steps above. The workflow and its pipeline are mine.</dd></div>
+      <div data-step="supporting part"><dt>LangGraph extraction</dt><dd>LangGraph workflows in the same system extract requirements from university emails, documents and web pages.</dd></div>
+      <div data-step="supporting part"><dt>Mail → Jira</dt><dd>The automation that creates tickets from incoming mail. It was already in place, and isn’t mine.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section id="own" class="sec" aria-labelledby="h-own">
+  <div class="sh"><span class="sh-n">03</span><h2 id="h-own">Who built what</h2><span class="sh-cmd">$ git blame --team</span></div>
+  <div class="own">
+    <div class="own-c mine"><h3>Mine</h3><ul><li>The architecture: which pieces exist, how they connect, and the path a case takes through them.</li><li>The n8n workflow and the pipeline.</li><li>The build order: retrieval first, then the Jira trigger, then Slack alerts, and finally the guardrails and decision directory.</li></ul></div>
+    <div class="own-c"><h3>Not mine</h3><ul><li>Some components inside the pipeline, built by colleagues.</li><li>The mail-to-Jira automation that creates the tickets.</li><li>Hermes, the agentic AI platform it runs on.</li></ul></div>
+    <figure class="own-q"><blockquote>“What makes him exceptional is his pragmatic caution: he builds systems where the model suggests, but logic and human review make the final call.”</blockquote><figcaption>GIBIN MATHEW · DATA &amp; AUTOMATION MANAGER, EDVOY · MANAGED ME DIRECTLY</figcaption></figure>
+  </div>
+</section>
+
+<section id="decisions" class="sec" aria-labelledby="h-dec">
+  <div class="sh"><span class="sh-n">04</span><h2 id="h-dec">Decisions and trade-offs</h2><span class="sh-cmd">$ git log --grep=decision</span></div>
+  <details class="dec" name="dec" open>
+    <summary><span class="dec-n">01</span><h3 class="dec-t">A decision directory, instead of asking a person every time</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>A directory that records which decision applies to each kind of case, written from the business rules and from how users responded to a working prototype.</div><div><span class="lbl">Why</span>Cases vary. A system that asks a person about each one only moves the work around; one that never asks will get some cases wrong.</div><div class="trade"><span class="lbl">Cost</span>The directory covers the kinds of case written into it, so it has to grow as new kinds appear and as the rules change.</div></div>
+  </details>
+  <details class="dec" name="dec">
+    <summary><span class="dec-n">02</span><h3 class="dec-t">Retrieve the whole email thread, not just the ticket</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>RAG over the email thread behind each ticket before anything is decided.</div><div><span class="lbl">Why</span>The ticket is created from a single email; the context that decides the case can sit earlier in the thread.</div><div class="trade"><span class="lbl">Cost</span>Every case pays for a retrieval step before a decision.</div></div>
+  </details>
+  <details class="dec" name="dec">
+    <summary><span class="dec-n">03</span><h3 class="dec-t">Guardrails last, built from a working prototype</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>Retrieval, then the Jira trigger, then Slack alerts, then the guardrails and decision directory.</div><div><span class="lbl">Why</span>The guardrails were written from how users responded to the prototype, so the prototype had to exist first.</div><div class="trade"><span class="lbl">Cost</span>The system went live only once that last step was in.</div></div>
+  </details>
+</section>
+
+<section id="roadmap" class="sec" aria-labelledby="h-road">
+  <div class="sh"><span class="sh-n">05</span><h2 id="h-road">How it was built</h2><span class="sh-cmd">$ git log --oneline</span></div>
+  <p class="road-intro">Internal work, so there are no public commits to link. The stages are in the order they happened.</p>
+  <ol class="road">
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 1</b></span><span class="st"><b>RAG over the email thread</b><span>Retrieval came first: the context behind a ticket.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 2</b></span><span class="st"><b>Jira poller</b><span>New tickets start the pipeline.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 3</b></span><span class="st"><b>Slack alerts</b><span>The responsible person hears about the cases that need them.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Step 4</b></span><span class="st"><b>Guardrails and decision directory</b><span>Written from the business rules and from how users responded to the prototype.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><time datetime="2026-10"><b>Live</b><small>Oct 2026</small></time><span class="st"><b>In production</b><span>Running on real cases since October 2026.</span></span></span></div></li>
+    <li><div class="now-row"><b>Open now</b><a href="#next">What this page doesn’t show</a></div></li>
+  </ol>
+</section>
+
+<section id="failures" class="sec" aria-labelledby="h-fail">
+  <div class="sh"><span class="sh-n">06</span><h2 id="h-fail">Failure modes and guardrails</h2><span class="sh-cmd">if → then</span></div>
+  <div class="fms">
+    <div class="fm"><p class="fm-if">if a case clears the decision directory and guardrails</p><p class="fm-then">The system acts on it without pulling a person in.</p></div>
+    <div class="fm"><p class="fm-if">if it doesn’t</p><p class="fm-then">Slack alerts the responsible person instead of the system guessing.</p></div>
+    <div class="fm"><p class="fm-if">if the ticket alone lacks the context</p><p class="fm-then">Retrieval pulls it from the email thread behind the ticket.</p></div>
+    <div class="fm"><p class="fm-if">if someone needs to know why it did something</p><p class="fm-then">Every agent call is logged.</p></div>
+  </div>
+</section>
+
+<section id="next" class="lim" aria-labelledby="h-next">
+  <div class="card lim-l">
+    <h2 id="h-next">What this page doesn’t show</h2>
+    <ul>
+      <li>No impact figures yet. The useful ones are how many cases it decides without a person, how often it escalates, and how often a decision turns out wrong. Until those are measured, none are claimed here.</li>
+      <li>The numbers elsewhere on this site (3,400+ submissions, ~30 → ~5 minutes) belong to the application automation, not to this system.</li>
+      <li>It’s an internal Edvoy system, so there’s no code, data or screenshots. I’m happy to walk through the design in conversation.</li>
+    </ul>
+  </div>
+  <div id="links" class="evid dark">
+    <h2>Where to check</h2>
+    <a href="https://www.linkedin.com/in/sudharsan-v-s-a851a3242/details/recommendations/" target="_blank" rel="noopener">Manager’s recommendation on LinkedIn <span aria-hidden="true">↗</span></a>
+    <a href="./#experience">Experience at Edvoy <span aria-hidden="true">→</span></a>
+    <a href="review.html">Same ideas in public code: Code Review Agent <span aria-hidden="true">→</span></a>
+    <a href="rbac.html">Guardrails inside retrieval: Permission-Aware RAG <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<a class="next-case" href="app-automation.html"><span><span>next case study</span><b>Application Automation</b></span><span aria-hidden="true">→</span></a>
+
+</main>
+
+<footer id="contact" class="foot" aria-labelledby="h-contact">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-l">
+        <h2 id="h-contact">Questions about how this was built? <em>Ask me.</em></h2>
+        <p class="foot-p">This is internal Edvoy work, so there’s no code to open issues against. Email is the quickest way to ask about the design.</p>
+      </div>
+      <div class="foot-links">
+        <a href="https://www.linkedin.com/in/sudharsan-v-s-a851a3242" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/Sudharsan2816" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+        <a class="mail" href="mailto:vssudhan2003@gmail.com?subject=About%20AI%20Workflow%20Automation">vssudhan2003@gmail.com <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <p class="foot-bot">
+      <a href="./">← Back to the portfolio</a>
+      <span><span class="sq-g" aria-hidden="true">●</span> for AI agents: <a href="llms.txt">/llms.txt</a></span>
+      <span class="r">© 2026 Sudharsan V S · Chennai</span>
+    </p>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Case study shortcuts">
+  <a class="row" href="./">← Home</a>
+  <a class="row" href="#own"><span class="g" aria-hidden="true">●</span>Who built what</a>
+  <a class="row y" href="app-automation.html">Next →</a>
+</nav>
+
+<script src="pw.js" defer></script>
+<script src="cmdk.js" defer></script>
+</body>
+</html>

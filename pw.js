@@ -28,7 +28,7 @@
     var trace = root.querySelector('.trace dl'), traceLine = root.querySelector('.trace-line');
     var O = data.outputs, order = data.commands, buttons = {};
     var alias = { stack: 'skills', capabilities: 'skills', 'cat capabilities.md': 'skills', rag: 'skills', agents: 'skills', evals: 'skills', about: 'whoami', me: 'whoami', who: 'whoami', ls: 'ls work', work: 'ls work', projects: 'ls work', results: 'cat results', numbers: 'cat results', proof: 'cat results',
-      now: 'tail -f now', news: 'tail -f now', demos: 'open demos', demo: 'open demos', try: 'open demos', email: 'contact', mail: 'contact', hire: 'contact', '?': 'help', man: 'help' };
+      edvoy: 'ls work', production: 'ls work', prod: 'ls work', now: 'tail -f now', news: 'tail -f now', demos: 'open demos', demo: 'open demos', try: 'open demos', email: 'contact', mail: 'contact', hire: 'contact', '?': 'help', man: 'help' };
     function setTrace(input, matched, src, n) {
       if (trace) trace.innerHTML = '';
       var rows = [['input', input], ['matched', matched], ['source', src], ['model calls', '0'], ['answer', n + ' line' + (n === 1 ? '' : 's') + (n ? ', all linked' : '')]];
@@ -115,7 +115,7 @@
       readmeBody = h('div', { class: 'readme-b' });
       var c5 = h('div', { class: 'wb-col c5' }, [h('div', { class: 'readme', 'aria-live': 'polite' }, [h('span', { class: 'port l', 'aria-hidden': 'true' }), h('p', { class: 'readme-h' }, [readmeHead, h('b', { text: 'TXT' })]), readmeBody])]);
       wb.appendChild(c1); wb.appendChild(c3); wb.appendChild(c5);
-      wb.appendChild(h('p', { class: 'wb-foot' }, [h('span', {}, [h('span', { class: 'sq-y', text: '■' }), ' production at Edvoy']), h('span', {}, [h('span', { class: 'sq-w', text: '■' }), ' personal build, public code']), h('span', { class: 'r', text: '5 systems · 5 stages · 15 wires' })]));
+      wb.appendChild(h('p', { class: 'wb-foot' }, [h('span', {}, [h('span', { class: 'sq-y', text: '■' }), ' production at Edvoy']), h('span', {}, [h('span', { class: 'sq-w', text: '■' }), ' personal build, public code']), h('span', { class: 'r', text: P.length + ' systems · ' + S.length + ' stages · ' + P.reduce(function (n, p) { return n + p.stages.length; }, 0) + ' wires' })]));
       if (window.ResizeObserver) new ResizeObserver(drawWires).observe(wb);
       renderBoard();
     }
@@ -156,7 +156,7 @@
         var p = P[sel.i];
         kids.push(h('p', { class: 'rd-kind' + (p.prod ? ' prod' : ''), text: p.kind }), h(isWide ? 'h3' : 'p', { class: 'rd-title', text: p.name }), h('p', { class: 'rd-lede', text: p.lede }), h('p', { class: 'rd-body', text: p.body }),
           h('p', { class: 'rd-metric' }, [h('b', { text: p.metric }), h('span', { text: p.metricNote })]), h('p', { class: 'rd-stack', text: p.stack }));
-        if (p.caseHref) kids.push(h('p', { class: 'rd-links' }, [h('a', { href: p.caseHref, text: 'Case study →' }), h('a', { href: p.tryHref, text: 'Try it →' }), h('a', { href: p.codeHref, target: '_blank', rel: 'noopener', text: 'Code ↗' })]));
+        if (p.caseHref) kids.push(h('p', { class: 'rd-links' }, [h('a', { href: p.caseHref, text: 'Case study →' }), p.tryHref ? h('a', { href: p.tryHref, text: 'Try it →' }) : null, p.codeHref ? h('a', { href: p.codeHref, target: '_blank', rel: 'noopener', text: 'Code ↗' }) : null]));
         if (p.note) kids.push(h('p', { class: 'rd-body', text: p.note }));
         if (isWide) readmeHead.textContent = 'readme.txt — ' + p.code;
       } else {

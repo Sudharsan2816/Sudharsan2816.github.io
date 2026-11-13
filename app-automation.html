@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Application Automation · Sudharsan V S</title>
+<meta name="description" content="A RabbitMQ-driven pipeline in production at Edvoy: 3,400+ submissions to 70+ university portals since March 2026, about 95% of runs succeeding, ~5 minutes of bot time per submission vs ~30 by hand.">
+<meta property="og:title" content="Application Automation · Sudharsan V S">
+<meta property="og:description" content="A RabbitMQ-driven pipeline in production at Edvoy: 3,400+ submissions to 70+ university portals since March 2026, about 95% of runs succeeding, ~5 minutes of bot time per submission vs ~30 by hand.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sudharsan2816.github.io/app-automation.html">
+<meta property="og:image" content="https://sudharsan2816.github.io/og/app-automation.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Application Automation case study">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F2EDE4">
+<link rel="canonical" href="https://sudharsan2816.github.io/app-automation.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="pw.css">
+<link rel="stylesheet" href="cmdk.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" aria-hidden="true"><span>CASE STUDY · APPLICATION AUTOMATION   ●   IN PRODUCTION AT EDVOY   ●   3,400+ SUBMISSIONS   ●   ~95% OF RUNS SUCCEED   ●   ~30 → ~5 MIN PER SUBMISSION   ●   70+ UNIVERSITY PORTALS   ●   </span><span>CASE STUDY · APPLICATION AUTOMATION   ●   IN PRODUCTION AT EDVOY   ●   3,400+ SUBMISSIONS   ●   ~95% OF RUNS SUCCEED   ●   ~30 → ~5 MIN PER SUBMISSION   ●   70+ UNIVERSITY PORTALS   ●   </span><span>CASE STUDY · APPLICATION AUTOMATION   ●   IN PRODUCTION AT EDVOY   ●   3,400+ SUBMISSIONS   ●   ~95% OF RUNS SUCCEED   ●   ~30 → ~5 MIN PER SUBMISSION   ●   70+ UNIVERSITY PORTALS   ●   </span><span>CASE STUDY · APPLICATION AUTOMATION   ●   IN PRODUCTION AT EDVOY   ●   3,400+ SUBMISSIONS   ●   ~95% OF RUNS SUCCEED   ●   ~30 → ~5 MIN PER SUBMISSION   ●   70+ UNIVERSITY PORTALS   ●   </span></div>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./"><span class="back" aria-hidden="true">←</span><b>Sudharsan</b><small>v s</small><span class="sr-only">, back to the portfolio</span></a>
+    <nav class="nav case-nav only-wide" aria-label="On this page">
+      <a href="#problem">Problem</a><a href="#architecture">Architecture</a><a class="strong" href="#own">Who built what</a><a href="#decisions">Decisions</a><a href="#roadmap">How it was built</a><a href="#failures">Failures</a>
+    </nav>
+    <div class="acts">
+      <button class="search" type="button" data-cmdk-open aria-label="Search the site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg><span class="search-l">search</span><kbd>Ctrl K</kbd></button>
+      <a class="pill-btn o only-wide" href="data-pipelines.html">Next: Pipelines →</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+<section class="c-hero" aria-labelledby="h1">
+  <div class="c-hero-main">
+    <p class="c-kick"><span class="prod-tag">PRODUCTION · EDVOY</span>~/edvoy/application-automation · production · since mar 2026</p>
+    <h1 id="h1">Application <span class="mk">Automation</span></h1>
+    <p class="c-lede">A pipeline that fills in and submits applications on university portals, where every portal has its own steps and rules. It has made <em>3,400+ submissions since March 2026</em>, and about 95% of its runs succeed.</p>
+  </div>
+  <dl class="spec">
+    <div><dt>my part</dt><dd>Designed the initial architecture; built the pipeline and its logic; wrote the university configurations; split it into three containers</dd></div>
+    <div><dt>stack</dt><dd>RabbitMQ, Docker, AWS, a browser-based bot</dd></div>
+    <div><dt>status</dt><dd>In production since March 2026</dd></div>
+    <div><dt>code</dt><dd>Internal to Edvoy. No code, data or screenshots are public.</dd></div>
+  </dl>
+</section>
+
+<div class="facts" role="list" aria-label="Headline numbers">
+  <div class="fact" role="listitem"><p class="n">3,400+</p><p>submissions since March 2026, in total</p></div>
+  <div class="fact" role="listitem"><p class="n">~95<small>%</small></p><p>of runs succeed: successful ÷ (successful + failed)</p></div>
+  <div class="fact" role="listitem"><p class="n">30<span class="r">→</span>5<small> min</small></p><p>per submission: about 30 by hand vs about 5 of the bot’s time</p></div>
+  <div class="fact" role="listitem"><p class="n">70+</p><p>university portals, each one a configuration</p></div>
+</div>
+
+<section id="problem" class="sec" aria-labelledby="h-problem">
+  <div class="sh"><span class="sh-n">01</span><h2 id="h-problem">Problem</h2><span class="sh-cmd">$ cat PROBLEM.md</span></div>
+  <div class="prob">
+    <p>Every application to a university goes through that university’s own portal, and every portal behaves differently: different steps, different fields, different rules. By hand, one submission took about 30 minutes.</p>
+    <p>The system had to run many submissions at once, keep one failure from stopping the rest, and take on a new university without new code.</p>
+  </div>
+</section>
+
+<section id="architecture" class="sec" aria-labelledby="h-arch">
+  <div class="sh"><span class="sh-n">02</span><h2 id="h-arch">Architecture</h2><span class="sh-cmd">pick a node</span></div>
+  <div class="board arch" data-arch data-start="0">
+    <p class="k">one submission · 5 nodes</p>
+    <div class="arch-path js-only" role="group" aria-label="One submission"><button class="anode" type="button" aria-pressed="false"><span>01</span><b>Task queue</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>02</span><b>Pipeline logic</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>03</span><b>University config</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>04</span><b>Browser bot</b></button><span class="awire" aria-hidden="true"></span><button class="anode" type="button" aria-pressed="false"><span>05</span><b>Run result</b></button></div>
+    <p class="k side js-only">around it</p>
+    <div class="arch-side js-only" role="group" aria-label="Supporting parts"><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>Three containers</b></button><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>AWS</b></button><button class="anode" type="button" aria-pressed="false"><span>aux</span><b>New data types</b></button></div>
+    <div class="arch-d js-only" aria-live="polite"><p class="a"></p><p class="b"></p></div>
+    <dl class="arch-all no-js">
+      <div data-step="node 1 of 5 · one submission"><dt>Task queue</dt><dd>RabbitMQ. Each submission becomes a task, scheduled asynchronously and run in parallel, and a failed one can be retried without holding up the rest.</dd></div>
+      <div data-step="node 2 of 5 · one submission"><dt>Pipeline logic</dt><dd>The steps every submission follows, shared across universities. I built the pipeline and the logic it follows.</dd></div>
+      <div data-step="node 3 of 5 · one submission"><dt>University config</dt><dd>What differs per university lives in its configuration, not in new code. I wrote the university-specific configurations; 70+ portals run this way.</dd></div>
+      <div data-step="node 4 of 5 · one submission"><dt>Browser bot</dt><dd>Fills in and submits the application on the portal, staying in contact with the pipeline through the browser’s native host.</dd></div>
+      <div data-step="node 5 of 5 · one submission"><dt>Run result</dt><dd>Each run ends as successful or failed. That’s what the ~95% counts; runs a user stopped are left out.</dd></div>
+      <div data-step="supporting part"><dt>Three containers</dt><dd>I dockerised the project and split it into three containers, so one failing feature can’t take the whole system down.</dd></div>
+      <div data-step="supporting part"><dt>AWS</dt><dd>Runs on AWS. Moving off local machines fixed the native-host disconnects that stalled the bot; the move was my manager’s call.</dd></div>
+      <div data-step="supporting part"><dt>New data types</dt><dd>I extended the pipeline to take new kinds of data without code changes.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section id="own" class="sec" aria-labelledby="h-own">
+  <div class="sh"><span class="sh-n">03</span><h2 id="h-own">Who built what</h2><span class="sh-cmd">$ git blame --team</span></div>
+  <div class="own">
+    <div class="own-c mine"><h3>Mine</h3><ul><li>The architecture of the initial RabbitMQ-based automation.</li><li>The automation pipeline and the logic it follows.</li><li>The university-specific configurations.</li><li>Dockerising the project and splitting it into three containers.</li><li>Extending the pipeline to take new kinds of data without code changes.</li></ul></div>
+    <div class="own-c"><h3>Not mine</h3><ul><li>The one-engine, configuration-per-portal approach: that was the platform lead’s.</li><li>The move to AWS: my manager’s idea.</li></ul></div>
+    <figure class="own-q"><blockquote>“Every university portal behaves differently, and when one of them broke, he was usually the one who worked out why.”</blockquote><figcaption>MOHAMMED KHALEELULLAH · DATA ENGINEER, EDVOY · SAME TEAM</figcaption></figure>
+  </div>
+</section>
+
+<section id="decisions" class="sec" aria-labelledby="h-dec">
+  <div class="sh"><span class="sh-n">04</span><h2 id="h-dec">Decisions and trade-offs</h2><span class="sh-cmd">$ git log --grep=decision</span></div>
+  <details class="dec" name="dec" open>
+    <summary><span class="dec-n">01</span><h3 class="dec-t">A queue between the work and the bot</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>RabbitMQ tasks: each submission is queued, scheduled asynchronously and run in parallel.</div><div><span class="lbl">Why</span>Submissions run side by side instead of one after another, and a failure is retried on its own instead of stopping the batch.</div><div class="trade"><span class="lbl">Cost</span>A broker to run and watch, and every task has to be safe to retry.</div></div>
+  </details>
+  <details class="dec" name="dec">
+    <summary><span class="dec-n">02</span><h3 class="dec-t">Three containers instead of one</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>The project dockerised and split into three containers.</div><div><span class="lbl">Why</span>So one failing feature can’t take the whole system down.</div><div class="trade"><span class="lbl">Cost</span>Three things to deploy and keep in step instead of one.</div></div>
+  </details>
+  <details class="dec" name="dec">
+    <summary><span class="dec-n">03</span><h3 class="dec-t">Each university as a configuration</h3><span class="sign" aria-hidden="true"></span></summary>
+    <div class="dec-g"><div><span class="lbl chose">Chose</span>70+ university configurations on one shared pipeline. The approach was the platform lead’s; the configurations are mine.</div><div><span class="lbl">Why</span>A new portal is new configuration, not new code.</div><div class="trade"><span class="lbl">Cost</span>The configuration has to capture everything that differs between portals, and when a portal changes, its configuration has to change with it.</div></div>
+  </details>
+</section>
+
+<section id="roadmap" class="sec" aria-labelledby="h-road">
+  <div class="sh"><span class="sh-n">05</span><h2 id="h-road">How it was built</h2><span class="sh-cmd">$ git log --oneline</span></div>
+  <p class="road-intro">Internal work, so there are no public commits to link. The stages are in the order they happened.</p>
+  <ol class="road">
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Before</b></span><span class="st"><b>Hand-written automation</b><span>Scripts, plus an OTP watcher for portals that email a login code (see Pipelines and events).</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Built</b></span><span class="st"><b>The initial architecture</b><span>RabbitMQ-based automation: the pipeline, its logic and the university configurations.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><time datetime="2026-03"><b>Live</b><small>Mar 2026</small></time><span class="st"><b>In production</b><span>Submissions are counted from here.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Hardened</b></span><span class="st"><b>Three containers, and AWS</b><span>Split so one failing feature can’t stop the rest; moved to AWS, which ended the bot stalls.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Extended</b></span><span class="st"><b>New kinds of data</b><span>The pipeline takes them without code changes.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><time datetime="2026-11"><b>Now</b><small>Nov 2026</small></time><span class="st"><b>3,400+ submissions</b><span>70+ portals; about 95% of runs succeed.</span></span></span></div></li>
+    <li><div class="now-row"><b>Open now</b><a href="#next">What this page doesn’t show</a></div></li>
+  </ol>
+</section>
+
+<section id="failures" class="sec" aria-labelledby="h-fail">
+  <div class="sh"><span class="sh-n">06</span><h2 id="h-fail">Failure modes and guardrails</h2><span class="sh-cmd">if → then</span></div>
+  <div class="fms">
+    <div class="fm"><p class="fm-if">if one submission fails</p><p class="fm-then">Its task is retried from the queue; the other submissions keep running.</p></div>
+    <div class="fm"><p class="fm-if">if one feature fails</p><p class="fm-then">It’s in its own container, so the other two keep running.</p></div>
+    <div class="fm"><p class="fm-if">if the browser’s native host disconnects</p><p class="fm-then">Running locally, the bot lost contact with the pipeline and stalled. Moving the project to AWS fixed it.</p></div>
+    <div class="fm"><p class="fm-if">if a portal emails a one-time code at login</p><p class="fm-then">The platform hands the code to a person. An earlier version caught these automatically (see Pipelines and events).</p></div>
+    <div class="fm"><p class="fm-if">if a new university is added</p><p class="fm-then">It’s a new configuration on the same pipeline, not new code.</p></div>
+    <div class="fm"><p class="fm-if">if a user stops a run</p><p class="fm-then">It isn’t counted as a success or a failure in the ~95%.</p></div>
+  </div>
+</section>
+
+<section id="next" class="lim" aria-labelledby="h-next">
+  <div class="card lim-l">
+    <h2 id="h-next">What this page doesn’t show</h2>
+    <ul>
+      <li>~95% is a run success rate, measured as successful ÷ (successful + failed), with runs a user stopped left out. It isn’t an accuracy figure.</li>
+      <li>~5 minutes is the bot’s own time per submission. It leaves out pauses where a person steps in, such as entering a one-time code.</li>
+      <li>3,400+ is the total since March 2026, not a daily figure.</li>
+      <li>It’s an internal Edvoy system: no code, data, university names or screenshots are public.</li>
+    </ul>
+  </div>
+  <div id="links" class="evid dark">
+    <h2>Where to check</h2>
+    <a href="https://www.linkedin.com/in/sudharsan-v-s-a851a3242/details/recommendations/" target="_blank" rel="noopener">Colleagues’ recommendations on LinkedIn <span aria-hidden="true">↗</span></a>
+    <a href="data-pipelines.html">What came before: Pipelines and events <span aria-hidden="true">→</span></a>
+    <a href="./#experience">Experience at Edvoy <span aria-hidden="true">→</span></a>
+    <a href="review.html#failures">Retry-safe in public code: one review per commit <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<a class="next-case" href="data-pipelines.html"><span><span>next case study</span><b>Pipelines and Events</b></span><span aria-hidden="true">→</span></a>
+
+</main>
+
+<footer id="contact" class="foot" aria-labelledby="h-contact">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-l">
+        <h2 id="h-contact">Questions about how this was built? <em>Ask me.</em></h2>
+        <p class="foot-p">This is internal Edvoy work, so there’s no code to open issues against. Email is the quickest way to ask about the design.</p>
+      </div>
+      <div class="foot-links">
+        <a href="https://www.linkedin.com/in/sudharsan-v-s-a851a3242" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/Sudharsan2816" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+        <a class="mail" href="mailto:vssudhan2003@gmail.com?subject=About%20Application%20Automation">vssudhan2003@gmail.com <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <p class="foot-bot">
+      <a href="./">← Back to the portfolio</a>
+      <span><span class="sq-g" aria-hidden="true">●</span> for AI agents: <a href="llms.txt">/llms.txt</a></span>
+      <span class="r">© 2026 Sudharsan V S · Chennai</span>
+    </p>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Case study shortcuts">
+  <a class="row" href="./">← Home</a>
+  <a class="row" href="#own"><span class="g" aria-hidden="true">●</span>Who built what</a>
+  <a class="row y" href="data-pipelines.html">Next →</a>
+</nav>
+
+<script src="pw.js" defer></script>
+<script src="cmdk.js" defer></script>
+</body>
+</html>
