@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Application Automation · Sudharsan V S</title>
-<meta name="description" content="A RabbitMQ-driven pipeline in production at Edvoy: 3,400+ submissions to 70+ university portals since March 2026, about 95% of runs succeeding, ~5 minutes of bot time per submission vs ~30 by hand.">
+<meta name="description" content="A RabbitMQ-driven pipeline at Edvoy, designed as a Junior Data Engineer and in production since May 2026: 3,400+ submissions to 70+ university portals since its first release, about 95% of runs succeeding, ~5 minutes of bot time per submission vs ~30 by hand.">
 <meta property="og:title" content="Application Automation · Sudharsan V S">
-<meta property="og:description" content="A RabbitMQ-driven pipeline in production at Edvoy: 3,400+ submissions to 70+ university portals since March 2026, about 95% of runs succeeding, ~5 minutes of bot time per submission vs ~30 by hand.">
+<meta property="og:description" content="A RabbitMQ-driven pipeline at Edvoy, designed as a Junior Data Engineer and in production since May 2026: 3,400+ submissions to 70+ university portals since its first release, about 95% of runs succeeding, ~5 minutes of bot time per submission vs ~30 by hand.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://sudharsan2816.github.io/app-automation.html">
 <meta property="og:image" content="https://sudharsan2816.github.io/og/app-automation.png">
@@ -47,20 +47,20 @@
 
 <section class="c-hero" aria-labelledby="h1">
   <div class="c-hero-main">
-    <p class="c-kick"><span class="prod-tag">PRODUCTION · EDVOY</span>~/edvoy/application-automation · production · since mar 2026</p>
+    <p class="c-kick"><span class="prod-tag">PRODUCTION · EDVOY</span>~/edvoy/application-automation · production · since may 2026</p>
     <h1 id="h1">Application <span class="mk">Automation</span></h1>
-    <p class="c-lede">A pipeline that fills in and submits applications on university portals, where every portal has its own steps and rules. It has made <em>3,400+ submissions since March 2026</em>, and about 95% of its runs succeed.</p>
+    <p class="c-lede">A pipeline that fills in and submits applications on university portals, where every portal has its own steps and rules. Released as a prototype in March 2026 and in production since May, it has made <em>3,400+ submissions</em>, and about 95% of its runs succeed.</p>
   </div>
   <dl class="spec">
-    <div><dt>my part</dt><dd>Designed the initial architecture; built the pipeline and its logic; wrote the university configurations; split it into three containers</dd></div>
+    <div><dt>my part</dt><dd>As Junior Data Engineer: designed the initial architecture, built the pipeline and its logic, wrote the university configurations, split it into three containers. After my promotion: optimised it in production.</dd></div>
     <div><dt>stack</dt><dd>RabbitMQ, Docker, AWS, a browser-based bot</dd></div>
-    <div><dt>status</dt><dd>In production since March 2026</dd></div>
+    <div><dt>status</dt><dd>Prototype released March 2026; in production since May 2026</dd></div>
     <div><dt>code</dt><dd>Internal to Edvoy. No code, data or screenshots are public.</dd></div>
   </dl>
 </section>
 
 <div class="facts" role="list" aria-label="Headline numbers">
-  <div class="fact" role="listitem"><p class="n">3,400+</p><p>submissions since March 2026, in total</p></div>
+  <div class="fact" role="listitem"><p class="n">3,400+</p><p>submissions in total, since the first release in March 2026</p></div>
   <div class="fact" role="listitem"><p class="n">~95<small>%</small></p><p>of runs succeed: successful ÷ (successful + failed)</p></div>
   <div class="fact" role="listitem"><p class="n">30<span class="r">→</span>5<small> min</small></p><p>per submission: about 30 by hand vs about 5 of the bot’s time</p></div>
   <div class="fact" role="listitem"><p class="n">70+</p><p>university portals, each one a configuration</p></div>
@@ -89,8 +89,8 @@
       <div data-step="node 4 of 5 · one submission"><dt>Browser bot</dt><dd>Fills in and submits the application on the portal, staying in contact with the pipeline through the browser’s native host.</dd></div>
       <div data-step="node 5 of 5 · one submission"><dt>Run result</dt><dd>Each run ends as successful or failed. That’s what the ~95% counts; runs a user stopped are left out.</dd></div>
       <div data-step="supporting part"><dt>Three containers</dt><dd>I dockerised the project and split it into three containers, so one failing feature can’t take the whole system down.</dd></div>
-      <div data-step="supporting part"><dt>AWS</dt><dd>Runs on AWS. Moving off local machines fixed the native-host disconnects that stalled the bot; the move was my manager’s call.</dd></div>
-      <div data-step="supporting part"><dt>New data types</dt><dd>I extended the pipeline to take new kinds of data without code changes.</dd></div>
+      <div data-step="supporting part"><dt>AWS</dt><dd>Runs on AWS. Moving off local machines fixed the native-host disconnects that stalled the bot. The move was my manager’s idea; I did the work, after my promotion.</dd></div>
+      <div data-step="supporting part"><dt>New data types</dt><dd>After my promotion, I extended the pipeline to take new kinds of data without code changes.</dd></div>
     </dl>
   </div>
 </section>
@@ -98,8 +98,8 @@
 <section id="own" class="sec" aria-labelledby="h-own">
   <div class="sh"><span class="sh-n">03</span><h2 id="h-own">Who built what</h2><span class="sh-cmd">$ git blame --team</span></div>
   <div class="own">
-    <div class="own-c mine"><h3>Mine</h3><ul><li>The architecture of the initial RabbitMQ-based automation.</li><li>The automation pipeline and the logic it follows.</li><li>The university-specific configurations.</li><li>Dockerising the project and splitting it into three containers.</li><li>Extending the pipeline to take new kinds of data without code changes.</li></ul></div>
-    <div class="own-c"><h3>Not mine</h3><ul><li>The one-engine, configuration-per-portal approach: that was the platform lead’s.</li><li>The move to AWS: my manager’s idea.</li></ul></div>
+    <div class="own-c mine"><h3>Mine</h3><ul><li>As Junior Data Engineer: the architecture of the initial RabbitMQ-based automation.</li><li>The automation pipeline and the logic it follows, and the university-specific configurations.</li><li>Dockerising the project and splitting it into three containers.</li><li>After my promotion, in production: moving it to AWS, extending it to take new kinds of data without code changes, and the optimisation that brought a submission to about 5 minutes of bot time.</li></ul></div>
+    <div class="own-c"><h3>Not mine</h3><ul><li>The one-engine, configuration-per-portal approach: that was the platform lead’s.</li><li>The decision to move to AWS: my manager’s idea, though I did the move.</li></ul></div>
     <figure class="own-q"><blockquote>“Every university portal behaves differently, and when one of them broke, he was usually the one who worked out why.”</blockquote><figcaption>MOHAMMED KHALEELULLAH · DATA ENGINEER, EDVOY · SAME TEAM</figcaption></figure>
   </div>
 </section>
@@ -125,10 +125,10 @@
   <p class="road-intro">Internal work, so there are no public commits to link. The stages are in the order they happened.</p>
   <ol class="road">
     <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Before</b></span><span class="st"><b>Hand-written automation</b><span>Scripts, plus an OTP watcher for portals that email a login code (see Pipelines and events).</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Built</b></span><span class="st"><b>The initial architecture</b><span>RabbitMQ-based automation: the pipeline, its logic and the university configurations.</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><time datetime="2026-03"><b>Live</b><small>Mar 2026</small></time><span class="st"><b>In production</b><span>Submissions are counted from here.</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Hardened</b></span><span class="st"><b>Three containers, and AWS</b><span>Split so one failing feature can’t stop the rest; moved to AWS, which ended the bot stalls.</span></span></span></div></li>
-    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Extended</b></span><span class="st"><b>New kinds of data</b><span>The pipeline takes them without code changes.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Designed</b></span><span class="st"><b>The initial architecture</b><span>As Junior Data Engineer: the RabbitMQ-based pipeline, its logic, the university configurations, and three containers so one failing feature can’t stop the rest.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><time datetime="2026-03"><b>Released</b><small>Mar 2026</small></time><span class="st"><b>Prototype released</b><span>Submissions are counted from here.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><time datetime="2026-05"><b>Live</b><small>May 2026</small></time><span class="st"><b>In production</b><span>It went into production after my promotion to Data Engineer.</span></span></span></div></li>
+    <li><div class="road-row"><span class="wrap-s"><span class="when"><b>Optimised</b></span><span class="st"><b>AWS, new kinds of data, speed</b><span>Moved it to AWS, which ended the bot stalls; let it take new kinds of data without code changes; brought a submission to about 5 minutes of bot time.</span></span></span></div></li>
     <li><div class="road-row"><span class="wrap-s"><time datetime="2026-11"><b>Now</b><small>Nov 2026</small></time><span class="st"><b>3,400+ submissions</b><span>70+ portals; about 95% of runs succeed.</span></span></span></div></li>
     <li><div class="now-row"><b>Open now</b><a href="#next">What this page doesn’t show</a></div></li>
   </ol>
@@ -152,7 +152,7 @@
     <ul>
       <li>~95% is a run success rate, measured as successful ÷ (successful + failed), with runs a user stopped left out. It isn’t an accuracy figure.</li>
       <li>~5 minutes is the bot’s own time per submission. It leaves out pauses where a person steps in, such as entering a one-time code.</li>
-      <li>3,400+ is the total since March 2026, not a daily figure.</li>
+      <li>3,400+ is the total since the first release in March 2026, not a daily figure.</li>
       <li>It’s an internal Edvoy system: no code, data, university names or screenshots are public.</li>
     </ul>
   </div>

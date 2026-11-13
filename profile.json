@@ -76,7 +76,7 @@
       "note": "promoted",
       "highlights": [
         "Designed the architecture of an AI-assisted workflow automation system (n8n + Hermes + LangGraph) and built its workflow and pipeline; in production since October 2026: Jira-triggered, RAG over email threads, Slack alerts, and a decision directory with guardrails. Colleagues built some of its components.",
-        "Designed the architecture of the initial RabbitMQ-based application automation; built its pipeline and logic and the university-specific configurations, and split it into three containers so one failing feature can't take the whole system down. 3,400+ submissions to 70+ portals since March 2026; about 95% of runs succeed; ~5 minutes of bot time per submission vs ~30 by hand."
+        "Optimised the application automation once it went into production in May 2026: moved it to AWS, which ended the bot stalls; extended the pipeline to take new kinds of data without code changes; and brought a submission to about 5 minutes of bot time, against about 30 by hand. 3,400+ submissions to 70+ portals; about 95% of runs succeed."
       ]
     },
     {
@@ -86,6 +86,7 @@
       "start": "2024-11",
       "end": "2026-05",
       "highlights": [
+        "Designed the architecture of the initial RabbitMQ-based application automation; built its pipeline and logic and the university-specific configurations, and split it into three containers so one failing feature can't take the whole system down. Prototype released March 2026.",
         "Built 25+ modular ETL pipelines that normalise heterogeneous external data into one internal format.",
         "Built a real-time OTP event service on GCP Pub/Sub with webhooks, acknowledgement, duplicate detection and timeout handling, so emailed login codes stopped blocking the earlier automation."
       ]
@@ -127,19 +128,20 @@
       "name": "Application Automation",
       "kind": "production at Edvoy (internal; no public code)",
       "case_study": "https://sudharsan2816.github.io/app-automation.html",
-      "since": "2026-03",
+      "since": "2026-05",
       "stack": [
         "RabbitMQ",
         "Docker",
         "AWS"
       ],
-      "my_part": "Designed the initial architecture; built the pipeline and its logic; wrote the university configurations; split it into three containers. The config-per-portal approach was the platform lead's; the AWS move was my manager's idea.",
+      "my_part": "As Junior Data Engineer: designed the initial architecture, built the pipeline and its logic, wrote the university configurations, split it into three containers. After promotion: optimised it in production (AWS move, new kinds of data without code changes, ~5 minutes of bot time per submission). The config-per-portal approach was the platform lead's; the AWS move was his manager's idea.",
       "results": [
-        "3,400+ submissions since March 2026 (total, not per day)",
+        "3,400+ submissions in total since the first release in March 2026 (not per day)",
         "~95% of runs succeed: successful / (successful + failed), user-stopped runs excluded",
         "~5 minutes of bot time per submission vs ~30 by hand (human pauses excluded)",
         "70+ university portals"
-      ]
+      ],
+      "released": "2026-03"
     },
     {
       "name": "Pipelines and Events",
